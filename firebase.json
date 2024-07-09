@@ -1,1 +1,19 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"pushnotifications-a6dc0","appId":"1:632988435177:android:6b7a14c18cb6c397a4a678","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"pushnotifications-a6dc0","configurations":{"android":"1:632988435177:android:6b7a14c18cb6c397a4a678","web":"1:632988435177:web:a033fbab4f152086a4a678"}}}}}}
+{
+    "flutter":{
+        "platforms":{"android":{"default":{"projectId":"pushnotifications-a6dc0","appId":"1:632988435177:android:6b7a14c18cb6c397a4a678","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"pushnotifications-a6dc0","configurations":{"android":"1:632988435177:android:6b7a14c18cb6c397a4a678","web":"1:632988435177:web:a033fbab4f152086a4a678"}}}}
+    },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

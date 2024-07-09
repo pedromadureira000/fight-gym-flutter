@@ -1,0 +1,9 @@
+GOOGLE_CLIENT_ID_WEB="<code>.apps.googleusercontent.com"
+GOOGLE_CLIENT_ID_ANDROID="<code>.apps.googleusercontent.com"
+
+SENTRY_DNS=""
+
+BACKEND_IP=127.0.0.1:8000
+SCHEME=http
+
+PAYMENT_LINK="https://buy.stripe.com/test_some-code"

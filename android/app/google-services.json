@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "632988435177",
+    "project_id": "pushnotifications-a6dc0",
+    "storage_bucket": "pushnotifications-a6dc0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:632988435177:android:6b7a14c18cb6c397a4a678",
+        "android_client_info": {
+          "package_name": "com.petersoftwarehouse.fight_gym"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "632988435177-48a4g3nsjjobvn85udmc1d3oqu41fgmv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8NfB27befBGWJ-tnOxsfGgb8zRHgCYZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "632988435177-48a4g3nsjjobvn85udmc1d3oqu41fgmv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

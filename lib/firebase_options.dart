@@ -51,17 +51,17 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDwbERu0qs7avPGH04bdykCTwnOg5lUePM',
-    appId: '1:632988435177:web:dc69b13bbc5e734ea4a678',
+    appId: '1:632988435177:web:a033fbab4f152086a4a678',
     messagingSenderId: '632988435177',
     projectId: 'pushnotifications-a6dc0',
     authDomain: 'pushnotifications-a6dc0.firebaseapp.com',
     storageBucket: 'pushnotifications-a6dc0.appspot.com',
-    measurementId: 'G-R4NNCE1M6X',
+    measurementId: 'G-3C5CWRE2M8',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyC8NfB27befBGWJ-tnOxsfGgb8zRHgCYZU',
-    appId: '1:632988435177:android:ca53266f2b253712a4a678',
+    appId: '1:632988435177:android:6b7a14c18cb6c397a4a678',
     messagingSenderId: '632988435177',
     projectId: 'pushnotifications-a6dc0',
     storageBucket: 'pushnotifications-a6dc0.appspot.com',

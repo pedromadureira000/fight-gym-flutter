@@ -13,7 +13,6 @@ class User with _$User {
     required String phone,
     required String email,
     int? subscription_status,
-    DateTime? subscription_started_at,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -26,4 +25,21 @@ class Configs with _$Configs {
   }) = _Configs;
 
   factory Configs.fromJson(Map<String, dynamic> json) => _$ConfigsFromJson(json);
+}
+
+
+@freezed
+class Customer with _$Customer {
+  factory Customer({
+    int? id,
+    required String name,
+    String? email,
+    String? phone,
+    String? family_phone,
+    String? address,
+    DateTime? birthday,
+    required Map enrollment,
+  }) = _Customer;
+
+  factory Customer.fromJson(Map<String, dynamic> json) => _$CustomerFromJson(json);
 }

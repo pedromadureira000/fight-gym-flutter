@@ -4,7 +4,7 @@ import 'package:fight_gym/page/login/login_page.dart';
 import 'package:fight_gym/page/profile/profile.dart';
 import 'package:fight_gym/page/profile/reset_password.dart';
 import 'package:fight_gym/page/profile/sign_up.dart';
-// import 'package:fight_gym/page/todo/todo_create_update_page.dart';
+import 'package:fight_gym/page/customer/customer_create_update_page.dart';
 
 class AppRoutes {
   static final pages = {
@@ -13,8 +13,8 @@ class AppRoutes {
     sendResetPasswordEmail: (params) => const SendResetPasswordEmail(),
     signUp: (params) => const SignUpPage(),
     menu: (params) => const MenuPage(),
-    // todoCreate: (params) => TodoCreateOrUpdatePage(params: params),
-    // todoUpdate: (params) => TodoCreateOrUpdatePage(params: params),
+    customerCreate: (params) => CustomerCreateOrUpdatePage(params: params),
+    customerUpdate: (params) => CustomerCreateOrUpdatePage(params: params),
   };
 
   static const login = '/login';
@@ -22,8 +22,8 @@ class AppRoutes {
   static const sendResetPasswordEmail = '/reset_password_email';
   static const signUp = '/sign_up';
   static const menu = '/menu';
-  // static const todoCreate = '/task_create';
-  // static const todoUpdate = '/task_update';
+  static const customerCreate = '/customer_create';
+  static const customerUpdate = '/customer_update';
 }
 
 Route<dynamic> getRoute(RouteSettings settings) {

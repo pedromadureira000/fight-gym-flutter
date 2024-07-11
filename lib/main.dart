@@ -57,7 +57,7 @@ void main() async {
         EasyLocalization(
             supportedLocales: const [Locale('en'), Locale('pt')],
             path: 'assets/translations',
-            fallbackLocale: const Locale('en'),
+            fallbackLocale: const Locale('pt'),
             child: const ProviderScope(
                 child: MyApp(),
             ),
@@ -97,7 +97,7 @@ class MyApp extends HookConsumerWidget {
                     darkTheme: darkTheme,
                     themeMode: theme == "light" ? ThemeMode.light : ThemeMode.dark,
                     initialRoute: AppRoutes.login,
-                    // routes: AppRoutes.pages,
+                    routes: AppRoutes.pages,
                     localizationsDelegates: context.localizationDelegates,
                     supportedLocales: context.supportedLocales,
                     locale: context.locale,
@@ -115,7 +115,7 @@ class MyApp extends HookConsumerWidget {
                     darkTheme: darkTheme,
                     themeMode: ThemeMode.dark,
                     initialRoute: AppRoutes.login,
-                    // routes: AppRoutes.pages,
+                    routes: AppRoutes.pages,
                     localizationsDelegates: context.localizationDelegates,
                     supportedLocales: context.supportedLocales,
                     locale: context.locale,

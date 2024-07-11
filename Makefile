@@ -1,3 +1,6 @@
+build_codegen:
+	@flutter pub run build_runner build --delete-conflicting-outputs
+
 dev:
 	@./run_dev.sh
 

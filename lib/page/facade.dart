@@ -90,3 +90,19 @@ setControllersData(ref, nameController, emailController, selectedPlan, record) a
     emailController.text = record.email;
     selectedPlan.value = "${record.enrollment['plan']}";
 }
+
+createInstanceFroModel(ref, instanceModel, controllerFields, ValueNotifierFields) async{
+    var newInstance = instanceModel(
+        name: nameController.text.trim(),
+        email: emailController.text.trim(),
+        phone: "phone",
+        family_phone: "family_phone",
+        address: "address",
+        birthday: DateTime.now(),
+        enrollment: {
+            "plan": int.parse(selectedPlan.value),
+            "subscription_status": 1
+        }
+    );
+    return newInstance;
+}

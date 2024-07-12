@@ -1,10 +1,12 @@
+import 'package:fight_gym/model/models.dart';
+import 'package:fight_gym/provider/customer_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fight_gym/page/menu.dart';
 import 'package:fight_gym/page/login/login_page.dart';
 import 'package:fight_gym/page/profile/profile.dart';
 import 'package:fight_gym/page/profile/reset_password.dart';
 import 'package:fight_gym/page/profile/sign_up.dart';
-import 'package:fight_gym/page/customer/customer_create_update_page.dart';
+import 'package:fight_gym/page/create_update_page.dart';
 
 class AppRoutes {
   static final pages = {
@@ -13,8 +15,18 @@ class AppRoutes {
     sendResetPasswordEmail: (params) => const SendResetPasswordEmail(),
     signUp: (params) => const SignUpPage(),
     menu: (params) => const MenuPage(),
-    customerCreate: (params) => CustomerCreateOrUpdatePage(params: params),
-    customerUpdate: (params) => CustomerCreateOrUpdatePage(params: params),
+    customerCreate: (params) => CreateOrUpdatePage(
+        params: params,
+        updateUrl: "/customer_update",
+        provider: asyncCustomersProvider,
+        instanceModel: Customer,
+    ),
+    customerUpdate: (params) => CreateOrUpdatePage(
+        params: params,
+        updateUrl: "/customer_update",
+        provider: asyncCustomersProvider,
+        instanceModel: Customer,
+    ),
   };
 
   static const login = '/login';

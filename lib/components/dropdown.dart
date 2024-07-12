@@ -58,79 +58,6 @@ class SelectLanguage extends HookConsumerWidget {
     }
 }
 
-class SelectGroupDropdown extends HookConsumerWidget {
-    SelectGroupDropdown(this.selectedGroup, this.provider, {Key? key}) : super(key: key);
-    ValueNotifier selectedGroup;
-    AsyncNotifierProvider provider;
-
-    @override
-    Widget build(BuildContext context, WidgetRef ref) {
-        final asyncValue = ref.watch(provider);
-        switch (asyncValue) {
-            case AsyncData(): 
-                final records = asyncValue.value;
-                return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                        Text(
-                            tr("Group"),
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Theme.of(context).brightness == Brightness.light ? Colors.black : AppColors.lightBackground,
-                            ),
-                        ),
-                        DropdownButtonHideUnderline(
-                            child: DropdownButton2<String>(
-                                isExpanded: true,
-                                hint: Text(
-                                    tr("Select group"),
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: Theme.of(context).hintColor,
-                                    ),
-                                ),
-                                items: records
-                                    .map<DropdownMenuItem<String>>((item) => DropdownMenuItem<String>(
-                                        value: "${item.id}",
-                                        child: Text(
-                                            item.name,
-                                            style: const TextStyle(
-                                                fontSize: 14,
-                                            ),
-                                        ),
-                                    ))
-                                    .toList(),
-                                value: selectedGroup.value,
-                                onChanged: (String? value) {
-                                    selectedGroup.value = value!;
-                                },
-                                buttonStyleData: const ButtonStyleData(
-                                    padding: EdgeInsets.symmetric(horizontal: 16),
-                                    height: 40,
-                                    width: kIsWeb? 140 : 120,
-                                ),
-                                menuItemStyleData: const MenuItemStyleData(
-                                    height: 40,
-                                ),
-                            ),
-                        ),
-                    ],
-                );
-            case AsyncError():
-                return Text(
-                    tr("Something went wrong"),
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.red,
-                    ),
-                    textAlign: TextAlign.center,
-                );
-            default: 
-                return const Center(child: CircularProgressIndicator());
-        }
-    }
-}
-
 class SelectDropdown extends HookConsumerWidget {
     SelectDropdown(
         this.selectedValue, this.valueOptions, this.label, {Key? key}
@@ -188,5 +115,107 @@ class SelectDropdown extends HookConsumerWidget {
                 ),
             ],
         );
+    }
+}
+
+class SelectValueFromProviderListDropdown extends HookConsumerWidget {
+    SelectValueFromProviderListDropdown(this.selectedValue, this.providerClass, {Key? key}) : super(key: key);
+    ValueNotifier selectedValue;
+    AsyncNotifierProvider providerClass;
+
+    @override
+    Widget build(BuildContext context, WidgetRef ref) {
+        final asyncValue = ref.watch(providerClass);
+        // this leads to the same errror as commented bellow
+
+        // Initialize selectedValue.value once when the widget is first built
+        // useEffect(() {
+          // if (selectedValue.value.isEmpty && asyncValue is AsyncData) {
+            // final records = asyncValue.value;
+            // if (records.isNotEmpty) {
+                // WidgetsBinding.instance.addPostFrameCallback((_) {
+                    // selectedValue.value = "${records[0].id}";
+                // });
+            // }
+          // }
+          // return null; // No cleanup function needed
+        // }, [asyncValue]);
+
+        switch (asyncValue) {
+            case AsyncData(): 
+                final records = asyncValue.value;
+                if (selectedValue.value.isEmpty) {
+                    final records = asyncValue.value;
+                    if (records.isNotEmpty) {
+                        // WidgetsBinding.instance.addPostFrameCallback((_) {
+                            // selectedValue.value = "${records[0].id}";
+                        // });
+                        // code above leads to error on line: map<DropdownMenuItem<String>>((item) => DropdownMenuItem<String>
+                        // it gets empty string and it should receive a id that matches the records list
+                        // without it, I get this error:
+                        // ``The following assertion was thrown while dispatching notifications for ValueNotifier<dynamic>:
+                        // setState() or markNeedsBuild() called during build.``
+                        selectedValue.value = "${records[0].id}";
+                    }
+                }
+                return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                        Text(
+                            tr("Value"),
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context).brightness == Brightness.light ? Colors.black : AppColors.lightBackground,
+                            ),
+                        ),
+                        DropdownButtonHideUnderline(
+                            child: DropdownButton2<String>(
+                                isExpanded: true,
+                                hint: Text(
+                                    tr("Select Value"),
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Theme.of(context).hintColor,
+                                    ),
+                                ),
+                                items: records
+                                    .map<DropdownMenuItem<String>>((item) => DropdownMenuItem<String>( // This line throws the error
+                                        value: "${item.id}",
+                                        child: Text(
+                                            item.getNameField(),
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                            ),
+                                        ),
+                                    ))
+                                    .toList(),
+                                value: selectedValue.value,
+                                onChanged: (String? value) {
+                                    selectedValue.value = value!;
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                    padding: EdgeInsets.symmetric(horizontal: 16),
+                                    height: 40,
+                                    width: kIsWeb? 140 : 120,
+                                ),
+                                menuItemStyleData: const MenuItemStyleData(
+                                    height: 40,
+                                ),
+                            ),
+                        ),
+                    ],
+                );
+            case AsyncError():
+                return Text(
+                    tr("Something went wrong"),
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.red,
+                    ),
+                    textAlign: TextAlign.center,
+                );
+            default: 
+                return const Center(child: CircularProgressIndicator());
+        }
     }
 }

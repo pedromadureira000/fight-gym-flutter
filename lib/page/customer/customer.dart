@@ -1,14 +1,11 @@
-import "package:fight_gym/config/app_config.dart";
-import "package:fight_gym/config/app_routes.dart";
+import 'package:fight_gym/config/app_routes.dart';
+import 'package:fight_gym/page/facade.dart';
 import 'package:fight_gym/styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import "package:easy_localization/easy_localization.dart";
 import "package:fight_gym/components/error_msg_widget.dart";
-import "package:fight_gym/model/models.dart";
 import "package:fight_gym/provider/customer_provider.dart";
-import "package:fight_gym/utils/snackbar.dart";
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 
 class CustomerWidget extends HookConsumerWidget {
@@ -35,8 +32,7 @@ class CustomerWidget extends HookConsumerWidget {
                 children: [
                     ElevatedButton(
                         onPressed: () {
-                          // Navigate to Create Customer page
-                          goToCustomerCreatePage(context, ref);
+                          goToCreatePage(context, ref, AppRoutes.customerCreate);
                         },
                         style: customDarkThemeStyles.elevatedBtnStyleInsideContainer,
                         child: RichText(
@@ -69,10 +65,9 @@ class CustomerWidget extends HookConsumerWidget {
                 itemBuilder: (context, index) {
                   final record = records[index];
                   return ListTile(
-                    title: Text(record.name), // Adjust to your record model
+                    title: Text(record.name),
                     onTap: () {
-                      // Navigate to Update Customer page
-                      goToCustomerUpdatePage(context, ref, record);
+                      goToUpdatePage(context, ref, record, AppRoutes.customerUpdate);
                     },
                   );
                 },
@@ -89,13 +84,4 @@ class CustomerWidget extends HookConsumerWidget {
       loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
-}
-
-void goToCustomerCreatePage(context, ref){
-    Navigator.pushNamed(context, AppRoutes.customerCreate, arguments: {"test": "fon"});
-}
-
-void goToCustomerUpdatePage(BuildContext context, WidgetRef ref, Customer record) {
-    var url = "${AppRoutes.customerUpdate}?record_id=${record.id}";
-    Navigator.pushNamed(context, url, arguments: {"record": record});
 }

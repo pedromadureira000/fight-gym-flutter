@@ -1,5 +1,6 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:fight_gym/page/customer/customer.dart";
+import "package:fight_gym/styles/app_colors.dart";
 import "package:flutter/material.dart";
 import "package:fight_gym/config/app_routes.dart";
 import "package:fight_gym/data/local_storage/secure_storage.dart";
@@ -42,6 +43,12 @@ class MenuPage extends HookConsumerWidget {
         void onItemTapped(int index) {
             selectedIndex.value = index;
         }
+
+        void floatingActionButtonAddMethod() {
+            print('asdfafd');
+        }
+
+        CustomDarkThemeStyles customDarkThemeStyles = CustomDarkThemeStyles(Theme.of(context).brightness);
 
         return Scaffold(
             appBar: CustomMenuAppBar(),
@@ -113,6 +120,12 @@ class MenuPage extends HookConsumerWidget {
                         )
                     ],
                 ),
+            ),
+            floatingActionButton: FloatingActionButton(
+                onPressed: floatingActionButtonAddMethod,
+                backgroundColor: customDarkThemeStyles.getPrimaryColor,
+                foregroundColor: customDarkThemeStyles.getSecundaryColor,
+                child: const Icon(Icons.add),
             ),
             body: SizedBox(
                 width: kIsWeb ? MediaQuery.of(context).size.width : null,

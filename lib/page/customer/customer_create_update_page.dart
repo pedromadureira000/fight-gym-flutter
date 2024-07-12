@@ -37,21 +37,22 @@ class CustomerCreateOrUpdatePage extends HookConsumerWidget {
 
         // Get record from backend if isUpdate and page was accessed directly from url
         // and therefore ther is no argument passed througth Navigation.pushnamed
-        //like `http://localhost:33885/customer_update?record_id=1`
+        //like `http://localhost:33885/instance_update?record_id=1`
         Map? queryParameters = params.runtimeType == Map ? params["queryParameters"] : null;
         var recordIdQueryParameter = queryParameters?["record_id"];
-        if (kIsWeb && ModalRoute.of(context)!.settings.name!.contains("/customer_update")){
-            if (recordIdQueryParameter == null && record == null){
-                // is updated But there is no record_id query parameter for some reason
-                // and there is no record from arguments too
-                // AppConfig.logger.d('Update page without record id. Redirecting to menu.');
-                handlePopNavigation(context, AppRoutes.menu);
-            }
-            if (record == null){
-                // AppConfig.logger.d('record is null. Will get it notifier.getSingleRecord(recordIdQueryParameter); //return future. Requires await');
+        bool isRecordUpdatePageOnWebWithoutRecord = kIsWeb && record == null && 
+                ModalRoute.of(context)!.settings.name!.contains("/customer_update");
+        if (isRecordUpdatePageOnWebWithoutRecord){
+            if (recordIdQueryParameter != null){
+                // AppConfig.logger.d('record is null. Will get it notifier.getSingleRecord(recordIdQueryParameter);
+                //return future. Requires await');
                 var notifier = ref.read(asyncCustomersProvider.notifier);
                 record = notifier.getSingleRecord(recordIdQueryParameter); //return future. Requires await
             }
+            // is updated But there is no record_id query parameter for some reason
+            // and there is no record from arguments too
+            // AppConfig.logger.d('Update page without record id. Redirecting to menu.');
+            handlePopNavigation(context, AppRoutes.menu);
         }
 
         //Fields

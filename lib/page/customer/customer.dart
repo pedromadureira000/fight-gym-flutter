@@ -96,5 +96,6 @@ void goToCustomerCreatePage(context, ref){
 }
 
 void goToCustomerUpdatePage(BuildContext context, WidgetRef ref, Customer record) {
-    Navigator.pushNamed(context, AppRoutes.customerUpdate, arguments: {"record": record});
+    var url = "${AppRoutes.customerUpdate}?record_id=${record.id}";
+    Navigator.pushNamed(context, url, arguments: {"record": record});
 }

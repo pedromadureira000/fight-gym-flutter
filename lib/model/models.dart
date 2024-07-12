@@ -54,5 +54,8 @@ class Plan with _$Plan {
     String? description,
   }) = _Plan;
 
+  const Plan._(); // ADD THIS LINE TO ADD NEW METHODS LIKE getNameField
+  String getNameField() => plan_name;  // Used on SelectValueFromProviderListDropdown
+
   factory Plan.fromJson(Map<String, dynamic> json) => _$PlanFromJson(json);
 }

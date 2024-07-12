@@ -23,11 +23,36 @@ class CustomerCreateOrUpdatePage extends HookConsumerWidget {
     Widget build(BuildContext context, WidgetRef ref) {
         // AppConfig.logger.d('params $params');
         // AppConfig.logger.d('params type ${params.runtimeType}');
+        // 👇 Whem receiving queryParameters
+        // │ 🐛 params {queryParameters: {}}
+        // │ 🐛 params type IdentityMap<String, dynamic>
+
+        // 👇 When don't receiving queryParameters
+        // │ 🐛 params Builder
+        // │ 🐛 params type StatelessElement
+
+        // Get record from arguments if page was acessed from Navigation.pushNamed
         final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
-        var recordFromArguments = arguments["record"];
-        var record = recordFromArguments;
-        CustomDarkThemeStyles customDarkThemeStyles = CustomDarkThemeStyles(Theme.of(context).brightness);
-        Color textStyleColor = Theme.of(context).brightness == Brightness.light ? Colors.black : AppColors.lightBackground;
+        var record = arguments["record"];
+
+        // Get record from backend if isUpdate and page was accessed directly from url
+        // and therefore ther is no argument passed througth Navigation.pushnamed
+        //like `http://localhost:33885/customer_update?record_id=1`
+        Map? queryParameters = params["queryParameters"];
+        var recordIdQueryParameter = queryParameters?["record_id"];
+        if (kIsWeb && ModalRoute.of(context)!.settings.name!.contains("/customer_update")){
+            if (recordIdQueryParameter == null && record == null){
+                // is updated But there is no record_id query parameter for some reason
+                // and there is no record from arguments too
+                // AppConfig.logger.d('Update page without record id. Redirecting to menu.');
+                handlePopNavigation(context, AppRoutes.menu);
+            }
+            if (record == null){
+                // AppConfig.logger.d('record is null. Will get it notifier.getSingleRecord(recordIdQueryParameter); //return future. Requires await');
+                var notifier = ref.read(asyncCustomersProvider.notifier);
+                record = notifier.getSingleRecord(recordIdQueryParameter); //return future. Requires await
+            }
+        }
 
         //Fields
         final ValueNotifier selectedPlan = useState(""); // could not put it above. got weird error
@@ -37,10 +62,20 @@ class CustomerCreateOrUpdatePage extends HookConsumerWidget {
         useEffect(() {
             userAuthMiddleware(context);
             if (record != null){
-                setControllersData(ref, nameController, emailController, selectedPlan, record);
+                setControllersData(
+                    ref,
+                    nameController,
+                    emailController,
+                    selectedPlan,
+                    record
+                );
             }
             return null;
         }, const []);
+
+        CustomDarkThemeStyles customDarkThemeStyles = CustomDarkThemeStyles(Theme.of(context).brightness);
+        Color textStyleColor = Theme.of(context).brightness == Brightness.light ? Colors.black :
+                AppColors.lightBackground;
 
         return Scaffold(
             appBar: AppBar(
@@ -113,7 +148,10 @@ class CustomerCreateOrUpdatePage extends HookConsumerWidget {
                                                 ),
                                             ),
                                             const SizedBox(height: 16.0),
-                                            SelectValueFromProviderListDropdown(selectedPlan, asyncPlansProvider),
+                                            SelectValueFromProviderListDropdown(
+                                                selectedPlan,
+                                                asyncPlansProvider,
+                                            ),
                                             const SizedBox(height: 20.0),
                                             Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -165,9 +203,11 @@ class CustomerCreateOrUpdatePage extends HookConsumerWidget {
 }
 
 setControllersData(ref, nameController, emailController, selectedPlan, record) async{
-    if (record.runtimeType == Future<Customer>){
-        record = await record;
-    }
+    // if (record.runtimeType == Future<Customer>){ // Don't work anymore with new model constructor workaround 
+    // to use custom methods. Like this: [const Plan._(); // ADD THIS LINE TO ADD NEW METHODS LIKE getNameField]
+    // runtimeType will be _$CustomerImpl or a _Future<Customer>, 
+    //this new _Future was hard to check type so I just await both, since it don't raise error.
+    record = await record;
     nameController.text = record.name;
     emailController.text = record.email;
     selectedPlan.value = "${record.enrollment['plan']}";
@@ -238,7 +278,7 @@ class SelectValueFromProviderListDropdown extends HookConsumerWidget {
                                     .map<DropdownMenuItem<String>>((item) => DropdownMenuItem<String>( // This line throws the error
                                         value: "${item.id}",
                                         child: Text(
-                                            item.plan_name,
+                                            item.getNameField(),
                                             style: const TextStyle(
                                                 fontSize: 14,
                                             ),
@@ -311,7 +351,7 @@ showDeleteDialog(BuildContext context, WidgetRef ref, record){
                                                         foregroundColor: AppColors.lightBackground,
                                                     ),
                                                     onPressed: () {
-                                                        deleteRecord(ref, context, record, asyncPlansProvider);
+                                                        deleteRecord(ref, context, record, asyncCustomersProvider);
                                                     },
                                                     child: Text(tr("Delete"), style: AppText.normalText)
                                                 ),
@@ -358,7 +398,8 @@ deleteRecord(ref, context, record, providerClass) async {
     var provider = ref.read(providerClass.notifier);
     String result = await provider.removeRecord(record.id);
     if (result == "success"){
-        handlePopNavigation(context, AppRoutes.menu);
+        handlePopNavigation(context, AppRoutes.menu); // close dialog
+        handlePopNavigation(context, AppRoutes.menu); // close createUpdateWidget
     }
     else {
         showSnackBar(context, result, "error");

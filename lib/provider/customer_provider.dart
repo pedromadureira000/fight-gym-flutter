@@ -66,6 +66,46 @@ class AsyncCustomers extends _$AsyncCustomers {
         }
     }
 
+    Future<Customer> getSingleRecord(String? recordId) async {
+        try{
+            var token = await SecureStorage().readSecureData("token");
+            String url = "${AppConfig.backUrl}/customer_view/$recordId";
+            final response = await http.get(
+                Uri.parse(url),
+                headers: Constants.httpRequestHeaders(token),
+            );
+            if (response.statusCode != 200){
+                throw Exception("Error while trying to get record");
+            }
+            dynamic decodedJsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+            final record = Customer.fromJson(decodedJsonResponse);
+            return record;
+        } catch (err, stack) {
+            throw Exception(Constants.defaultErrorMsg);
+        }
+    }
+
+    Future<String> updateRecord(int? recordId, Customer newRecordData) async {
+        try{
+            var token = await SecureStorage().readSecureData("token");
+            Map recordMap = newRecordData.toJson();
+            recordMap['id'] = recordId;
+            var jsonBody = json.encode(recordMap);
+            final response = await http.put(
+                Uri.parse("${AppConfig.backUrl}/customer_view/$recordId"),
+                headers: Constants.httpRequestHeadersWithJsonBody(token),
+                body: jsonBody,
+            );
+            var requestError = response.statusCode != 200;
+            if (requestError) {
+                return getErrorMsg(response, Constants.defaultErrorMsg);
+            }
+            return "success";
+        } catch (err, stack) {
+            return Constants.defaultErrorMsg;
+        }
+    }
+
     Future<String> removeRecord(int recordId) async {
         try{
             var token = await SecureStorage().readSecureData("token");
@@ -84,46 +124,6 @@ class AsyncCustomers extends _$AsyncCustomers {
             return "success";
         } catch (err, stack) {
             return Constants.defaultErrorMsg;
-        }
-    }
-
-    Future<String> updateRecord(int? recordId, Customer newRecordData) async {
-        try{
-            var token = await SecureStorage().readSecureData("token");
-            Map recordMap = newRecordData.toJson();
-            recordMap['id'] = recordId;
-            var jsonBody = json.encode(recordMap);
-            final response = await http.patch(
-                Uri.parse("${AppConfig.backUrl}/customer_view/$recordId"),
-                headers: Constants.httpRequestHeadersWithJsonBody(token),
-                body: jsonBody,
-            );
-            var requestError = response.statusCode != 200;
-            if (requestError) {
-                return getErrorMsg(response, Constants.defaultErrorMsg);
-            }
-            return "success";
-        } catch (err, stack) {
-            return Constants.defaultErrorMsg;
-        }
-    }
-
-    Future<Customer> getSingleRecord(String? recordId) async {
-        try{
-            var token = await SecureStorage().readSecureData("token");
-            String url = "${AppConfig.backUrl}/customers_view/$recordId";
-            final response = await http.get(
-                Uri.parse(url),
-                headers: Constants.httpRequestHeaders(token),
-            );
-            if (response.statusCode != 200){
-                throw Exception("Error while trying to get record");
-            }
-            dynamic decodedJsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-            final record = Customer.fromJson(decodedJsonResponse);
-            return record;
-        } catch (err, stack) {
-            throw Exception(Constants.defaultErrorMsg);
         }
     }
 }

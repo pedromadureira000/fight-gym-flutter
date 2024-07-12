@@ -44,88 +44,88 @@ class MenuPage extends HookConsumerWidget {
         }
 
         return Scaffold(
-          appBar: CustomMenuAppBar(),
-          drawer: Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                const DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                  ),
-                  child: Text(
-                    'Menu',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
+            appBar: CustomMenuAppBar(),
+            drawer: Drawer(
+                child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: <Widget>[
+                        const DrawerHeader(
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                          ),
+                          child: Text(
+                            'Menu',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                            ),
+                          ),
+                        ),
+                        ListTile(
+                            selected: selectedIndex.value == 0,
+                            leading: const Icon(Icons.person),
+                            title: Text(tr("Customer")),
+                            onTap: () {
+                                onItemTapped(0);
+                                Navigator.pop(context);
+                            },
+                        ),
+                        ListTile(
+                            selected: selectedIndex.value == 1,
+                            leading: const Icon(Icons.card_membership),
+                            title: Text(tr("Membership Plan")),
+                            onTap: () {
+                                onItemTapped(1);
+                                Navigator.pop(context);
+                                // Navigator.pop(context); // Close the drawer
+                                // Navigator.pushReplacementNamed(
+                                    // context,
+                                    // AppRoutes.profile
+                                // );
+                            },
+                        ),
+                        ListTile(
+                            selected: selectedIndex.value == 2,
+                            leading: const Icon(Icons.fitness_center),
+                            title: Text(tr("Modality")),
+                            onTap: () {
+                                onItemTapped(2);
+                                Navigator.pop(context);
+                            },
+                        ),
+                        ListTile(
+                            selected: selectedIndex.value == 3,
+                            leading: const Icon(Icons.check_circle),
+                            title: Text(tr("Attendance")),
+                            onTap: () {
+                                onItemTapped(3);
+                                Navigator.pop(context);
+                            },
+                        ),
+                        ListTile(
+                            selected: selectedIndex.value == 4,
+                            leading: const Icon(Icons.payment),
+                            title: Text(tr("Payment")),
+                            onTap: () {
+                                onItemTapped(4);
+                                Navigator.pop(context);
+                            },
+                        )
+                    ],
+                ),
+            ),
+            body: SizedBox(
+                width: kIsWeb ? MediaQuery.of(context).size.width : null,
+                child: Padding(
+                  padding: const EdgeInsets.all(kIsWeb ? 15 : 1),
+                  child: SizedBox(
+                    width: kIsWeb ? MediaQuery.of(context).size.width : null,
+                    child: Center(
+                        child: widgetOptions[selectedIndex.value],
                     ),
                   ),
                 ),
-                ListTile(
-                    selected: selectedIndex.value == 0,
-                    leading: const Icon(Icons.person),
-                    title: Text(tr("Customer")),
-                    onTap: () {
-                        onItemTapped(0);
-                        Navigator.pop(context);
-                    },
-                ),
-                ListTile(
-                    selected: selectedIndex.value == 1,
-                    leading: const Icon(Icons.card_membership),
-                    title: Text(tr("Membership Plan")),
-                    onTap: () {
-                        onItemTapped(1);
-                        Navigator.pop(context);
-                        // Navigator.pop(context); // Close the drawer
-                        // Navigator.pushReplacementNamed(
-                            // context,
-                            // AppRoutes.profile
-                        // );
-                    },
-                ),
-                ListTile(
-                    selected: selectedIndex.value == 2,
-                    leading: const Icon(Icons.fitness_center),
-                    title: Text(tr("Modality")),
-                    onTap: () {
-                        onItemTapped(2);
-                        Navigator.pop(context);
-                    },
-                ),
-                ListTile(
-                    selected: selectedIndex.value == 3,
-                    leading: const Icon(Icons.check_circle),
-                    title: Text(tr("Attendance")),
-                    onTap: () {
-                        onItemTapped(3);
-                        Navigator.pop(context);
-                    },
-                ),
-                ListTile(
-                    selected: selectedIndex.value == 4,
-                    leading: const Icon(Icons.payment),
-                    title: Text(tr("Payment")),
-                    onTap: () {
-                        onItemTapped(4);
-                        Navigator.pop(context);
-                    },
-                )
-              ],
             ),
-          ),
-          body: SizedBox(
-            width: kIsWeb ? MediaQuery.of(context).size.width : null,
-            child: Padding(
-              padding: const EdgeInsets.all(kIsWeb ? 15 : 1),
-              child: SizedBox(
-                width: kIsWeb ? MediaQuery.of(context).size.width : null,
-                child: Center(
-                    child: widgetOptions[selectedIndex.value],
-                ),
-              ),
-            ),
-          ),
         );
     }
 }

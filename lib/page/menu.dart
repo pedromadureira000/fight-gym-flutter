@@ -1,5 +1,6 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:fight_gym/page/customer/customer.dart";
+import "package:fight_gym/page/facade.dart";
 import "package:fight_gym/styles/app_colors.dart";
 import "package:flutter/material.dart";
 import "package:fight_gym/config/app_routes.dart";
@@ -22,30 +23,33 @@ class MenuPage extends HookConsumerWidget {
             return null;
         }, const []);
 
-        final ValueNotifier selectedIndex = useState(0);
+        final ValueNotifier selectedMenu = useState("customer");
 
-        const List<Widget> widgetOptions = <Widget>[
-            CustomerWidget(),
-            Text(
-                'Index 1: MembershipPlan',
-            ),
-            Text(
-                'Index 2: Modality',
-            ),
-            Text(
-                'Index 3: Attendance',
-            ),
-            Text(
-                'Index 4: Payment',
-            ),
-        ];
-
-        void onItemTapped(int index) {
-            selectedIndex.value = index;
-        }
+        const Map<String, dynamic> widgetOptions = {
+            "customer": {
+                "widget": CustomerWidget(),
+                "addInstanceRoute": AppRoutes.customerCreate,
+            },
+            "plan": {
+                "widget": Text('2'),
+                "addInstanceRoute": AppRoutes.customerCreate,
+            },
+            "modality": {
+                "widget": Text('3'),
+                "addInstanceRoute": AppRoutes.customerCreate,
+            },
+            "attendance": {
+                "widget": Text('4'),
+                "addInstanceRoute": AppRoutes.customerCreate,
+            },
+            "payment": {
+                "widget": Text('5'),
+                "addInstanceRoute": AppRoutes.customerCreate,
+            }, 
+        };
 
         void floatingActionButtonAddMethod() {
-            print('asdfafd');
+           goToCreatePage(context, ref, widgetOptions[selectedMenu.value]["addInstanceRoute"]);
         }
 
         CustomDarkThemeStyles customDarkThemeStyles = CustomDarkThemeStyles(Theme.of(context).brightness);
@@ -69,20 +73,20 @@ class MenuPage extends HookConsumerWidget {
                           ),
                         ),
                         ListTile(
-                            selected: selectedIndex.value == 0,
+                            selected: selectedMenu.value == "customer",
                             leading: const Icon(Icons.person),
                             title: Text(tr("Customer")),
                             onTap: () {
-                                onItemTapped(0);
+                                selectedMenu.value = "customer";
                                 Navigator.pop(context);
                             },
                         ),
                         ListTile(
-                            selected: selectedIndex.value == 1,
+                            selected: selectedMenu.value == "plan",
                             leading: const Icon(Icons.card_membership),
                             title: Text(tr("Membership Plan")),
                             onTap: () {
-                                onItemTapped(1);
+                                selectedMenu.value = "plan";
                                 Navigator.pop(context);
                                 // Navigator.pop(context); // Close the drawer
                                 // Navigator.pushReplacementNamed(
@@ -92,29 +96,29 @@ class MenuPage extends HookConsumerWidget {
                             },
                         ),
                         ListTile(
-                            selected: selectedIndex.value == 2,
+                            selected: selectedMenu.value == "modality",
                             leading: const Icon(Icons.fitness_center),
                             title: Text(tr("Modality")),
                             onTap: () {
-                                onItemTapped(2);
+                                selectedMenu.value = "modality";
                                 Navigator.pop(context);
                             },
                         ),
                         ListTile(
-                            selected: selectedIndex.value == 3,
+                            selected: selectedMenu.value == "attendance",
                             leading: const Icon(Icons.check_circle),
                             title: Text(tr("Attendance")),
                             onTap: () {
-                                onItemTapped(3);
+                                selectedMenu.value = "attendance";
                                 Navigator.pop(context);
                             },
                         ),
                         ListTile(
-                            selected: selectedIndex.value == 4,
+                            selected: selectedMenu.value == "payment",
                             leading: const Icon(Icons.payment),
                             title: Text(tr("Payment")),
                             onTap: () {
-                                onItemTapped(4);
+                                selectedMenu.value = "payment";
                                 Navigator.pop(context);
                             },
                         )
@@ -134,7 +138,7 @@ class MenuPage extends HookConsumerWidget {
                   child: SizedBox(
                     width: kIsWeb ? MediaQuery.of(context).size.width : null,
                     child: Center(
-                        child: widgetOptions[selectedIndex.value],
+                        child: widgetOptions[selectedMenu.value]["widget"],
                     ),
                   ),
                 ),

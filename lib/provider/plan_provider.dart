@@ -8,16 +8,16 @@ import "package:fight_gym/constants/constants.dart";
 import "package:fight_gym/model/models.dart";
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-part "customer_provider.g.dart";
+part "plan_provider.g.dart";
 
 @Riverpod(keepAlive: true)
-class AsyncCustomers extends _$AsyncCustomers {
+class AsyncPlans extends _$AsyncPlans {
     @override
-    FutureOr<List<Customer>> build() async {
+    FutureOr<List<Plan>> build() async {
         return _fetchData();
     }
 
-    Future<List<Customer>> _fetchData() async {
+    Future<List<Plan>> _fetchData() async {
         var token = await SecureStorage().readSecureData("token");
         if (token.isEmpty){throw Exception("The user's token is missing");}
 
@@ -28,14 +28,14 @@ class AsyncCustomers extends _$AsyncCustomers {
 
         try {
             final response = await http.get(
-                Uri.parse("${AppConfig.backUrl}/list_customers_view"),
+                Uri.parse("${AppConfig.backUrl}/list_plan_view"),
                 headers: Constants.httpRequestHeaders(token),
             );
             if (response.statusCode == 200){
                 dynamic decodedJsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
                 int totalRecords = decodedJsonResponse["totalRecords"];
                 final records = (decodedJsonResponse["result"] as List<dynamic>).cast<Map<String, dynamic>>();
-                List<Customer> listRecords = records.map(Customer.fromJson).toList();
+                List<Plan> listRecords = records.map(Plan.fromJson).toList();
                 return listRecords;
             }
             throw getErrorMsg(response, Constants.defaultErrorMsg);
@@ -46,13 +46,13 @@ class AsyncCustomers extends _$AsyncCustomers {
         }
     }
 
-    Future<(String, dynamic)> addRecord(Customer record) async {
+    Future<(String, dynamic)> addRecord(Plan record) async {
         try{
             Map recordMap = record.toJson();
             var jsonBody = json.encode(recordMap);
             var token = await SecureStorage().readSecureData("token");
             final response = await http.post(
-                Uri.parse("${AppConfig.backUrl}/customer_view"),
+                Uri.parse("${AppConfig.backUrl}/plan_view"),
                 headers: Constants.httpRequestHeadersWithJsonBody(token),
                 body:jsonBody 
             );
@@ -73,7 +73,7 @@ class AsyncCustomers extends _$AsyncCustomers {
                 "id": recordId,
             });
             final response = await http.delete(
-                Uri.parse("${AppConfig.backUrl}/customer_view/$recordId"),
+                Uri.parse("${AppConfig.backUrl}/plan_view/$recordId"),
                 headers: Constants.httpRequestHeadersWithJsonBody(token),
                 body:jsonBody 
             );
@@ -87,14 +87,14 @@ class AsyncCustomers extends _$AsyncCustomers {
         }
     }
 
-    Future<String> updateRecord(int? recordId, Customer newRecordData) async {
+    Future<String> updateRecord(int? recordId, Plan newRecordData) async {
         try{
             var token = await SecureStorage().readSecureData("token");
             Map recordMap = newRecordData.toJson();
             recordMap['id'] = recordId;
             var jsonBody = json.encode(recordMap);
             final response = await http.patch(
-                Uri.parse("${AppConfig.backUrl}/customer_view/$recordId"),
+                Uri.parse("${AppConfig.backUrl}/plan_view/$recordId"),
                 headers: Constants.httpRequestHeadersWithJsonBody(token),
                 body: jsonBody,
             );
@@ -108,10 +108,10 @@ class AsyncCustomers extends _$AsyncCustomers {
         }
     }
 
-    Future<Customer> getSingleRecord(String? recordId) async {
+    Future<Plan> getSingleRecord(String? recordId) async {
         try{
             var token = await SecureStorage().readSecureData("token");
-            String url = "${AppConfig.backUrl}/customers_view/$recordId";
+            String url = "${AppConfig.backUrl}/plan_view/$recordId";
             final response = await http.get(
                 Uri.parse(url),
                 headers: Constants.httpRequestHeaders(token),
@@ -120,7 +120,7 @@ class AsyncCustomers extends _$AsyncCustomers {
                 throw Exception("Error while trying to get record");
             }
             dynamic decodedJsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-            final record = Customer.fromJson(decodedJsonResponse);
+            final record = Plan.fromJson(decodedJsonResponse);
             return record;
         } catch (err, stack) {
             throw Exception(Constants.defaultErrorMsg);

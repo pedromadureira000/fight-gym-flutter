@@ -40,7 +40,6 @@ class AsyncUser extends _$AsyncUser {
         }
         dynamic userMap = jsonDecode(utf8.decode(response.bodyBytes));
         User user = User.fromJson(userMap);
-        AppConfig.logger.d("user ${user}");
         return user;
     }
     

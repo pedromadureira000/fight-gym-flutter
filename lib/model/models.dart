@@ -43,3 +43,16 @@ class Customer with _$Customer {
 
   factory Customer.fromJson(Map<String, dynamic> json) => _$CustomerFromJson(json);
 }
+
+
+@freezed
+class Plan with _$Plan {
+  factory Plan({
+    int? id,
+    required String plan_name,
+    required dynamic price,
+    String? description,
+  }) = _Plan;
+
+  factory Plan.fromJson(Map<String, dynamic> json) => _$PlanFromJson(json);
+}

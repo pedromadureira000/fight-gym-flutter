@@ -1,3 +1,4 @@
+import "package:fight_gym/config/app_config.dart";
 import "package:fight_gym/config/app_routes.dart";
 import 'package:fight_gym/styles/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -90,8 +91,8 @@ class CustomerWidget extends HookConsumerWidget {
   }
 }
 
-void goToCustomerCreatePage(context, ref, {fromGroup}){
-    Navigator.pushNamed(context,AppRoutes.customerCreate);
+void goToCustomerCreatePage(context, ref){
+    Navigator.pushNamed(context, AppRoutes.customerCreate, arguments: {"test": "fon"});
 }
 
 void goToCustomerUpdatePage(BuildContext context, WidgetRef ref, Customer record) {

@@ -4,7 +4,7 @@ part 'models.freezed.dart';
 part 'models.g.dart';
 
 
-@freezed
+@unfreezed
 class User with _$User {
   factory User({
     int? id,
@@ -28,7 +28,7 @@ class Configs with _$Configs {
 }
 
 
-@freezed
+@unfreezed
 class Customer with _$Customer {
   factory Customer({
     int? id,
@@ -45,7 +45,7 @@ class Customer with _$Customer {
 }
 
 
-@freezed
+@unfreezed
 class Plan with _$Plan {
   factory Plan({
     int? id,

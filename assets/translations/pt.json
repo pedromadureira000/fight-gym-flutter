@@ -99,6 +99,8 @@
     "Modality": "Modalidade",
     "Attendance": "Presença",
     "Payment": "Pagamento",
+    "An unknown error has occurred": "Ocorreu um erro desconhecido",
+    "Add Customer": "Adicionar Aluno",
 
     "name": "nome",
     "password": "senha",

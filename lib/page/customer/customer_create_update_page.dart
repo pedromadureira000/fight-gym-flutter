@@ -38,7 +38,7 @@ class CustomerCreateOrUpdatePage extends HookConsumerWidget {
         // Get record from backend if isUpdate and page was accessed directly from url
         // and therefore ther is no argument passed througth Navigation.pushnamed
         //like `http://localhost:33885/customer_update?record_id=1`
-        Map? queryParameters = params["queryParameters"];
+        Map? queryParameters = params.runtimeType == Map ? params["queryParameters"] : null;
         var recordIdQueryParameter = queryParameters?["record_id"];
         if (kIsWeb && ModalRoute.of(context)!.settings.name!.contains("/customer_update")){
             if (recordIdQueryParameter == null && record == null){
@@ -370,39 +370,58 @@ showDeleteDialog(BuildContext context, WidgetRef ref, record){
 
 
 addRecord (ref, newRecord, context, providerClass) async {
-    var notifier = ref.read(providerClass.notifier);
-    var (result, recordMap) = await notifier.addRecord(newRecord);
-    if (result == "success"){
-        // notifier.addRecordLocaly(newRecord, recordMap);
-        handlePopNavigation(context, AppRoutes.menu);
-    }
-    else {
-        showSnackBar(context, result, "error");
+    try {
+        var notifier = ref.read(providerClass.notifier);
+        var (result, recordMap) = await notifier.addRecord(newRecord);
+        if (result == "success"){
+            notifier.addRecordLocaly(newRecord, recordMap);
+            handlePopNavigation(context, AppRoutes.menu);
+        }
+        else {
+            showSnackBar(context, result, "error");
+        }
+    } catch (err, stack) {
+        AppConfig.logger.d("Unknown Error: $err");
+        AppConfig.logger.d("Unknown Error: stack $stack");
+        showSnackBar(context, tr("An unknown error has occurred"), "error");
     }
 }
 
 updateRecord (ref, newRecord, context, record, providerClass) async {
-    record = await record;
-    var providerObj = ref.read(providerClass.notifier);
-    String result = await providerObj.updateRecord(record.id, newRecord);
-    if (result == "success"){
-        // providerObj.updateRecordLocaly(newRecord, record);
-        handlePopNavigation(context, AppRoutes.menu);
-    }
-    else {
-        showSnackBar(context, result, "error");
+    try {
+        record = await record;
+        var providerObj = ref.read(providerClass.notifier);
+        String result = await providerObj.updateRecord(record.id, newRecord);
+        if (result == "success"){
+            providerObj.updateRecordLocaly(newRecord, record);
+            handlePopNavigation(context, AppRoutes.menu);
+        }
+        else {
+            showSnackBar(context, result, "error");
+        }
+    } catch (err, stack) {
+        AppConfig.logger.d("Unknown Error: $err");
+        AppConfig.logger.d("Unknown Error: stack $stack");
+        showSnackBar(context, tr("An unknown error has occurred"), "error");
     }
 }
 
 deleteRecord(ref, context, record, providerClass) async {
-    var provider = ref.read(providerClass.notifier);
-    String result = await provider.removeRecord(record.id);
-    if (result == "success"){
-        handlePopNavigation(context, AppRoutes.menu); // close dialog
-        handlePopNavigation(context, AppRoutes.menu); // close createUpdateWidget
-    }
-    else {
-        showSnackBar(context, result, "error");
+    try {
+        var provider = ref.read(providerClass.notifier);
+        String result = await provider.removeRecord(record.id);
+        if (result == "success"){
+            provider.deleteRecordLocaly(record);
+            handlePopNavigation(context, AppRoutes.menu); // close dialog
+            handlePopNavigation(context, AppRoutes.menu); // close createUpdateWidget
+        }
+        else {
+            showSnackBar(context, result, "error");
+        }
+    } catch (err, stack) {
+        AppConfig.logger.d("Unknown Error: $err");
+        AppConfig.logger.d("Unknown Error: stack $stack");
+        showSnackBar(context, tr("An unknown error has occurred"), "error");
     }
 }
 

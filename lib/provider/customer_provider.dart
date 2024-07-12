@@ -126,4 +126,27 @@ class AsyncCustomers extends _$AsyncCustomers {
             return Constants.defaultErrorMsg;
         }
     }
+
+    addRecordLocaly(newRecordObj, recordMap) {
+        newRecordObj.id = recordMap["id"];
+        state.value!.insert(0, newRecordObj);
+        state = state;
+    }
+
+    updateRecordLocaly(newRecordObj, oldRecordOjb) {
+        var elIndex = state.value!.indexWhere((el) => el.id == oldRecordOjb.id);
+        state.value!.removeAt(elIndex);
+        newRecordObj.id = oldRecordOjb.id;
+        state.value!.insert(elIndex, newRecordObj);
+        state = state;
+    }
+
+    deleteRecordLocaly(record) {
+        state.value!.removeWhere((el) => el.id == record.id);
+        state = state;
+    }
+
+    offlineRefresh() {
+        state = state;
+    }
 }

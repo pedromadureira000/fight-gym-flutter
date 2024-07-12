@@ -33,31 +33,31 @@ class CustomerWidget extends HookConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      // Navigate to Create Customer page
-                      goToCustomerCreatePage(context, ref);
-                    },
-                    style: customDarkThemeStyles.elevatedBtnStyleInsideContainer,
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          const WidgetSpan(
-                            child: Icon(Icons.add, size: 19),
+                    ElevatedButton(
+                        onPressed: () {
+                          // Navigate to Create Customer page
+                          goToCustomerCreatePage(context, ref);
+                        },
+                        style: customDarkThemeStyles.elevatedBtnStyleInsideContainer,
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              const WidgetSpan(
+                                child: Icon(Icons.add, size: 19),
+                              ),
+                              TextSpan(
+                                text: tr("Add Customer"),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Theme.of(context).brightness == Brightness.light
+                                      ? AppColors.lightBackground
+                                      : Colors.black,
+                                ),
+                              ),
+                            ],
                           ),
-                          TextSpan(
-                            text: tr("Create Customer"),
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).brightness == Brightness.light
-                                  ? AppColors.lightBackground
-                                  : Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
                     ),
-                  ),
                   const SizedBox(width: 10),
                 ],
               ),

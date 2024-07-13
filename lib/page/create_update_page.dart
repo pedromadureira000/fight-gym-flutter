@@ -1,11 +1,10 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:fight_gym/components/dialogs.dart";
-import "package:fight_gym/components/dropdown.dart";
+import "package:fight_gym/config/app_config.dart";
 import "package:fight_gym/config/app_routes.dart";
 import "package:fight_gym/page/facade.dart";
 import "package:flutter/material.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
-import "package:fight_gym/provider/plan_provider.dart";
 import "package:fight_gym/styles/app_colors.dart";
 import "package:fight_gym/styles/app_text.dart";
 import "package:fight_gym/utils/user_auth_middleware.dart";
@@ -14,23 +13,25 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 
 class CreateOrUpdatePage extends HookConsumerWidget {
-    CreateOrUpdatePage(
-        {
-            super.key,
-            this.params = const {},
-            required this.updateUrl,
-            required this.provider,
-            required this.instanceModel,
-        }
-    );
+    CreateOrUpdatePage({
+        super.key,
+        this.params = const {},
+        required this.updateUrl,
+        required this.provider,
+        required this.fodderRecordObjCauseFlutterCantPassClsAsParam
+    });
     dynamic params;
     final String updateUrl;
-    // final AsyncNotifierProvider provider;
     final dynamic provider;
-    final dynamic instanceModel;
+    final dynamic fodderRecordObjCauseFlutterCantPassClsAsParam;
 
     @override
     Widget build(BuildContext context, WidgetRef ref) {
+        CustomDarkThemeStyles customDarkThemeStyles = CustomDarkThemeStyles(Theme.of(context).brightness);
+        Color textStyleColor = Theme.of(context).brightness == Brightness.light ? Colors.black :
+                AppColors.lightBackground;
+
+        var getInstanceFromControllers = fodderRecordObjCauseFlutterCantPassClsAsParam.getInstanceFromControllers;
         // AppConfig.logger.d('params $params');
         // AppConfig.logger.d('params type ${params.runtimeType}');
         // 👇 Whem receiving queryParameters
@@ -65,28 +66,20 @@ class CreateOrUpdatePage extends HookConsumerWidget {
             handlePopNavigation(context, AppRoutes.menu);
         }
 
-        //Fields
-        final ValueNotifier selectedPlan = useState(""); // could not put it above. got weird error
-        final nameController = useTextEditingController();
-        final emailController = useTextEditingController();
+        Map controllerFields = fodderRecordObjCauseFlutterCantPassClsAsParam.getControllerFields(context);
+        List<dynamic> listOfFieldWidgets = fodderRecordObjCauseFlutterCantPassClsAsParam.getListOfFieldWidgets(context, customDarkThemeStyles, controllerFields);
 
         useEffect(() {
             userAuthMiddleware(context);
             if (record != null){
-                setControllersData(
+                fodderRecordObjCauseFlutterCantPassClsAsParam.setControllersData(
                     ref,
-                    nameController,
-                    emailController,
-                    selectedPlan,
+                    controllerFields,
                     record
                 );
             }
             return null;
         }, const []);
-
-        CustomDarkThemeStyles customDarkThemeStyles = CustomDarkThemeStyles(Theme.of(context).brightness);
-        Color textStyleColor = Theme.of(context).brightness == Brightness.light ? Colors.black :
-                AppColors.lightBackground;
 
         return Scaffold(
             appBar: AppBar(
@@ -130,39 +123,7 @@ class CreateOrUpdatePage extends HookConsumerWidget {
                                                 ],
                                             ),
                                             const SizedBox(height: 16.0),
-                                            TextField(
-                                                minLines: 1,
-                                                maxLines: null,
-                                                controller: nameController,
-                                                style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) : Theme.of(context).textTheme.titleMedium,
-                                                decoration: InputDecoration(
-                                                    labelText: tr("Name"),
-                                                    border: const OutlineInputBorder(
-                                                        borderRadius: BorderRadius.all(Radius.circular(12))
-                                                    ),
-                                                    filled: true,
-                                                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
-                                                ),
-                                            ),
-                                            const SizedBox(height: 16.0),
-                                            TextField(
-                                                minLines: 1,
-                                                maxLines: null,
-                                                controller: emailController,
-                                                decoration: InputDecoration(
-                                                    labelText: tr("Email"),
-                                                    border: const OutlineInputBorder(
-                                                        borderRadius: BorderRadius.all(Radius.circular(12))
-                                                    ),
-                                                    filled: true,
-                                                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
-                                                ),
-                                            ),
-                                            const SizedBox(height: 16.0),
-                                            SelectValueFromProviderListDropdown(
-                                                selectedPlan,
-                                                asyncPlansProvider,
-                                            ),
+                                            ...listOfFieldWidgets,
                                             const SizedBox(height: 20.0),
                                             Row(
                                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -177,24 +138,18 @@ class CreateOrUpdatePage extends HookConsumerWidget {
                                                     ElevatedButton(
                                                         style: customDarkThemeStyles.elevatedBtnStyle,
                                                         onPressed: () {
-                                                            var newRecord = instanceModel(
-                                                                name: nameController.text.trim(),
-                                                                email: emailController.text.trim(),
-                                                                phone: "phone",
-                                                                family_phone: "family_phone",
-                                                                address: "address",
-                                                                birthday: DateTime.now(),
-                                                                enrollment: {
-                                                                    "plan": int.parse(selectedPlan.value),
-                                                                    "subscription_status": 1
-                                                                }
-                                                            );
-                                                            if (record != null){
-                                                                updateRecord(ref, newRecord, context, record, provider);
-                                                            }
-                                                            else {
-                                                                addRecord(ref, newRecord, context, provider);
-                                                            }
+                                                            AppConfig.logger.d("getInstanceFromControllers ${getInstanceFromControllers}");
+                                                            var newRecord = getInstanceFromControllers(controllerFields);
+
+                                                            // AppConfig.logger.d("fodderRecordObjCauseFlutterCantPassClsAsParam.getInstanceFromControllers ${fodderRecordObjCauseFlutterCantPassClsAsParam.getInstanceFromControllers}");
+                                                            // var newRecord = fodderRecordObjCauseFlutterCantPassClsAsParam.getInstanceFromControllers(controllerFields);
+                                                            AppConfig.logger.d("newRecord $newRecord");
+                                                            // if (record != null){
+                                                                // updateRecord(ref, newRecord, context, record, provider);
+                                                            // }
+                                                            // else {
+                                                                // addRecord(ref, newRecord, context, provider);
+                                                            // }
                                                         },
                                                         child: record != null ? Text(tr("Update"), style: AppText.normalText) :
                                                             Text(tr("Add"), style: AppText.normalText),

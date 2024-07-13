@@ -79,30 +79,3 @@ void handlePopNavigation(BuildContext context, namedRoute) {
         );
     }
 }
-
-setControllersData(ref, nameController, emailController, selectedPlan, record) async{
-    // if (record.runtimeType == Future<Customer>){ // Don't work anymore with new model constructor workaround 
-    // to use custom methods. Like this: [const Plan._(); // ADD THIS LINE TO ADD NEW METHODS LIKE getNameField]
-    // runtimeType will be _$CustomerImpl or a _Future<Customer>, 
-    //this new _Future was hard to check type so I just await both, since it don't raise error.
-    record = await record;
-    nameController.text = record.name;
-    emailController.text = record.email;
-    selectedPlan.value = "${record.enrollment['plan']}";
-}
-
-createInstanceFroModel(ref, instanceModel, controllerFields, ValueNotifierFields) async{
-    var newInstance = instanceModel(
-        name: nameController.text.trim(),
-        email: emailController.text.trim(),
-        phone: "phone",
-        family_phone: "family_phone",
-        address: "address",
-        birthday: DateTime.now(),
-        enrollment: {
-            "plan": int.parse(selectedPlan.value),
-            "subscription_status": 1
-        }
-    );
-    return newInstance;
-}

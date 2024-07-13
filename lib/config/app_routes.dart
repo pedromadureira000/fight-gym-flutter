@@ -19,13 +19,13 @@ class AppRoutes {
         params: params,
         updateUrl: "/customer_update",
         provider: asyncCustomersProvider,
-        instanceModel: Customer,
+        fodderRecordObjCauseFlutterCantPassClsAsParam: Customer(name: "fodderRecordObjCauseFlutterCantPassClsAsParam", enrollment: {}),
     ),
     customerUpdate: (params) => CreateOrUpdatePage(
         params: params,
         updateUrl: "/customer_update",
         provider: asyncCustomersProvider,
-        instanceModel: Customer,
+        fodderRecordObjCauseFlutterCantPassClsAsParam: Customer(name: "fodderRecordObjCauseFlutterCantPassClsAsParam", enrollment: {}),
     ),
   };
 

@@ -130,6 +130,25 @@ class AsyncCustomers extends _$AsyncCustomers {
         }
     }
 
+    Future<void> fetchMoreRecords(recordsLength) async {
+        var token = await SecureStorage().readSecureData("token");
+        String url = "${AppConfig.backUrl}/list_customers_view?startingIndex=$recordsLength";
+        final response = await http.get(
+            Uri.parse(url),
+            headers: Constants.httpRequestHeaders(token),
+        );
+        if (response.statusCode != 200){
+            throw Exception("Error while trying to get records");
+        }
+        dynamic decodedJsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
+        int totalRecords = decodedJsonResponse["totalRecords"];
+        final records = (decodedJsonResponse["result"] as List<dynamic>).cast<Map<String, dynamic>>();
+        List<Customer> listRecords = records.map(Customer.fromJson).toList();
+        state.value!["totalRecords"] = totalRecords;
+        state.value!["listRecords"].addAll(listRecords);
+        state = state; // to refresh page
+    }
+
     addRecordLocaly(newRecordObj, recordMap) {
         newRecordObj.id = recordMap["id"];
         if (state.value != null){ // XXX avoid to update localy if it has not been fetched yet

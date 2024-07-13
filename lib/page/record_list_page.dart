@@ -1,3 +1,4 @@
+import 'package:fight_gym/config/app_config.dart';
 import 'package:fight_gym/page/facade.dart';
 import 'package:fight_gym/styles/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -24,49 +25,6 @@ class ListPage extends HookConsumerWidget {
     Widget build(BuildContext context, WidgetRef ref) {
         final asyncValue = ref.watch(provider);
         CustomDarkThemeStyles customDarkThemeStyles = CustomDarkThemeStyles(Theme.of(context).brightness);
-
-        // int totalRecords = group.totalRecords ?? 0;
-        // int recordsLength = group.records != null ? group.records!.length : 0;
-        // final showLoadMoreBtn = recordsLength < totalRecords;
-        // int indexOfLastEl = group.records != null ? group.records!.length : 0;
-        // int masonItemCount = group.records != null ? group.records!.length : 0;
-        // if (showLoadMoreBtn){
-            // masonItemCount += 1;
-        // }
-        // MasonryGridView.count(
-            // itemCount: masonItemCount,
-            // itemBuilder: (context, index) {
-                // if (showLoadMoreBtn && index == indexOfLastEl){
-                    // return Column(
-                        // children: <Widget>[
-                            // Text(tr("Load more")),
-                            // IconButton(
-                                // highlightColor: Colors.transparent,
-                                // splashColor: Colors.transparent,
-                                // hoverColor: Colors.transparent,
-                                // icon: const Icon(Icons.sync),
-                                // onPressed: () {
-                                    // fetchRecordsByGroup(
-                                        // ref,
-                                        // context,
-                                        // group.id,
-                                        // loadMore: true,
-                                    // );
-                                // },
-                            // )
-                        // ],
-                    // );
-                // }
-                // else {
-                    // return NoteItemTile(
-                        // context: context,
-                        // ref: ref,
-                        // record: group.records![index],
-                        // customDarkThemeStyles: customDarkThemeStyles,
-                    // );
-                // }
-            // },
-        // );
 
         return switch (asyncValue) {
             AsyncData(:final value) => RefreshIndicator(
@@ -110,7 +68,7 @@ class ListPage extends HookConsumerWidget {
                                 ],
                             ),
                             const SizedBox(height: 10),
-                            ListOfRecords(value, updateRecordNamedRoute)
+                            ListOfRecords(value, updateRecordNamedRoute, provider)
                         ],
                     ),
                 ),
@@ -127,25 +85,56 @@ class ListPage extends HookConsumerWidget {
 
 
 class ListOfRecords extends HookConsumerWidget {
-    ListOfRecords(this.response, this.updateRecordNamedRoute, {super.key});
+    ListOfRecords(this.response, this.updateRecordNamedRoute, this.provider, {super.key});
 
     final dynamic response;
     final dynamic updateRecordNamedRoute;
+    final dynamic provider;
 
     @override
     Widget build(BuildContext context, WidgetRef ref) {
+        int totalRecords = response["totalRecords"];
+        int recordsLength = response["listRecords"].length;
+        final showLoadMoreBtn = recordsLength < totalRecords;
+        int indexOfLastEl = recordsLength;
+
+        int itemCount = response["listRecords"].length;
+
+        if (showLoadMoreBtn){
+            itemCount += 1; // The last element will be the btn
+        }
+
         return ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: response["listRecords"].length,
+            itemCount: itemCount,
             itemBuilder: (context, index) {
-                final record = response["listRecords"][index];
-                return ListTile(
-                    title: Text(record.name),
-                    onTap: () {
-                        goToUpdatePage(context, ref, record, updateRecordNamedRoute);
-                    },
-                );
+                if (showLoadMoreBtn && index == indexOfLastEl){
+                    return Column(
+                        children: <Widget>[
+                            Text(tr("Load more")),
+                            IconButton(
+                                highlightColor: Colors.transparent,
+                                splashColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
+                                icon: const Icon(Icons.sync),
+                                onPressed: () {
+                                    var notifier = ref.read(provider.notifier);
+                                    notifier.fetchMoreRecords(recordsLength);
+                                },
+                            )
+                        ],
+                    );
+                }
+                else {
+                    final record = response["listRecords"][index];
+                    return ListTile(
+                        title: Text(record.name),
+                        onTap: () {
+                            goToUpdatePage(context, ref, record, updateRecordNamedRoute);
+                        },
+                    );
+                }
             },
         );
     }

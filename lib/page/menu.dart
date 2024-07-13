@@ -37,19 +37,19 @@ class MenuPage extends HookConsumerWidget {
                 "addInstanceRoute": AppRoutes.customerCreate,
             },
             "plan": {
-                "widget": Text('2'),
+                "widget": const Text('2'),
                 "addInstanceRoute": AppRoutes.customerCreate,
             },
             "modality": {
-                "widget": Text('3'),
+                "widget": const Text('3'),
                 "addInstanceRoute": AppRoutes.customerCreate,
             },
             "attendance": {
-                "widget": Text('4'),
+                "widget": const Text('4'),
                 "addInstanceRoute": AppRoutes.customerCreate,
             },
             "payment": {
-                "widget": Text('5'),
+                "widget": const Text('5'),
                 "addInstanceRoute": AppRoutes.customerCreate,
             }, 
         };

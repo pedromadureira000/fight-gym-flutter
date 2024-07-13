@@ -166,6 +166,5 @@ class ListPage extends HookConsumerWidget {
             // default:
                 // return const Center(child: CircularProgressIndicator());
         // }
-
     }
 }

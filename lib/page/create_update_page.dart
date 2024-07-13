@@ -1,5 +1,6 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:fight_gym/components/dialogs.dart";
+import "package:fight_gym/config/app_config.dart";
 import "package:fight_gym/config/app_routes.dart";
 import "package:fight_gym/page/facade.dart";
 import "package:flutter/material.dart";
@@ -29,17 +30,6 @@ class CreateOrUpdatePage extends HookConsumerWidget {
         CustomDarkThemeStyles customDarkThemeStyles = CustomDarkThemeStyles(Theme.of(context).brightness);
         Color textStyleColor = Theme.of(context).brightness == Brightness.light ? Colors.black :
                 AppColors.lightBackground;
-
-        // AppConfig.logger.d('params $params');
-        // AppConfig.logger.d('params type ${params.runtimeType}');
-        // 👇 Whem receiving queryParameters
-        // │ 🐛 params {queryParameters: {}}
-        // │ 🐛 params type IdentityMap<String, dynamic>
-
-        // 👇 When don't receiving queryParameters
-        // │ 🐛 params Builder
-        // │ 🐛 params type StatelessElement
-
         // Get record from arguments if page was acessed from Navigation.pushNamed
         final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
         var record = arguments["record"];
@@ -47,21 +37,20 @@ class CreateOrUpdatePage extends HookConsumerWidget {
         // Get record from backend if isUpdate and page was accessed directly from url
         // and therefore ther is no argument passed througth Navigation.pushnamed
         //like `http://localhost:33885/instance_update?record_id=1`
-        Map? queryParameters = params.runtimeType == Map ? params["queryParameters"] : null;
+        Map? queryParameters = params is Map ? params["queryParameters"] : null;
         var recordIdQueryParameter = queryParameters?["record_id"];
         bool isRecordUpdatePageOnWebWithoutRecord = kIsWeb && record == null && 
                 ModalRoute.of(context)!.settings.name!.contains(updateUrl);
         if (isRecordUpdatePageOnWebWithoutRecord){
-            if (recordIdQueryParameter != null){
-                // AppConfig.logger.d('record is null. Will get it notifier.getSingleRecord(recordIdQueryParameter);
-                //return future. Requires await');
+            if (recordIdQueryParameter == null){
+                // is updated But there is no record_id query parameter for some reason
+                // and there is no record from arguments too
+                handlePopNavigation(context, AppRoutes.menu);
+            }
+            else {
                 var notifier = ref.read(provider.notifier);
                 record = notifier.getSingleRecord(recordIdQueryParameter); //return future. Requires await
             }
-            // is updated But there is no record_id query parameter for some reason
-            // and there is no record from arguments too
-            // AppConfig.logger.d('Update page without record id. Redirecting to menu.');
-            handlePopNavigation(context, AppRoutes.menu);
         }
 
         Map controllerFields = fodderRecordObj.getControllerFields(context);

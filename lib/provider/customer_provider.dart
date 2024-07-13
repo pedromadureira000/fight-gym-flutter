@@ -13,11 +13,11 @@ part "customer_provider.g.dart";
 @Riverpod(keepAlive: true)
 class AsyncCustomers extends _$AsyncCustomers {
     @override
-    FutureOr<List<Customer>> build() async {
+    FutureOr<Map<String, dynamic>> build() async {
         return _fetchData();
     }
 
-    Future<List<Customer>> _fetchData() async {
+    Future<Map<String, dynamic>> _fetchData() async {
         var token = await SecureStorage().readSecureData("token");
         if (token.isEmpty){throw Exception("The user's token is missing");}
 
@@ -36,7 +36,10 @@ class AsyncCustomers extends _$AsyncCustomers {
                 int totalRecords = decodedJsonResponse["totalRecords"];
                 final records = (decodedJsonResponse["result"] as List<dynamic>).cast<Map<String, dynamic>>();
                 List<Customer> listRecords = records.map(Customer.fromJson).toList();
-                return listRecords;
+                return {
+                    "totalRecords": totalRecords,
+                    "listRecords": listRecords
+                };
             }
             throw getErrorMsg(response, Constants.defaultErrorMsg);
         } catch (err, stack) {
@@ -129,21 +132,29 @@ class AsyncCustomers extends _$AsyncCustomers {
 
     addRecordLocaly(newRecordObj, recordMap) {
         newRecordObj.id = recordMap["id"];
-        state.value!.insert(0, newRecordObj);
+        if (state.value != null){ // XXX avoid to update localy if it has not been fetched yet
+            state.value!["listRecords"]!.insert(0, newRecordObj);
+            state.value!["totalRecords"] = (state.value!["totalRecords"] ?? 1) + 1;
+        }
         state = state;
     }
 
     updateRecordLocaly(newRecordObj, oldRecordOjb) {
-        var elIndex = state.value!.indexWhere((el) => el.id == oldRecordOjb.id);
-        state.value!.removeAt(elIndex);
-        newRecordObj.id = oldRecordOjb.id;
-        state.value!.insert(elIndex, newRecordObj);
-        state = state;
+        if (state.value != null){ // XXX avoid to update localy if it has not been fetched yet
+            var elIndex = state.value!["listRecords"].indexWhere((el) => el.id == oldRecordOjb.id);
+            state.value!["listRecords"].removeAt(elIndex);
+            newRecordObj.id = oldRecordOjb.id;
+            state.value!["listRecords"].insert(elIndex, newRecordObj);
+            state = state;
+        }
     }
 
     deleteRecordLocaly(record) {
-        state.value!.removeWhere((el) => el.id == record.id);
-        state = state;
+        if (state.value != null){ // XXX avoid to update localy if it has not been fetched yet
+            state.value!["listRecords"].removeWhere((el) => el.id == record.id);
+            state.value!["totalRecords"] = (state.value!["totalRecords"] ?? 1) - 1;
+            state = state;
+        }
     }
 
     offlineRefresh() {

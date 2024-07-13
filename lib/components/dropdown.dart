@@ -143,9 +143,8 @@ class SelectValueFromProviderListDropdown extends HookConsumerWidget {
 
         switch (asyncValue) {
             case AsyncData(): 
-                final records = asyncValue.value;
+                final records = asyncValue.value["listRecords"];
                 if (selectedValue.value.isEmpty) {
-                    final records = asyncValue.value;
                     if (records.isNotEmpty) {
                         // WidgetsBinding.instance.addPostFrameCallback((_) {
                             // selectedValue.value = "${records[0].id}";

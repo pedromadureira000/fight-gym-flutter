@@ -13,11 +13,11 @@ part "plan_provider.g.dart";
 @Riverpod(keepAlive: true)
 class AsyncPlans extends _$AsyncPlans {
     @override
-    FutureOr<List<Plan>> build() async {
+    FutureOr<Map<String, dynamic>> build() async {
         return _fetchData();
     }
 
-    Future<List<Plan>> _fetchData() async {
+    Future<Map<String, dynamic>> _fetchData() async {
         var token = await SecureStorage().readSecureData("token");
         if (token.isEmpty){throw Exception("The user's token is missing");}
 
@@ -36,7 +36,10 @@ class AsyncPlans extends _$AsyncPlans {
                 int totalRecords = decodedJsonResponse["totalRecords"];
                 final records = (decodedJsonResponse["result"] as List<dynamic>).cast<Map<String, dynamic>>();
                 List<Plan> listRecords = records.map(Plan.fromJson).toList();
-                return listRecords;
+                return {
+                    "totalRecords": totalRecords,
+                    "listRecords": listRecords
+                };
             }
             throw getErrorMsg(response, Constants.defaultErrorMsg);
         } catch (err, stack) {

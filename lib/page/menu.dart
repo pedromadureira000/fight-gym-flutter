@@ -1,6 +1,7 @@
 import "package:easy_localization/easy_localization.dart";
-import "package:fight_gym/page/customer/customer.dart";
 import "package:fight_gym/page/facade.dart";
+import "package:fight_gym/page/record_list_page.dart";
+import "package:fight_gym/provider/customer_provider.dart";
 import "package:fight_gym/styles/app_colors.dart";
 import "package:flutter/material.dart";
 import "package:fight_gym/config/app_routes.dart";
@@ -25,9 +26,14 @@ class MenuPage extends HookConsumerWidget {
 
         final ValueNotifier selectedMenu = useState("customer");
 
-        const Map<String, dynamic> widgetOptions = {
+        Map<String, dynamic> widgetOptions = {
             "customer": {
-                "widget": CustomerWidget(),
+                "widget": ListPage(
+                    provider: asyncCustomersProvider,
+                    createRecordNamedRoute: AppRoutes.customerCreate,
+                    updateRecordNamedRoute: AppRoutes.customerUpdate,
+                    addInstanceLabel: "Add Customer",
+                ),
                 "addInstanceRoute": AppRoutes.customerCreate,
             },
             "plan": {

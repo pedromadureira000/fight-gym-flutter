@@ -52,8 +52,13 @@ class Customer with _$Customer {
 
     factory Customer.fromJson(Map<String, dynamic> json) => _$CustomerFromJson(json);
 
-    getInstanceFromControllers({required Map<String, dynamic> controllerFields}) {
-        AppConfig.logger.d("getInstanceFromControllers lajdflajslkdfjalksdfjadf $controllerFields");
+    // 💀💀💀 For some crazy reason if I define the controllerFields parameter like this:
+    // ```getInstanceFromControllers({required Map<String, dynamic> controllerFields}) {```
+    // and call it like this:
+    // ```// var newRecord = fodderRecordObj.getInstanceFromControllers(controllerFields);```
+    // it throws `NoSuchMethodError: 'getInstanceFromControllers' instead of something else`
+
+    getInstanceFromControllers(controllerFields) {
         return Customer(
             name: controllerFields["nameController"].text.trim(),
             email: controllerFields["emailController"].text.trim(),

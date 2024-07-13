@@ -1,6 +1,5 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:fight_gym/components/dialogs.dart";
-import "package:fight_gym/config/app_config.dart";
 import "package:fight_gym/config/app_routes.dart";
 import "package:fight_gym/page/facade.dart";
 import "package:flutter/material.dart";
@@ -18,12 +17,12 @@ class CreateOrUpdatePage extends HookConsumerWidget {
         this.params = const {},
         required this.updateUrl,
         required this.provider,
-        required this.fodderRecordObjCauseFlutterCantPassClsAsParam
+        required this.fodderRecordObj
     });
     dynamic params;
     final String updateUrl;
     final dynamic provider;
-    final dynamic fodderRecordObjCauseFlutterCantPassClsAsParam;
+    final dynamic fodderRecordObj;
 
     @override
     Widget build(BuildContext context, WidgetRef ref) {
@@ -31,7 +30,6 @@ class CreateOrUpdatePage extends HookConsumerWidget {
         Color textStyleColor = Theme.of(context).brightness == Brightness.light ? Colors.black :
                 AppColors.lightBackground;
 
-        var getInstanceFromControllers = fodderRecordObjCauseFlutterCantPassClsAsParam.getInstanceFromControllers;
         // AppConfig.logger.d('params $params');
         // AppConfig.logger.d('params type ${params.runtimeType}');
         // 👇 Whem receiving queryParameters
@@ -66,13 +64,13 @@ class CreateOrUpdatePage extends HookConsumerWidget {
             handlePopNavigation(context, AppRoutes.menu);
         }
 
-        Map controllerFields = fodderRecordObjCauseFlutterCantPassClsAsParam.getControllerFields(context);
-        List<dynamic> listOfFieldWidgets = fodderRecordObjCauseFlutterCantPassClsAsParam.getListOfFieldWidgets(context, customDarkThemeStyles, controllerFields);
+        Map controllerFields = fodderRecordObj.getControllerFields(context);
+        List<dynamic> listOfFieldWidgets = fodderRecordObj.getListOfFieldWidgets(context, customDarkThemeStyles, controllerFields);
 
         useEffect(() {
             userAuthMiddleware(context);
             if (record != null){
-                fodderRecordObjCauseFlutterCantPassClsAsParam.setControllersData(
+                fodderRecordObj.setControllersData(
                     ref,
                     controllerFields,
                     record
@@ -138,18 +136,13 @@ class CreateOrUpdatePage extends HookConsumerWidget {
                                                     ElevatedButton(
                                                         style: customDarkThemeStyles.elevatedBtnStyle,
                                                         onPressed: () {
-                                                            AppConfig.logger.d("getInstanceFromControllers ${getInstanceFromControllers}");
-                                                            var newRecord = getInstanceFromControllers(controllerFields);
-
-                                                            // AppConfig.logger.d("fodderRecordObjCauseFlutterCantPassClsAsParam.getInstanceFromControllers ${fodderRecordObjCauseFlutterCantPassClsAsParam.getInstanceFromControllers}");
-                                                            // var newRecord = fodderRecordObjCauseFlutterCantPassClsAsParam.getInstanceFromControllers(controllerFields);
-                                                            AppConfig.logger.d("newRecord $newRecord");
-                                                            // if (record != null){
-                                                                // updateRecord(ref, newRecord, context, record, provider);
-                                                            // }
-                                                            // else {
-                                                                // addRecord(ref, newRecord, context, provider);
-                                                            // }
+                                                            var newRecord = fodderRecordObj.getInstanceFromControllers(controllerFields);
+                                                            if (record != null){
+                                                                updateRecord(ref, newRecord, context, record, provider);
+                                                            }
+                                                            else {
+                                                                addRecord(ref, newRecord, context, provider);
+                                                            }
                                                         },
                                                         child: record != null ? Text(tr("Update"), style: AppText.normalText) :
                                                             Text(tr("Add"), style: AppText.normalText),

@@ -104,7 +104,7 @@ class CreateOrUpdatePage extends HookConsumerWidget {
                                                         icon: Icon(Icons.delete, color: customDarkThemeStyles.getContrastColor),
                                                         tooltip: tr("Delete"),
                                                         onPressed: () {
-                                                            showDeleteDialog(context, ref, record);
+                                                            showDeleteDialog(context, ref, record, provider);
                                                         }
                                                     ) : const SizedBox(),
                                                 ],

@@ -1,14 +1,13 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:fight_gym/config/app_routes.dart";
 import "package:fight_gym/page/facade.dart";
-import "package:fight_gym/provider/customer_provider.dart";
 import "package:flutter/material.dart";
 import "package:fight_gym/styles/app_colors.dart";
 import "package:fight_gym/styles/app_text.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 
 
-showDeleteDialog(BuildContext context, WidgetRef ref, record){
+showDeleteDialog(BuildContext context, WidgetRef ref, record, provider){
     CustomDarkThemeStyles customDarkThemeStyles = CustomDarkThemeStyles(Theme.of(context).brightness);
     return showDialog<String>(
         context: context,
@@ -43,7 +42,7 @@ showDeleteDialog(BuildContext context, WidgetRef ref, record){
                                                         foregroundColor: AppColors.lightBackground,
                                                     ),
                                                     onPressed: () {
-                                                        deleteRecord(ref, context, record, asyncCustomersProvider);
+                                                        deleteRecord(ref, context, record, provider);
                                                     },
                                                     child: Text(tr("Delete"), style: AppText.normalText)
                                                 ),

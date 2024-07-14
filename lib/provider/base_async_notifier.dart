@@ -1,25 +1,30 @@
-import "dart:convert";
-import "package:fight_gym/data/local_storage/secure_storage.dart";
-import "package:fight_gym/utils/error_handler.dart";
-import "package:http/http.dart" as http;
-import "package:riverpod_annotation/riverpod_annotation.dart";
-import "package:fight_gym/config/app_config.dart";
-import "package:fight_gym/constants/constants.dart";
-import "package:fight_gym/model/models.dart";
+import 'dart:convert';
+import 'dart:async';
+import 'package:fight_gym/utils/error_handler.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:fight_gym/data/local_storage/secure_storage.dart';
+import 'package:fight_gym/config/app_config.dart';
+import 'package:fight_gym/constants/constants.dart';
 
-part "customer_provider.g.dart";
+abstract class BaseAsyncNotifier<T> extends AsyncNotifier<Map<String, dynamic>> {
+    final String listUrl;
+    final String createUrl;
+    final T Function(Map<String, dynamic>) fromJson;
 
-@Riverpod(keepAlive: true)
-class AsyncCustomers extends _$AsyncCustomers {
+    BaseAsyncNotifier(this.listUrl, this.createUrl, this.fromJson);
+
     @override
-    FutureOr<Map<String, dynamic>> build() async {
+    Future<Map<String, dynamic>> build() async {
         return _fetchData();
     }
 
     Future<Map<String, dynamic>> _fetchData() async {
         var token = await SecureStorage().readSecureData("token");
-        if (token.isEmpty){throw Exception("The user's token is missing");}
+        if (token.isEmpty) {
+            throw Exception("The user's token is missing");
+        }
 
         final List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
         if (connectivityResult.contains(ConnectivityResult.none)) {
@@ -28,17 +33,17 @@ class AsyncCustomers extends _$AsyncCustomers {
 
         try {
             final response = await http.get(
-                Uri.parse("${AppConfig.backUrl}/list_customers_view"),
+                Uri.parse("${AppConfig.backUrl}/$listUrl"),
                 headers: Constants.httpRequestHeaders(token),
             );
-            if (response.statusCode == 200){
+            if (response.statusCode == 200) {
                 dynamic decodedJsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
                 int totalRecords = decodedJsonResponse["totalRecords"];
                 final records = (decodedJsonResponse["result"] as List<dynamic>).cast<Map<String, dynamic>>();
-                List<Customer> listRecords = records.map(Customer.fromJson).toList();
+                var listRecords = records.map(fromJson).toList();
                 return {
-                    "totalRecords": totalRecords,
-                    "listRecords": listRecords
+                  "totalRecords": totalRecords,
+                  "listRecords": listRecords
                 };
             }
             throw getErrorMsg(response, Constants.defaultErrorMsg);
@@ -49,17 +54,17 @@ class AsyncCustomers extends _$AsyncCustomers {
         }
     }
 
-    Future<(String, dynamic)> addRecord(Customer record) async {
-        try{
-            Map recordMap = record.toJson();
+    Future<(String, dynamic)> addRecord(T record) async {
+        try {
+            Map recordMap = (record as dynamic).toJson(); // Ensure your model has a toJson() method
             var jsonBody = json.encode(recordMap);
             var token = await SecureStorage().readSecureData("token");
             final response = await http.post(
-                Uri.parse("${AppConfig.backUrl}/customer_view"),
+                Uri.parse("${AppConfig.backUrl}/$createUrl"),
                 headers: Constants.httpRequestHeadersWithJsonBody(token),
-                body:jsonBody 
+                body: jsonBody,
             );
-            if (response.statusCode != 200){
+            if (response.statusCode != 200) {
                 return (getErrorMsg(response, Constants.defaultErrorMsg), null);
             }
             Map responseMap = jsonDecode(response.body);
@@ -69,7 +74,7 @@ class AsyncCustomers extends _$AsyncCustomers {
         }
     }
 
-    Future<Customer> getSingleRecord(String? recordId) async {
+    Future<T> getSingleRecord(String? recordId) async {
         try{
             var token = await SecureStorage().readSecureData("token");
             String url = "${AppConfig.backUrl}/customer_view/$recordId";
@@ -81,17 +86,18 @@ class AsyncCustomers extends _$AsyncCustomers {
                 throw Exception("Error while trying to get record");
             }
             dynamic decodedJsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-            final record = Customer.fromJson(decodedJsonResponse);
+            final record = fromJson(decodedJsonResponse);
             return record;
         } catch (err, stack) {
             throw Exception(Constants.defaultErrorMsg);
         }
     }
 
-    Future<String> updateRecord(int? recordId, Customer newRecordData) async {
+    Future<String> updateRecord(int? recordId, T newRecordData) async {
         try{
             var token = await SecureStorage().readSecureData("token");
-            Map recordMap = newRecordData.toJson();
+            // Map recordMap = newRecordData?.toJson();  :TypeError T is type 'unknow' and don't have 'toJson'
+            Map recordMap = (newRecordData as dynamic).toJson();
             recordMap['id'] = recordId;
             var jsonBody = json.encode(recordMap);
             final response = await http.put(
@@ -143,7 +149,7 @@ class AsyncCustomers extends _$AsyncCustomers {
         dynamic decodedJsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
         int totalRecords = decodedJsonResponse["totalRecords"];
         final records = (decodedJsonResponse["result"] as List<dynamic>).cast<Map<String, dynamic>>();
-        List<Customer> listRecords = records.map(Customer.fromJson).toList();
+        var listRecords = records.map(fromJson).toList();
         state.value!["totalRecords"] = totalRecords;
         state.value!["listRecords"].addAll(listRecords);
         state = state; // to refresh page

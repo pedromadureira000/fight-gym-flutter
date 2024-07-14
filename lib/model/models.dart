@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fight_gym/components/dropdown.dart';
-import 'package:fight_gym/config/app_config.dart';
 import 'package:fight_gym/provider/plan_provider.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

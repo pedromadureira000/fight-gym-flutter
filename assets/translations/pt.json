@@ -55,7 +55,8 @@
     "Error in the field ": "Erro no campo ",
     "Account created. Please verify via email.": "Conta criada. Verifique por e-mail.",
     "After changing the password you will have to log in again": "Após alterar a senha você terá que fazer login novamente",
-    
+
+
     "This field may not be blank.": "Este campo não pode ficar em branco.",
     "Ensure this field has no more than 100 characters.": "Certifique-se de que este campo não tenha mais de 100 caracteres",
     "Ensure this field has no more than 20 characters.": "Certifique-se de que este campo não tenha mais de 20 caracteres",
@@ -118,6 +119,15 @@
     "user": "usuário",
     "title": "título",
     "description": "descrição",
+    "plan_name": "Nome do plano",
+    "phone": "Telefone",
+    "family_phone": "Telefone do familiar",
+    "address": "Endereço",
+    "birthday": "Aniversário",
+    "enrollment": "Matrícula",
+    "price": "Preço",
 
-    "user model with this email already exists.": "Usuário com este e-mail já existe."
+    "user model with this email already exists.": "Usuário com este e-mail já existe.",
+    "Record not found": "Registro não encontrado",
+    "Cannot delete this record because it is associated with other records": "Não é possível excluir este registro porque ele está associado a outros registros",
 }

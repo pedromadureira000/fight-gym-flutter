@@ -338,3 +338,78 @@ class Plan with _$Plan {
         controllerFields["descriptionController"].text = record.description;
     }
 }
+
+@unfreezed
+class Modality with _$Modality {
+    const Modality._(); // ADD THIS LINE TO ADD NEW METHODS LIKE getNameField
+
+    factory Modality({
+        int? id,
+        required String name,
+        String? description,
+    }) = _Modality;
+
+    factory Modality.fromJson(Map<String, dynamic> json) => _$ModalityFromJson(json);
+
+    String getNameField() => name;
+
+    getInstanceFromControllers(controllerFields) {
+        return Modality(
+            name: controllerFields["nameController"].text.trim(),
+            description: controllerFields["descriptionController"].text.trim(),
+        );
+    }
+
+    getControllerFields(context) {
+        Map controllerFieldsList = {
+            "nameController": useTextEditingController(),
+            "descriptionController":  useTextEditingController(),
+        };
+        return controllerFieldsList;
+    }
+
+    getListOfFieldWidgets(context, ref, customDarkThemeStyles, controllerFields) {
+        var widgetList = [
+            TextField(
+                minLines: 1,
+                maxLines: null,
+                controller: controllerFields["nameController"],
+                style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                    Theme.of(context).textTheme.titleMedium,
+                decoration: InputDecoration(
+                    labelText: tr("Modality name"),
+                    border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12))
+                    ),
+                    filled: true,
+                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                ),
+            ),
+            const SizedBox(height: 16.0),
+            TextField(
+                minLines: 1,
+                maxLines: null,
+                controller: controllerFields["descriptionController"],
+                style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                    Theme.of(context).textTheme.titleMedium,
+                decoration: InputDecoration(
+                    labelText: tr("Description"),
+                    border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12))
+                    ),
+                    filled: true,
+                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                ),
+            ),
+            const SizedBox(height: 20.0),
+        ];
+
+        return widgetList;
+    }
+
+    setControllersData(ref, controllerFields, record) async {
+        record = await record;
+        controllerFields["nameController"].text = record.name;
+        controllerFields["descriptionController"].text = record.description;
+    }
+}

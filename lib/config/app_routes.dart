@@ -1,6 +1,7 @@
 import 'package:fight_gym/model/models.dart';
 import "package:fight_gym/provider/modules/customer_provider.dart";
 import 'package:fight_gym/provider/modules/plan_provider.dart';
+import 'package:fight_gym/provider/modules/modality_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fight_gym/page/menu.dart';
 import 'package:fight_gym/page/login/login_page.dart';
@@ -59,6 +60,24 @@ class AppRoutes {
         addRecordLabel: "Add Plan",
         updateRecordLabel: "Update Plan",
     ),
+    modalityCreate: (params) => CreateOrUpdatePage(
+        params: params,
+        menuRoute: modality,
+        updateUrl: modalityUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
+        provider: asyncModalityProvider,
+        fodderRecordObj: Modality(name: "fodderRecordObj"),
+        addRecordLabel: "Add Modality",
+        updateRecordLabel: "Update Modality",
+    ),
+    modalityUpdate: (params) => CreateOrUpdatePage(
+        params: params,
+        menuRoute: modality,
+        updateUrl: modalityUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
+        provider: asyncModalityProvider,
+        fodderRecordObj: Modality(name: "fodderRecordObj"),
+        addRecordLabel: "Add Modality",
+        updateRecordLabel: "Update Modality",
+    ),
   };
 
   static const login = '/login';
@@ -77,6 +96,8 @@ class AppRoutes {
   static const customerUpdate = '/customer_update';
   static const planCreate = '/plan_create';
   static const planUpdate = '/plan_update';
+  static const modalityCreate = '/modality_create';
+  static const modalityUpdate = '/modality_update';
 }
 
 Route<dynamic> getRoute(RouteSettings settings) {

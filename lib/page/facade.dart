@@ -15,7 +15,7 @@ void goToUpdatePage(context, ref, record, namedRoute) {
 
 addRecord (ref, newRecord, context, providerClass, menuRoute) async {
     try {
-        var notifier = ref.read(providerClass.notifier);
+        var notifier = await ref.read(providerClass.notifier);
         var (result, recordMap) = await notifier.addRecord(newRecord);
         if (result == "success"){
             notifier.addRecordLocaly(newRecord, recordMap);
@@ -34,7 +34,7 @@ addRecord (ref, newRecord, context, providerClass, menuRoute) async {
 updateRecord (ref, newRecord, context, record, providerClass, menuRoute) async {
     try {
         record = await record;
-        var providerObj = ref.read(providerClass.notifier);
+        var providerObj = await ref.read(providerClass.notifier);
         String result = await providerObj.updateRecord(record.id, newRecord);
         if (result == "success"){
             providerObj.updateRecordLocaly(newRecord, record);
@@ -52,7 +52,7 @@ updateRecord (ref, newRecord, context, record, providerClass, menuRoute) async {
 
 deleteRecord(ref, context, record, providerClass, menuRoute) async {
     try {
-        var provider = ref.read(providerClass.notifier);
+        var provider = await ref.read(providerClass.notifier);
         String result = await provider.removeRecord(record.id);
         if (result == "success"){
             provider.deleteRecordLocaly(record);
@@ -73,7 +73,6 @@ void handlePopNavigation(BuildContext context, namedRoute) {
     if (Navigator.canPop(context)) {
         Navigator.pop(context);
     } else {
-        AppConfig.logger.d("namedRoute $namedRoute");
         Navigator.pushNamed(
             context,
             namedRoute

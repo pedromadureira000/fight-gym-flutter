@@ -4,6 +4,7 @@ import "package:fight_gym/page/facade.dart";
 import "package:fight_gym/page/record_list_page.dart";
 import "package:fight_gym/provider/modules/customer_provider.dart";
 import "package:fight_gym/provider/modules/plan_provider.dart";
+import "package:fight_gym/provider/modules/modality_provider.dart";
 import "package:fight_gym/styles/app_colors.dart";
 import "package:flutter/material.dart";
 import "package:fight_gym/config/app_routes.dart";
@@ -27,7 +28,6 @@ class MenuPage extends HookConsumerWidget {
         }, const []);
 
         var route = ModalRoute.of(context)!.settings.name;
-        AppConfig.logger.d('route $route');
         if (route == "/menu"){ // sometimes I need goToMenu
             route = "/customer";
         }
@@ -54,8 +54,13 @@ class MenuPage extends HookConsumerWidget {
                 "addInstanceRoute": AppRoutes.planCreate,
             },
             "modality": {
-                "widget": const Text('3'),
-                "addInstanceRoute": AppRoutes.customerCreate,
+                "widget": ListPage(
+                    provider: asyncModalityProvider,
+                    createRecordNamedRoute: AppRoutes.modalityCreate,
+                    updateRecordNamedRoute: AppRoutes.modalityUpdate,
+                    addInstanceLabel: "Add Modality",
+                ),
+                "addInstanceRoute": AppRoutes.modalityCreate,
             },
             "attendance": {
                 "widget": const Text('4'),
@@ -115,8 +120,7 @@ class MenuPage extends HookConsumerWidget {
                             leading: const Icon(Icons.fitness_center),
                             title: Text(tr("Modality")),
                             onTap: () {
-                                selectedMenu.value = "modality";
-                                Navigator.pop(context);
+                                Navigator.pushNamed(context, AppRoutes.modality);
                             },
                         ),
                         ListTile(
@@ -124,8 +128,7 @@ class MenuPage extends HookConsumerWidget {
                             leading: const Icon(Icons.check_circle),
                             title: Text(tr("Attendance")),
                             onTap: () {
-                                selectedMenu.value = "attendance";
-                                Navigator.pop(context);
+                                Navigator.pushNamed(context, AppRoutes.plan);
                             },
                         ),
                         ListTile(
@@ -133,8 +136,7 @@ class MenuPage extends HookConsumerWidget {
                             leading: const Icon(Icons.payment),
                             title: Text(tr("Payment")),
                             onTap: () {
-                                selectedMenu.value = "payment";
-                                Navigator.pop(context);
+                                Navigator.pushNamed(context, AppRoutes.plan);
                             },
                         )
                     ],

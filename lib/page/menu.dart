@@ -151,9 +151,7 @@ class MenuPage extends HookConsumerWidget {
                   padding: const EdgeInsets.all(kIsWeb ? 15 : 1),
                   child: SizedBox(
                     width: kIsWeb ? MediaQuery.of(context).size.width : null,
-                    child: Center(
-                        child: widgetOptions[selectedMenu.value]["widget"],
-                    ),
+                    child: widgetOptions[selectedMenu.value]["widget"],
                   ),
                 ),
             ),

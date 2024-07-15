@@ -33,7 +33,8 @@ class ListPage extends HookConsumerWidget {
                 child: SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                             const SizedBox(height: 10),
                             Row(

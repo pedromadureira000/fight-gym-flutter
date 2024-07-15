@@ -1,5 +1,6 @@
 import 'package:fight_gym/model/models.dart';
-import 'package:fight_gym/provider/customer_provider.dart';
+import "package:fight_gym/provider/modules/customer_provider.dart";
+import 'package:fight_gym/provider/modules/plan_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fight_gym/page/menu.dart';
 import 'package:fight_gym/page/login/login_page.dart';
@@ -28,6 +29,18 @@ class AppRoutes {
         provider: asyncCustomersProvider,
         fodderRecordObj: Customer(name: "fodderRecordObj", enrollment: {}),
     ),
+    planCreate: (params) => CreateOrUpdatePage(
+        params: params,
+        updateUrl: "/plan_update",
+        provider: asyncPlansProvider,
+        fodderRecordObj: Plan(plan_name: "fodderRecordObj", price: 99),
+    ),
+    planUpdate: (params) => CreateOrUpdatePage(
+        params: params,
+        updateUrl: "/plan_update",
+        provider: asyncPlansProvider,
+        fodderRecordObj: Plan(plan_name: "fodderRecordObj", price: 99),
+    ),
   };
 
   static const login = '/login';
@@ -37,6 +50,8 @@ class AppRoutes {
   static const menu = '/menu';
   static const customerCreate = '/customer_create';
   static const customerUpdate = '/customer_update';
+  static const planCreate = '/plan_create';
+  static const planUpdate = '/plan_update';
 }
 
 Route<dynamic> getRoute(RouteSettings settings) {

@@ -10,10 +10,10 @@ import 'package:fight_gym/constants/constants.dart';
 
 abstract class BaseAsyncNotifier<T> extends AsyncNotifier<Map<String, dynamic>> {
     final String listUrl;
-    final String createUrl;
+    final String crudUrl;
     final T Function(Map<String, dynamic>) fromJson;
 
-    BaseAsyncNotifier(this.listUrl, this.createUrl, this.fromJson);
+    BaseAsyncNotifier(this.listUrl, this.crudUrl, this.fromJson);
 
     @override
     Future<Map<String, dynamic>> build() async {
@@ -60,7 +60,7 @@ abstract class BaseAsyncNotifier<T> extends AsyncNotifier<Map<String, dynamic>> 
             var jsonBody = json.encode(recordMap);
             var token = await SecureStorage().readSecureData("token");
             final response = await http.post(
-                Uri.parse("${AppConfig.backUrl}/$createUrl"),
+                Uri.parse("${AppConfig.backUrl}/$crudUrl"),
                 headers: Constants.httpRequestHeadersWithJsonBody(token),
                 body: jsonBody,
             );
@@ -77,7 +77,7 @@ abstract class BaseAsyncNotifier<T> extends AsyncNotifier<Map<String, dynamic>> 
     Future<T> getSingleRecord(String? recordId) async {
         try{
             var token = await SecureStorage().readSecureData("token");
-            String url = "${AppConfig.backUrl}/customer_view/$recordId";
+            String url = "${AppConfig.backUrl}/$crudUrl/$recordId";
             final response = await http.get(
                 Uri.parse(url),
                 headers: Constants.httpRequestHeaders(token),
@@ -101,7 +101,7 @@ abstract class BaseAsyncNotifier<T> extends AsyncNotifier<Map<String, dynamic>> 
             recordMap['id'] = recordId;
             var jsonBody = json.encode(recordMap);
             final response = await http.put(
-                Uri.parse("${AppConfig.backUrl}/customer_view/$recordId"),
+                Uri.parse("${AppConfig.backUrl}/$crudUrl/$recordId"),
                 headers: Constants.httpRequestHeadersWithJsonBody(token),
                 body: jsonBody,
             );
@@ -122,7 +122,7 @@ abstract class BaseAsyncNotifier<T> extends AsyncNotifier<Map<String, dynamic>> 
                 "id": recordId,
             });
             final response = await http.delete(
-                Uri.parse("${AppConfig.backUrl}/customer_view/$recordId"),
+                Uri.parse("${AppConfig.backUrl}/$crudUrl/$recordId"),
                 headers: Constants.httpRequestHeadersWithJsonBody(token),
                 body:jsonBody 
             );
@@ -138,7 +138,7 @@ abstract class BaseAsyncNotifier<T> extends AsyncNotifier<Map<String, dynamic>> 
 
     Future<void> fetchMoreRecords(recordsLength) async {
         var token = await SecureStorage().readSecureData("token");
-        String url = "${AppConfig.backUrl}/list_customers_view?startingIndex=$recordsLength";
+        String url = "${AppConfig.backUrl}/$listUrl?startingIndex=$recordsLength";
         final response = await http.get(
             Uri.parse(url),
             headers: Constants.httpRequestHeaders(token),

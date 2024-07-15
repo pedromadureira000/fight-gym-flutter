@@ -1,7 +1,8 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:fight_gym/page/facade.dart";
 import "package:fight_gym/page/record_list_page.dart";
-import "package:fight_gym/provider/customer_provider.dart";
+import "package:fight_gym/provider/modules/customer_provider.dart";
+import "package:fight_gym/provider/modules/plan_provider.dart";
 import "package:fight_gym/styles/app_colors.dart";
 import "package:flutter/material.dart";
 import "package:fight_gym/config/app_routes.dart";
@@ -37,8 +38,13 @@ class MenuPage extends HookConsumerWidget {
                 "addInstanceRoute": AppRoutes.customerCreate,
             },
             "plan": {
-                "widget": const Text('2'),
-                "addInstanceRoute": AppRoutes.customerCreate,
+                "widget": ListPage(
+                    provider: asyncPlansProvider,
+                    createRecordNamedRoute: AppRoutes.planCreate,
+                    updateRecordNamedRoute: AppRoutes.planUpdate,
+                    addInstanceLabel: "Add Plan",
+                ),
+                "addInstanceRoute": AppRoutes.planCreate,
             },
             "modality": {
                 "widget": const Text('3'),

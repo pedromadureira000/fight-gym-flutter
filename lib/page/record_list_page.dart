@@ -1,4 +1,3 @@
-import 'package:fight_gym/config/app_config.dart';
 import 'package:fight_gym/page/facade.dart';
 import 'package:fight_gym/styles/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -129,7 +128,7 @@ class ListOfRecords extends HookConsumerWidget {
                 else {
                     final record = response["listRecords"][index];
                     return ListTile(
-                        title: Text(record.name),
+                        title: Text(record.getNameField()),
                         onTap: () {
                             goToUpdatePage(context, ref, record, updateRecordNamedRoute);
                         },

@@ -1,9 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fight_gym/components/dropdown.dart';
-import 'package:fight_gym/provider/plan_provider.dart';
+import 'package:fight_gym/provider/modules/plan_provider.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import "package:flutter/material.dart";
+import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 part 'models.freezed.dart';
@@ -50,6 +51,8 @@ class Customer with _$Customer {
     }) = _Customer;
 
     factory Customer.fromJson(Map<String, dynamic> json) => _$CustomerFromJson(json);
+
+    String getNameField() => name;
 
     // 💀💀💀 For some crazy reason if I define the controllerFields parameter like this:
     // ```getInstanceFromControllers({required Map<String, dynamic> controllerFields}) {```
@@ -138,16 +141,99 @@ class Customer with _$Customer {
 
 @unfreezed
 class Plan with _$Plan {
-  const Plan._(); // ADD THIS LINE TO ADD NEW METHODS LIKE getNameField
+    const Plan._(); // ADD THIS LINE TO ADD NEW METHODS LIKE getNameField
 
-  factory Plan({
-    int? id,
-    required String plan_name,
-    required dynamic price,
-    String? description,
-  }) = _Plan;
+    factory Plan({
+        int? id,
+        required String plan_name,
+        required dynamic price,
+        String? description,
+    }) = _Plan;
 
-  factory Plan.fromJson(Map<String, dynamic> json) => _$PlanFromJson(json);
+    factory Plan.fromJson(Map<String, dynamic> json) => _$PlanFromJson(json);
 
-  String getNameField() => plan_name;  // Used on SelectValueFromProviderListDropdown
+    String getNameField() => plan_name;
+
+    getInstanceFromControllers(controllerFields) {
+        return Plan(
+            plan_name: controllerFields["planNameController"].text.trim(),
+            price: controllerFields["priceController"].text.trim(),
+            description: controllerFields["descriptionController"].text.trim(),
+        );
+    }
+
+    getControllerFields(context) {
+        Map controllerFieldsList = {
+            "planNameController": useTextEditingController(),
+            "priceController": useTextEditingController(),
+            "descriptionController":  useTextEditingController(),
+        };
+        return controllerFieldsList;
+    }
+
+    getListOfFieldWidgets(context, customDarkThemeStyles, controllerFields) {
+        var widgetList = [
+            TextField(
+                minLines: 1,
+                maxLines: null,
+                controller: controllerFields["planNameController"],
+                style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                    Theme.of(context).textTheme.titleMedium,
+                decoration: InputDecoration(
+                    labelText: tr("Plan name"),
+                    border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12))
+                    ),
+                    filled: true,
+                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                ),
+            ),
+            const SizedBox(height: 16.0),
+            TextField(
+                minLines: 1,
+                maxLines: null,
+                controller: controllerFields["priceController"],
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                ],
+                // inputFormatters: [
+                    // WhitelistingTextInputFormatter.digitsOnly,
+                    // CurrencyInputFormatter()
+                // ],
+                decoration: InputDecoration(
+                    labelText: tr("Price"),
+                    border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12))
+                    ),
+                    filled: true,
+                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                ),
+            ),
+            const SizedBox(height: 16.0),
+            TextField(
+                minLines: 1,
+                maxLines: null,
+                controller: controllerFields["descriptionController"],
+                decoration: InputDecoration(
+                    labelText: tr("Description"),
+                    border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12))
+                    ),
+                    filled: true,
+                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                ),
+            ),
+            const SizedBox(height: 20.0),
+        ];
+
+        return widgetList;
+    }
+
+    setControllersData(ref, controllerFields, record) async {
+        record = await record;
+        controllerFields["planNameController"].text = record.plan_name;
+        controllerFields["priceController"].text = record.price;
+        controllerFields["descriptionController"].text = record.description;
+    }
 }

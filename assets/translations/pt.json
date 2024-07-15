@@ -102,6 +102,10 @@
     "An unknown error has occurred": "Ocorreu um erro desconhecido",
     "Add Customer": "Adicionar Aluno",
     "Load more": "Carregar mais",
+    "Add Plan": "Adicionar Plano",
+    "Plan name": "Nome do plano",
+    "Price": "Preço",
+    "Description": "Descrição",
 
     "name": "nome",
     "password": "senha",

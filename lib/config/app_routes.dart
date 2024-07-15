@@ -16,28 +16,38 @@ class AppRoutes {
     sendResetPasswordEmail: (params) => const SendResetPasswordEmail(),
     signUp: (params) => const SignUpPage(),
     menu: (params) => const MenuPage(),
+
+    customer: (params) => const MenuPage(),
+    plan: (params) => const MenuPage(),
+    modality: (params) => const MenuPage(),
+    attendance: (params) => const MenuPage(),
+    payment: (params) => const MenuPage(),
+
     customerCreate: (params) => CreateOrUpdatePage(
         params: params,
-        updateUrl: "/customer_update",
+        menuRoute: customer,
+        updateUrl: customerUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
         provider: asyncCustomersProvider,
         fodderRecordObj: Customer(name: "fodderRecordObj", enrollment: {}),
-        // fodderRecordObjCauseFlutterCantPassClsAsParam: Customer(name: "fodderRecordObjCauseFlutterCantPassClsAsParam", enrollment: {}),
     ),
     customerUpdate: (params) => CreateOrUpdatePage(
         params: params,
-        updateUrl: "/customer_update",
+        menuRoute: customer,
+        updateUrl: customerUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
         provider: asyncCustomersProvider,
         fodderRecordObj: Customer(name: "fodderRecordObj", enrollment: {}),
     ),
     planCreate: (params) => CreateOrUpdatePage(
         params: params,
-        updateUrl: "/plan_update",
+        menuRoute: plan,
+        updateUrl: planUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
         provider: asyncPlansProvider,
         fodderRecordObj: Plan(plan_name: "fodderRecordObj", price: 99),
     ),
     planUpdate: (params) => CreateOrUpdatePage(
         params: params,
-        updateUrl: "/plan_update",
+        menuRoute: plan,
+        updateUrl: planUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
         provider: asyncPlansProvider,
         fodderRecordObj: Plan(plan_name: "fodderRecordObj", price: 99),
     ),
@@ -48,6 +58,13 @@ class AppRoutes {
   static const sendResetPasswordEmail = '/reset_password_email';
   static const signUp = '/sign_up';
   static const menu = '/menu';
+
+  static const customer = '/customer';
+  static const plan = '/plan';
+  static const modality = '/modality';
+  static const attendance = '/attendance';
+  static const payment = '/payment';
+
   static const customerCreate = '/customer_create';
   static const customerUpdate = '/customer_update';
   static const planCreate = '/plan_create';

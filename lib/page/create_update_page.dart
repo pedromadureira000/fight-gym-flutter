@@ -16,11 +16,13 @@ class CreateOrUpdatePage extends HookConsumerWidget {
     CreateOrUpdatePage({
         super.key,
         this.params = const {},
+        required this.menuRoute,
         required this.updateUrl,
         required this.provider,
         required this.fodderRecordObj
     });
     dynamic params;
+    final String menuRoute;
     final String updateUrl;
     final dynamic provider;
     final dynamic fodderRecordObj;
@@ -43,9 +45,11 @@ class CreateOrUpdatePage extends HookConsumerWidget {
                 ModalRoute.of(context)!.settings.name!.contains(updateUrl);
         if (isRecordUpdatePageOnWebWithoutRecord){
             if (recordIdQueryParameter == null){
+                AppConfig.logger.d('ModalRoute.of(context)!.settings.name ${ModalRoute.of(context)!.settings.name}');
+                AppConfig.logger.d('updateUrl $updateUrl');
                 // is updated But there is no record_id query parameter for some reason
                 // and there is no record from arguments too
-                handlePopNavigation(context, AppRoutes.menu);
+                handlePopNavigation(context, menuRoute);
             }
             else {
                 var notifier = ref.read(provider.notifier);
@@ -74,7 +78,7 @@ class CreateOrUpdatePage extends HookConsumerWidget {
                 leading: IconButton(
                     icon: const Icon(Icons.arrow_back, color: Colors.white),
                     onPressed: () {
-                        handlePopNavigation(context, AppRoutes.menu);
+                        handlePopNavigation(context, menuRoute);
                     },
                 ),
             ),
@@ -104,7 +108,7 @@ class CreateOrUpdatePage extends HookConsumerWidget {
                                                         icon: Icon(Icons.delete, color: customDarkThemeStyles.getContrastColor),
                                                         tooltip: tr("Delete"),
                                                         onPressed: () {
-                                                            showDeleteDialog(context, ref, record, provider);
+                                                            showDeleteDialog(context, ref, record, provider, menuRoute);
                                                         }
                                                     ) : const SizedBox(),
                                                 ],
@@ -117,7 +121,7 @@ class CreateOrUpdatePage extends HookConsumerWidget {
                                                 children: [
                                                     ElevatedButton(
                                                         onPressed: () {
-                                                            handlePopNavigation(context, AppRoutes.menu);
+                                                            handlePopNavigation(context, menuRoute);
                                                         },
                                                         style: customDarkThemeStyles.elevatedBtnStyleCancelDeletion,
                                                         child: Text(tr("Close"), style: AppText.normalText),
@@ -127,10 +131,10 @@ class CreateOrUpdatePage extends HookConsumerWidget {
                                                         onPressed: () {
                                                             var newRecord = fodderRecordObj.getInstanceFromControllers(controllerFields);
                                                             if (record != null){
-                                                                updateRecord(ref, newRecord, context, record, provider);
+                                                                updateRecord(ref, newRecord, context, record, provider, menuRoute);
                                                             }
                                                             else {
-                                                                addRecord(ref, newRecord, context, provider);
+                                                                addRecord(ref, newRecord, context, provider, menuRoute);
                                                             }
                                                         },
                                                         child: record != null ? Text(tr("Update"), style: AppText.normalText) :

@@ -1,4 +1,5 @@
 import "package:easy_localization/easy_localization.dart";
+import "package:fight_gym/config/app_config.dart";
 import "package:fight_gym/page/facade.dart";
 import "package:fight_gym/page/record_list_page.dart";
 import "package:fight_gym/provider/modules/customer_provider.dart";
@@ -25,7 +26,13 @@ class MenuPage extends HookConsumerWidget {
             return null;
         }, const []);
 
-        final ValueNotifier selectedMenu = useState("customer");
+        var route = ModalRoute.of(context)!.settings.name;
+        AppConfig.logger.d('route $route');
+        if (route == "/menu"){ // sometimes I need goToMenu
+            route = "/customer";
+        }
+
+        final ValueNotifier selectedMenu = useState(route != null ? route.substring(1) : "customer");
 
         Map<String, dynamic> widgetOptions = {
             "customer": {
@@ -100,11 +107,6 @@ class MenuPage extends HookConsumerWidget {
                             onTap: () {
                                 selectedMenu.value = "plan";
                                 Navigator.pop(context);
-                                // Navigator.pop(context); // Close the drawer
-                                // Navigator.pushReplacementNamed(
-                                    // context,
-                                    // AppRoutes.profile
-                                // );
                             },
                         ),
                         ListTile(

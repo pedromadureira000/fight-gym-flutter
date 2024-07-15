@@ -8,9 +8,9 @@ import "package:fight_gym/utils/utils.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 
 class ErrorMessageWidget extends HookConsumerWidget {
-  const ErrorMessageWidget({Key? key, required this.message, required this.provider, required this.error}) : super(key: key);
+  const ErrorMessageWidget({Key? key, required this.message, this.provider, required this.error}) : super(key: key);
   final String message;
-  final AsyncNotifierProvider provider;
+  final AsyncNotifierProvider? provider;
   final Object error;
 
   @override
@@ -48,7 +48,9 @@ class ErrorMessageWidget extends HookConsumerWidget {
                     const SizedBox(height: 10),
                     ElevatedButton(
                         onPressed: () {
-                            ref.refresh(provider.future);
+                            if (provider != null) {
+                                ref.refresh(provider!.future);
+                            }
                             goToMenu(context);
                         },
                         child: Text(tr("Refresh"), style: AppText.normalText),

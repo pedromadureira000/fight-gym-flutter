@@ -7,7 +7,7 @@ import "package:fight_gym/styles/app_text.dart";
 import "package:hooks_riverpod/hooks_riverpod.dart";
 
 
-showDeleteDialog(BuildContext context, WidgetRef ref, record, provider){
+showDeleteDialog(BuildContext context, WidgetRef ref, record, provider, menuRoute){
     CustomDarkThemeStyles customDarkThemeStyles = CustomDarkThemeStyles(Theme.of(context).brightness);
     return showDialog<String>(
         context: context,
@@ -31,7 +31,7 @@ showDeleteDialog(BuildContext context, WidgetRef ref, record, provider){
                                             children: [
                                                 ElevatedButton(
                                                     onPressed: () {
-                                                        handlePopNavigation(context, AppRoutes.menu);
+                                                        handlePopNavigation(context, menuRoute);
                                                     },
                                                     style: customDarkThemeStyles.elevatedBtnStyleCancelDeletion,
                                                     child: Text(tr("Close"), style: AppText.normalText),
@@ -42,7 +42,7 @@ showDeleteDialog(BuildContext context, WidgetRef ref, record, provider){
                                                         foregroundColor: AppColors.lightBackground,
                                                     ),
                                                     onPressed: () {
-                                                        deleteRecord(ref, context, record, provider);
+                                                        deleteRecord(ref, context, record, provider, menuRoute);
                                                     },
                                                     child: Text(tr("Delete"), style: AppText.normalText)
                                                 ),

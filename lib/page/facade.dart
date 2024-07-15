@@ -13,13 +13,13 @@ void goToUpdatePage(context, ref, record, namedRoute) {
     Navigator.pushNamed(context, url, arguments: {"record": record});
 }
 
-addRecord (ref, newRecord, context, providerClass) async {
+addRecord (ref, newRecord, context, providerClass, menuRoute) async {
     try {
         var notifier = ref.read(providerClass.notifier);
         var (result, recordMap) = await notifier.addRecord(newRecord);
         if (result == "success"){
             notifier.addRecordLocaly(newRecord, recordMap);
-            handlePopNavigation(context, AppRoutes.menu);
+            handlePopNavigation(context, menuRoute);
         }
         else {
             showSnackBar(context, result, "error");
@@ -31,14 +31,14 @@ addRecord (ref, newRecord, context, providerClass) async {
     }
 }
 
-updateRecord (ref, newRecord, context, record, providerClass) async {
+updateRecord (ref, newRecord, context, record, providerClass, menuRoute) async {
     try {
         record = await record;
         var providerObj = ref.read(providerClass.notifier);
         String result = await providerObj.updateRecord(record.id, newRecord);
         if (result == "success"){
             providerObj.updateRecordLocaly(newRecord, record);
-            handlePopNavigation(context, AppRoutes.menu);
+            handlePopNavigation(context, menuRoute);
         }
         else {
             showSnackBar(context, result, "error");
@@ -50,14 +50,14 @@ updateRecord (ref, newRecord, context, record, providerClass) async {
     }
 }
 
-deleteRecord(ref, context, record, providerClass) async {
+deleteRecord(ref, context, record, providerClass, menuRoute) async {
     try {
         var provider = ref.read(providerClass.notifier);
         String result = await provider.removeRecord(record.id);
         if (result == "success"){
             provider.deleteRecordLocaly(record);
-            handlePopNavigation(context, AppRoutes.menu); // close dialog
-            handlePopNavigation(context, AppRoutes.menu); // close createUpdateWidget
+            handlePopNavigation(context, menuRoute); // close dialog
+            handlePopNavigation(context, menuRoute); // close createUpdateWidget
         }
         else {
             showSnackBar(context, result, "error");
@@ -73,6 +73,7 @@ void handlePopNavigation(BuildContext context, namedRoute) {
     if (Navigator.canPop(context)) {
         Navigator.pop(context);
     } else {
+        AppConfig.logger.d("namedRoute $namedRoute");
         Navigator.pushNamed(
             context,
             namedRoute

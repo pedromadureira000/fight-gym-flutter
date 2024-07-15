@@ -6,7 +6,7 @@ import 'package:http/http.dart';
 String getErrorMsg(Response response, String defaultErrorMsg) {
   try {
     // Parse the JSON body
-    Map<String, dynamic> responseBody = json.decode(response.body);
+    Map<String, dynamic> responseBody = jsonDecode(utf8.decode(response.bodyBytes));
     int statusCode = response.statusCode;
 
     if (statusCode == 500){

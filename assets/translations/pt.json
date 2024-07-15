@@ -129,5 +129,5 @@
 
     "user model with this email already exists.": "Usuário com este e-mail já existe.",
     "Record not found": "Registro não encontrado",
-    "Cannot delete this record because it is associated with other records": "Não é possível excluir este registro porque ele está associado a outros registros",
+    "Cannot delete this record because it is associated with other records": "Não é possível excluir este registro porque ele está associado a outros registros"
 }

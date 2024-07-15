@@ -24,7 +24,10 @@ ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     scrollbarTheme: ScrollbarThemeData(
       thumbVisibility: MaterialStateProperty.all<bool>(true),
-    )
+    ),
+    // drawerTheme: const DrawerThemeData(
+        // backgroundColor: AppColors.primaryColor,
+    // ),
 );
 
 ThemeData darkTheme_ = ThemeData(
@@ -56,7 +59,10 @@ ThemeData darkTheme_ = ThemeData(
     useMaterial3: true,
     scrollbarTheme: ScrollbarThemeData(
       thumbVisibility: MaterialStateProperty.all<bool>(true),
-    )
+    ),
+    // drawerTheme: const DrawerThemeData(
+        // backgroundColor: AppColors.darkPrimaryColor,
+    // ),
 );
 // NOTE: THis crazy workaround is because colorScheme change text colors previously set. And this was the way I found to set color for textField border to AppColors.darktextColor
 ThemeData darkTheme = darkTheme_.copyWith(colorScheme: darkTheme_.colorScheme.copyWith(primary: AppColors.darktextColor, brightness: Brightness.dark));

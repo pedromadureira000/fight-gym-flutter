@@ -119,7 +119,8 @@ class SelectDropdown extends HookConsumerWidget {
 }
 
 class SelectValueFromProviderListDropdown extends HookConsumerWidget {
-    SelectValueFromProviderListDropdown(this.selectedValue, this.providerClass, {Key? key}) : super(key: key);
+    SelectValueFromProviderListDropdown(this.fieldLabel, this.selectedValue, this.providerClass, {Key? key}) : super(key: key);
+    String fieldLabel;
     ValueNotifier selectedValue;
     AsyncNotifierProvider providerClass;
 
@@ -161,7 +162,7 @@ class SelectValueFromProviderListDropdown extends HookConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                         Text(
-                            tr("Value"),
+                            tr(fieldLabel),
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Theme.of(context).brightness == Brightness.light ? Colors.black : AppColors.lightBackground,

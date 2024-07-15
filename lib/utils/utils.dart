@@ -65,6 +65,13 @@ Color getPriorityColor(int status) {
   }
 }
 
+
+setDateControllersInitialValue(ref, dateField, dateController, dateISOStringController) {
+    bool hasDateField = dateField.runtimeType == DateTime;
+    dateController.text = hasDateField ? parseDateTimeToLocalizedString(ref, dateField) : "";
+    dateISOStringController.text = hasDateField ? dateField!.toIso8601String() : "";
+}
+
 Future<void> selectAndSetDateToControlers(context, ref, dateController, dateISOStringController) async {
     DateTime? pickedDate = await showDatePicker(
         context: context,

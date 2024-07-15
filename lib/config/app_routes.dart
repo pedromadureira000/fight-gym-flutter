@@ -29,6 +29,8 @@ class AppRoutes {
         updateUrl: customerUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
         provider: asyncCustomersProvider,
         fodderRecordObj: Customer(name: "fodderRecordObj", enrollment: {}),
+        addRecordLabel: "Add Customer",
+        updateRecordLabel: "Update Customer",
     ),
     customerUpdate: (params) => CreateOrUpdatePage(
         params: params,
@@ -36,6 +38,8 @@ class AppRoutes {
         updateUrl: customerUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
         provider: asyncCustomersProvider,
         fodderRecordObj: Customer(name: "fodderRecordObj", enrollment: {}),
+        addRecordLabel: "Add Customer",
+        updateRecordLabel: "Update Customer",
     ),
     planCreate: (params) => CreateOrUpdatePage(
         params: params,
@@ -43,6 +47,8 @@ class AppRoutes {
         updateUrl: planUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
         provider: asyncPlansProvider,
         fodderRecordObj: Plan(plan_name: "fodderRecordObj", price: 99),
+        addRecordLabel: "Add Plan",
+        updateRecordLabel: "Update Plan",
     ),
     planUpdate: (params) => CreateOrUpdatePage(
         params: params,
@@ -50,6 +56,8 @@ class AppRoutes {
         updateUrl: planUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
         provider: asyncPlansProvider,
         fodderRecordObj: Plan(plan_name: "fodderRecordObj", price: 99),
+        addRecordLabel: "Add Plan",
+        updateRecordLabel: "Update Plan",
     ),
   };
 

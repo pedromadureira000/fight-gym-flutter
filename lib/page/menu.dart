@@ -76,17 +76,18 @@ class MenuPage extends HookConsumerWidget {
         return Scaffold(
             appBar: CustomMenuAppBar(),
             drawer: Drawer(
+                // backgroundColor: Colors.pink,
                 child: ListView(
                     padding: EdgeInsets.zero,
                     children: <Widget>[
-                        const DrawerHeader(
+                        DrawerHeader(
                           decoration: BoxDecoration(
-                            color: Colors.blue,
+                            color: customDarkThemeStyles.getPrimaryColor,
                           ),
                           child: Text(
                             'Menu',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: customDarkThemeStyles.getSecundaryColor,
                               fontSize: 24,
                             ),
                           ),

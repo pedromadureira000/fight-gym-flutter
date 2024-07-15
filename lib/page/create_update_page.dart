@@ -19,13 +19,17 @@ class CreateOrUpdatePage extends HookConsumerWidget {
         required this.menuRoute,
         required this.updateUrl,
         required this.provider,
-        required this.fodderRecordObj
+        required this.fodderRecordObj,
+        required this.addRecordLabel,
+        required this.updateRecordLabel,
     });
     dynamic params;
     final String menuRoute;
     final String updateUrl;
     final dynamic provider;
     final dynamic fodderRecordObj;
+    final String addRecordLabel;
+    final String updateRecordLabel;
 
     @override
     Widget build(BuildContext context, WidgetRef ref) {
@@ -58,7 +62,12 @@ class CreateOrUpdatePage extends HookConsumerWidget {
         }
 
         Map controllerFields = fodderRecordObj.getControllerFields(context);
-        List<dynamic> listOfFieldWidgets = fodderRecordObj.getListOfFieldWidgets(context, customDarkThemeStyles, controllerFields);
+        List<dynamic> listOfFieldWidgets = fodderRecordObj.getListOfFieldWidgets(
+            context,
+            ref,
+            customDarkThemeStyles,
+            controllerFields,
+        );
 
         useEffect(() {
             userAuthMiddleware(context);
@@ -74,7 +83,7 @@ class CreateOrUpdatePage extends HookConsumerWidget {
 
         return Scaffold(
             appBar: AppBar(
-                title: Text(record != null ? tr("Update record") : tr("Add record")),
+                title: Text(record != null ? tr(updateRecordLabel) : tr(addRecordLabel)),
                 leading: IconButton(
                     icon: const Icon(Icons.arrow_back, color: Colors.white),
                     onPressed: () {
@@ -98,7 +107,7 @@ class CreateOrUpdatePage extends HookConsumerWidget {
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: <Widget>[
                                                     Text(
-                                                        record != null ? tr("Update record") : tr("Add record"),
+                                                        record != null ? tr(updateRecordLabel) : tr(addRecordLabel),
                                                         style: TextStyle(
                                                             fontSize: 16,
                                                             color: textStyleColor,

@@ -96,8 +96,7 @@ class MenuPage extends HookConsumerWidget {
                             leading: const Icon(Icons.person),
                             title: Text(tr("Customer")),
                             onTap: () {
-                                selectedMenu.value = "customer";
-                                Navigator.pop(context);
+                                Navigator.pushNamed(context, AppRoutes.customer);
                             },
                         ),
                         ListTile(
@@ -105,8 +104,9 @@ class MenuPage extends HookConsumerWidget {
                             leading: const Icon(Icons.card_membership),
                             title: Text(tr("Membership Plan")),
                             onTap: () {
-                                selectedMenu.value = "plan";
-                                Navigator.pop(context);
+                                // selectedMenu.value = "plan"; //this was before specific menu routes
+                                // Navigator.pop(context);
+                                Navigator.pushNamed(context, AppRoutes.plan);
                             },
                         ),
                         ListTile(

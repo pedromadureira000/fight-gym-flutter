@@ -1,7 +1,9 @@
 import 'package:fight_gym/model/models.dart';
+import 'package:fight_gym/provider/modules/class_provider.dart';
 import "package:fight_gym/provider/modules/customer_provider.dart";
 import 'package:fight_gym/provider/modules/plan_provider.dart';
 import 'package:fight_gym/provider/modules/modality_provider.dart';
+import 'package:fight_gym/provider/modules/attendance_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fight_gym/page/menu.dart';
 import 'package:fight_gym/page/login/login_page.dart';
@@ -21,6 +23,7 @@ class AppRoutes {
     customer: (params) => const MenuPage(),
     plan: (params) => const MenuPage(),
     modality: (params) => const MenuPage(),
+    classMenuRoute: (params) => const MenuPage(),
     attendance: (params) => const MenuPage(),
     payment: (params) => const MenuPage(),
 
@@ -78,6 +81,52 @@ class AppRoutes {
         addRecordLabel: "Add Modality",
         updateRecordLabel: "Update Modality",
     ),
+    classCreate: (params) => CreateOrUpdatePage(
+        params: params,
+        menuRoute: classMenuRoute,
+        updateUrl: classUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
+        provider: asyncClassProvider,
+        fodderRecordObj: Class(
+            modality: {},
+            start_time: "14:30:00",
+            end_time: "14:30:00",
+            max_participants: 99
+        ),
+        addRecordLabel: "Add Class",
+        updateRecordLabel: "Update Class",
+    ),
+    classUpdate: (params) => CreateOrUpdatePage(
+        params: params,
+        menuRoute: classMenuRoute,
+        updateUrl: classUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
+        provider: asyncClassProvider,
+        fodderRecordObj: Class(
+            modality: {},
+            start_time: "14:30:00",
+            end_time: "14:30:00",
+            max_participants: 99
+        ),
+        addRecordLabel: "Add Class",
+        updateRecordLabel: "Update Class",
+    ),
+    attendanceCreate: (params) => CreateOrUpdatePage(
+        params: params,
+        menuRoute: attendance,
+        updateUrl: attendanceUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
+        provider: asyncAttendanceProvider,
+        fodderRecordObj: Attendance(customer: {}, class_instance: {}, date: DateTime.now()),
+        addRecordLabel: "Add Attendance",
+        updateRecordLabel: "Update Attendance",
+    ),
+    attendanceUpdate: (params) => CreateOrUpdatePage(
+        params: params,
+        menuRoute: attendance,
+        updateUrl: attendanceUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
+        provider: asyncAttendanceProvider,
+        fodderRecordObj: Attendance(customer: {}, class_instance: {}, date: DateTime.now()),
+        addRecordLabel: "Add Attendance",
+        updateRecordLabel: "Update Attendance",
+    ),
   };
 
   static const login = '/login';
@@ -89,6 +138,7 @@ class AppRoutes {
   static const customer = '/customer';
   static const plan = '/plan';
   static const modality = '/modality';
+  static const classMenuRoute = '/class';
   static const attendance = '/attendance';
   static const payment = '/payment';
 
@@ -98,6 +148,10 @@ class AppRoutes {
   static const planUpdate = '/plan_update';
   static const modalityCreate = '/modality_create';
   static const modalityUpdate = '/modality_update';
+  static const classCreate = '/class_create';
+  static const classUpdate = '/class_update';
+  static const attendanceCreate = '/attendance_create';
+  static const attendanceUpdate = '/attendance_update';
 }
 
 Route<dynamic> getRoute(RouteSettings settings) {

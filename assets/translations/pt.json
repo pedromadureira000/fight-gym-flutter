@@ -58,6 +58,13 @@
     "Add Modality": "Adicionar Modalidade",
     "Update Modality": "Atualizar Modalidade",
     "Modality name": "Nome da modalidade",
+    "Add Attendance": "Adicionar Presença",
+    "Update Attendance": "Atualizar Presença",
+    "Add Class": "Adicionar treino",
+    "Update Class": "Atualizar treino",
+    "Start date": "Data inicial",
+    "End date": "Data final",
+    "Max Participants": "Máximo de participantes",
 
     "This field may not be blank.": "Este campo não pode ficar em branco.",
     "Ensure this field has no more than 100 characters.": "Certifique-se de que este campo não tenha mais de 100 caracteres",

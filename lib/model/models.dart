@@ -1,5 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fight_gym/components/dropdown.dart';
+import 'package:fight_gym/config/app_config.dart';
+import 'package:fight_gym/provider/modules/class_provider.dart';
+import 'package:fight_gym/provider/modules/customer_provider.dart';
+import 'package:fight_gym/provider/modules/modality_provider.dart';
 import 'package:fight_gym/provider/modules/plan_provider.dart';
 import 'package:fight_gym/utils/utils.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -61,177 +65,201 @@ class Customer with _$Customer {
     // ```// var newRecord = fodderRecordObj.getInstanceFromControllers(controllerFields);```
     // it throws `NoSuchMethodError: 'getInstanceFromControllers' instead of something else`
 
-    getInstanceFromControllers(controllerFields) {
-        return Customer(
-            name: controllerFields["nameController"].text.trim(),
-            email: controllerFields["emailController"].text.trim(),
-            phone: controllerFields["phoneController"].text.trim(),
-            family_phone: controllerFields["familyPhoneController"].text.trim(),
-            address: controllerFields["addressController"].text.trim(),
-            birthday: controllerFields["dateISOStringController"].text.isNotEmpty ? DateTime.parse(controllerFields["dateISOStringController"].text) : null,
-            enrollment: {
-                "plan": int.parse(controllerFields["selectedPlan"].value),
-                "subscription_status": 1
-            }
-        );
-    }
-
     getControllerFields(context) {
-        Map controllerFieldsList = {
-            "nameController": useTextEditingController(),
-            "emailController": useTextEditingController(),
-            "phoneController": useTextEditingController(),
-            "familyPhoneController": useTextEditingController(),
-            "addressController": useTextEditingController(),
-            "birthdayController": useTextEditingController(),
-            "dateISOStringController": useTextEditingController(),
-            "selectedPlan":  useState(""),
-        };
-        return controllerFieldsList;
-    }
-
-    getListOfFieldWidgets(context, ref, customDarkThemeStyles, controllerFields) {
-        var widgetList = [
-            TextField(
-                minLines: 1,
-                maxLines: null,
-                controller: controllerFields["nameController"],
-                style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
-                    Theme.of(context).textTheme.titleMedium,
-                decoration: InputDecoration(
-                    labelText: tr("Name"),
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12))
-                    ),
-                    filled: true,
-                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
-                ),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-                minLines: 1,
-                maxLines: null,
-                controller: controllerFields["emailController"],
-                style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
-                    Theme.of(context).textTheme.titleMedium,
-                decoration: InputDecoration(
-                    labelText: tr("Email"),
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12))
-                    ),
-                    filled: true,
-                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
-                ),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-                minLines: 1,
-                maxLines: null,
-                controller: controllerFields["phoneController"],
-                style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
-                    Theme.of(context).textTheme.titleMedium,
-                decoration: InputDecoration(
-                    labelText: tr("Phone"),
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12))
-                    ),
-                    filled: true,
-                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
-                ),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-                minLines: 1,
-                maxLines: null,
-                controller: controllerFields["familyPhoneController"],
-                style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
-                    Theme.of(context).textTheme.titleMedium,
-                decoration: InputDecoration(
-                    labelText: tr("Family Phone"),
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12))
-                    ),
-                    filled: true,
-                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
-                ),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-                minLines: 1,
-                maxLines: null,
-                controller: controllerFields["addressController"],
-                style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
-                    Theme.of(context).textTheme.titleMedium,
-                decoration: InputDecoration(
-                    labelText: tr("Address"),
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12))
-                    ),
-                    filled: true,
-                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
-                ),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-                controller: controllerFields["birthdayController"],
-                readOnly: true,
-                onTap:(){
-                    selectAndSetDateToControlers(
-                        context,
-                        ref,
-                        controllerFields["birthdayController"],
-                        controllerFields["dateISOStringController"]
-                    );
-                },
-                style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
-                    Theme.of(context).textTheme.titleMedium,
-                decoration: InputDecoration(
-                    labelText: tr("Birthday"),
-                    prefixIcon: const Icon(Icons.calendar_today),
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12))
-                    ),
-                    filled: true,
-                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
-                    suffixIcon: IconButton(
-                        onPressed: (){
-                            controllerFields["birthdayController"].clear();
-                            controllerFields["dateISOStringController"].clear();
-                        },
-                        icon: const Icon(Icons.clear),
-                    ),
-                ),
-            ),
-            const SizedBox(height: 16.0),
-            SelectValueFromProviderListDropdown(
-                "Plan",
-                controllerFields["selectedPlan"],
-                asyncPlansProvider,
-            ),
-            const SizedBox(height: 20.0),
-        ];
-
-        return widgetList;
+        try {
+            Map controllerFieldsList = {
+                "nameController": useTextEditingController(),
+                "emailController": useTextEditingController(),
+                "phoneController": useTextEditingController(),
+                "familyPhoneController": useTextEditingController(),
+                "addressController": useTextEditingController(),
+                "birthdayController": useTextEditingController(),
+                "dateISOStringController": useTextEditingController(),
+                "selectedPlan":  useState(""),
+            };
+            return controllerFieldsList;
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
     }
 
     setControllersData(ref, controllerFields, record) async {
-        // if (record.runtimeType == Future<Customer>) // Don't work anymore with new model constructor workaround 
-        // to use custom methods. Like this: [const Plan._(); // ADD THIS LINE TO ADD NEW METHODS LIKE getNameField]
-        // runtimeType will be _$CustomerImpl or a _Future<Customer>, 
-        //this new _Future was hard to check type so I just await both, since it don't raise error.
-        record = await record;
-        controllerFields["nameController"].text = record.name;
-        controllerFields["emailController"].text = record.email;
-        controllerFields["phoneController"].text = record.phone;
-        controllerFields["familyPhoneController"].text = record.family_phone;
-        controllerFields["addressController"].text = record.address;
-        setDateControllersInitialValue(
-            ref,
-            record.birthday,
-            controllerFields["birthdayController"],
-            controllerFields["dateISOStringController"],
-        );
-        controllerFields["selectedPlan"].value = "${record.enrollment['plan']}";
+        try {
+            // if (record.runtimeType == Future<Customer>) // Don't work anymore with new model constructor workaround 
+            // to use custom methods. Like this: [const Plan._(); // ADD THIS LINE TO ADD NEW METHODS LIKE getNameField]
+            // runtimeType will be _$CustomerImpl or a _Future<Customer>, 
+            //this new _Future was hard to check type so I just await both, since it don't raise error.
+            record = await record;
+            controllerFields["nameController"].text = record.name;
+            controllerFields["emailController"].text = record.email;
+            controllerFields["phoneController"].text = record.phone;
+            controllerFields["familyPhoneController"].text = record.family_phone;
+            controllerFields["addressController"].text = record.address;
+            setDateControllersInitialValue(
+                ref,
+                record.birthday,
+                controllerFields["birthdayController"],
+                controllerFields["dateISOStringController"],
+            );
+            controllerFields["selectedPlan"].value = "${record.enrollment['plan']}";
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+
+    getListOfFieldWidgets(context, ref, customDarkThemeStyles, controllerFields) {
+        try {
+            var widgetList = [
+                TextField(
+                    minLines: 1,
+                    maxLines: null,
+                    controller: controllerFields["nameController"],
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Name"),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                    ),
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                    minLines: 1,
+                    maxLines: null,
+                    controller: controllerFields["emailController"],
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Email"),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                    ),
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                    minLines: 1,
+                    maxLines: null,
+                    controller: controllerFields["phoneController"],
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Phone"),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                    ),
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                    minLines: 1,
+                    maxLines: null,
+                    controller: controllerFields["familyPhoneController"],
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Family Phone"),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                    ),
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                    minLines: 1,
+                    maxLines: null,
+                    controller: controllerFields["addressController"],
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Address"),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                    ),
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                    controller: controllerFields["birthdayController"],
+                    readOnly: true,
+                    onTap:(){
+                        selectAndSetDateToControlers(
+                            context,
+                            ref,
+                            controllerFields["birthdayController"],
+                            controllerFields["dateISOStringController"]
+                        );
+                    },
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Birthday"),
+                        prefixIcon: const Icon(Icons.calendar_today),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                        suffixIcon: IconButton(
+                            onPressed: (){
+                                controllerFields["birthdayController"].clear();
+                                controllerFields["dateISOStringController"].clear();
+                            },
+                            icon: const Icon(Icons.clear),
+                        ),
+                    ),
+                ),
+                const SizedBox(height: 16.0),
+                SelectValueFromProviderListDropdown(
+                    "Plan",
+                    controllerFields["selectedPlan"],
+                    asyncPlansProvider,
+                ),
+                const SizedBox(height: 20.0),
+            ];
+
+            return widgetList;
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+
+    getInstanceFromControllers(controllerFields) {
+        try {
+            return Customer(
+                name: controllerFields["nameController"].text.trim(),
+                email: controllerFields["emailController"].text.trim(),
+                phone: controllerFields["phoneController"].text.trim(),
+                family_phone: controllerFields["familyPhoneController"].text.trim(),
+                address: controllerFields["addressController"].text.trim(),
+                birthday: controllerFields["dateISOStringController"].text.isNotEmpty ? DateTime.parse(controllerFields["dateISOStringController"].text) : null,
+                enrollment: {
+                    "plan": int.parse(controllerFields["selectedPlan"].value),
+                    "subscription_status": 1
+                }
+            );
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
     }
 }
 
@@ -251,91 +279,115 @@ class Plan with _$Plan {
 
     String getNameField() => plan_name;
 
-    getInstanceFromControllers(controllerFields) {
-        return Plan(
-            plan_name: controllerFields["planNameController"].text.trim(),
-            price: controllerFields["priceController"].text.trim(),
-            description: controllerFields["descriptionController"].text.trim(),
-        );
-    }
-
     getControllerFields(context) {
-        Map controllerFieldsList = {
-            "planNameController": useTextEditingController(),
-            "priceController": useTextEditingController(),
-            "descriptionController":  useTextEditingController(),
-        };
-        return controllerFieldsList;
-    }
-
-    getListOfFieldWidgets(context, ref, customDarkThemeStyles, controllerFields) {
-        var widgetList = [
-            TextField(
-                minLines: 1,
-                maxLines: null,
-                controller: controllerFields["planNameController"],
-                style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
-                    Theme.of(context).textTheme.titleMedium,
-                decoration: InputDecoration(
-                    labelText: tr("Plan name"),
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12))
-                    ),
-                    filled: true,
-                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
-                ),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-                minLines: 1,
-                maxLines: null,
-                controller: controllerFields["priceController"],
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
-                ],
-                // inputFormatters: [
-                    // WhitelistingTextInputFormatter.digitsOnly,
-                    // CurrencyInputFormatter()
-                // ],
-                style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
-                    Theme.of(context).textTheme.titleMedium,
-                decoration: InputDecoration(
-                    labelText: tr("Price"),
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12))
-                    ),
-                    filled: true,
-                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
-                ),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-                minLines: 1,
-                maxLines: null,
-                controller: controllerFields["descriptionController"],
-                style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
-                    Theme.of(context).textTheme.titleMedium,
-                decoration: InputDecoration(
-                    labelText: tr("Description"),
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12))
-                    ),
-                    filled: true,
-                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
-                ),
-            ),
-            const SizedBox(height: 20.0),
-        ];
-
-        return widgetList;
+        try {
+            Map controllerFieldsList = {
+                "planNameController": useTextEditingController(),
+                "priceController": useTextEditingController(),
+                "descriptionController":  useTextEditingController(),
+            };
+            return controllerFieldsList;
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
     }
 
     setControllersData(ref, controllerFields, record) async {
-        record = await record;
-        controllerFields["planNameController"].text = record.plan_name;
-        controllerFields["priceController"].text = record.price;
-        controllerFields["descriptionController"].text = record.description;
+        try {
+            record = await record;
+            controllerFields["planNameController"].text = record.plan_name;
+            controllerFields["priceController"].text = record.price;
+            controllerFields["descriptionController"].text = record.description;
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+
+    getListOfFieldWidgets(context, ref, customDarkThemeStyles, controllerFields) {
+        try {
+            var widgetList = [
+                TextField(
+                    minLines: 1,
+                    maxLines: null,
+                    controller: controllerFields["planNameController"],
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Plan name"),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                    ),
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                    minLines: 1,
+                    maxLines: null,
+                    controller: controllerFields["priceController"],
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                    ],
+                    // inputFormatters: [
+                        // WhitelistingTextInputFormatter.digitsOnly,
+                        // CurrencyInputFormatter()
+                    // ],
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Price"),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                    ),
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                    minLines: 1,
+                    maxLines: null,
+                    controller: controllerFields["descriptionController"],
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Description"),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                    ),
+                ),
+                const SizedBox(height: 20.0),
+            ];
+
+            return widgetList;
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+
+    getInstanceFromControllers(controllerFields) {
+        try {
+            return Plan(
+                plan_name: controllerFields["planNameController"].text.trim(),
+                price: controllerFields["priceController"].text.trim(),
+                description: controllerFields["descriptionController"].text.trim(),
+            );
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
     }
 }
 
@@ -353,63 +405,377 @@ class Modality with _$Modality {
 
     String getNameField() => name;
 
-    getInstanceFromControllers(controllerFields) {
-        return Modality(
-            name: controllerFields["nameController"].text.trim(),
-            description: controllerFields["descriptionController"].text.trim(),
-        );
-    }
-
     getControllerFields(context) {
-        Map controllerFieldsList = {
-            "nameController": useTextEditingController(),
-            "descriptionController":  useTextEditingController(),
-        };
-        return controllerFieldsList;
-    }
-
-    getListOfFieldWidgets(context, ref, customDarkThemeStyles, controllerFields) {
-        var widgetList = [
-            TextField(
-                minLines: 1,
-                maxLines: null,
-                controller: controllerFields["nameController"],
-                style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
-                    Theme.of(context).textTheme.titleMedium,
-                decoration: InputDecoration(
-                    labelText: tr("Modality name"),
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12))
-                    ),
-                    filled: true,
-                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
-                ),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-                minLines: 1,
-                maxLines: null,
-                controller: controllerFields["descriptionController"],
-                style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
-                    Theme.of(context).textTheme.titleMedium,
-                decoration: InputDecoration(
-                    labelText: tr("Description"),
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12))
-                    ),
-                    filled: true,
-                    fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
-                ),
-            ),
-            const SizedBox(height: 20.0),
-        ];
-
-        return widgetList;
+        try {
+            Map controllerFieldsList = {
+                "nameController": useTextEditingController(),
+                "descriptionController": useTextEditingController(),
+            };
+            return controllerFieldsList;
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
     }
 
     setControllersData(ref, controllerFields, record) async {
-        record = await record;
-        controllerFields["nameController"].text = record.name;
-        controllerFields["descriptionController"].text = record.description;
+        try {
+            record = await record;
+            controllerFields["nameController"].text = record.name;
+            controllerFields["descriptionController"].text = record.description;
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+
+    getListOfFieldWidgets(context, ref, customDarkThemeStyles, controllerFields) {
+        try {
+            var widgetList = [
+                TextField(
+                    minLines: 1,
+                    maxLines: null,
+                    controller: controllerFields["nameController"],
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Modality name"),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                    ),
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                    minLines: 1,
+                    maxLines: null,
+                    controller: controllerFields["descriptionController"],
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Description"),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                    ),
+                ),
+                const SizedBox(height: 20.0),
+            ];
+            return widgetList;
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+
+    getInstanceFromControllers(controllerFields) {
+        try {
+            return Modality(
+                name: controllerFields["nameController"].text.trim(),
+                description: controllerFields["descriptionController"].text.trim(),
+            );
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+}
+
+@unfreezed
+class Class with _$Class {
+    const Class._(); // ADD THIS LINE TO ADD NEW METHODS LIKE getNameField
+
+    factory Class({
+        int? id,
+        required Map modality,
+        required String start_time,
+        required String end_time,
+        required int max_participants,
+    }) = _Class;
+
+    factory Class.fromJson(Map<String, dynamic> json) => _$ClassFromJson(json);
+
+    String getNameField() => "${modality['name']}   -   ${start_time.substring(0, start_time.length - 3)}";
+
+    getControllerFields(context) {
+        try {
+            Map controllerFieldsList = {
+                "selectedModality":  useState(""),
+                "startDateController": useTextEditingController(),
+                "startDateAPIformatedDateController": useTextEditingController(),
+                "endDateController": useTextEditingController(),
+                "endDateAPIformatedDateController": useTextEditingController(),
+                "maxParticipantsController": useTextEditingController(),
+            };
+            return controllerFieldsList;
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+
+    setControllersData(ref, controllerFields, record) async {
+        try {
+            record = await record;
+            controllerFields["selectedModality"].value = "${record.modality['id']}";
+            setTimeControllersInitialValue(
+                record.start_time,
+                controllerFields["startDateController"],
+                controllerFields["startDateAPIformatedDateController"],
+            );
+            setTimeControllersInitialValue(
+                record.end_time,
+                controllerFields["endDateController"],
+                controllerFields["endDateAPIformatedDateController"],
+            );
+            controllerFields["maxParticipantsController"].text = "${record.max_participants}";
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+
+    getListOfFieldWidgets(context, ref, customDarkThemeStyles, controllerFields) {
+        try {
+            var widgetList = [
+                SelectValueFromProviderListDropdown(
+                    "Modality",
+                    controllerFields["selectedModality"],
+                    asyncModalityProvider,
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                    controller: controllerFields["startDateController"],
+                    readOnly: true,
+                    onTap:(){
+                        selectAndSetTimeToControllers(
+                            context,
+                            controllerFields["startDateController"],
+                            controllerFields["startDateAPIformatedDateController"],
+                        );
+                    },
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Start date"),
+                        prefixIcon: const Icon(Icons.calendar_today),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                        suffixIcon: IconButton(
+                            onPressed: (){
+                                controllerFields["startDateController"].clear();
+                                controllerFields["startDateAPIformatedDateController"].clear();
+                            },
+                            icon: const Icon(Icons.clear),
+                        ),
+                    ),
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                    controller: controllerFields["endDateController"],
+                    readOnly: true,
+                    onTap:(){
+                        selectAndSetTimeToControllers(
+                            context,
+                            controllerFields["endDateController"],
+                            controllerFields["endDateAPIformatedDateController"],
+                        );
+                    },
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("End date"),
+                        prefixIcon: const Icon(Icons.calendar_today),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                        suffixIcon: IconButton(
+                            onPressed: (){
+                                controllerFields["endDateController"].clear();
+                                controllerFields["endDateAPIformatedDateController"].clear();
+                            },
+                            icon: const Icon(Icons.clear),
+                        ),
+                    ),
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                    minLines: 1,
+                    maxLines: null,
+                    controller: controllerFields["maxParticipantsController"],
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Max Participants"),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                    ),
+                ),
+            ];
+            return widgetList;
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+
+    getInstanceFromControllers(controllerFields) {
+        try {
+            return Class(
+                modality: {
+                    "id": int.parse(controllerFields["selectedModality"].value),
+                    "name": "fodder-name"
+                },
+                start_time: controllerFields["startDateAPIformatedDateController"].text,
+                end_time: controllerFields["endDateAPIformatedDateController"].text,
+                max_participants: int.parse(controllerFields["maxParticipantsController"].text.trim()),
+            );
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+}
+
+
+@unfreezed
+class Attendance with _$Attendance {
+    const Attendance._(); // ADD THIS LINE TO ADD NEW METHODS LIKE getNameField
+
+    factory Attendance({
+        int? id,
+        required Map customer,
+        required Map class_instance,
+        required DateTime date,
+    }) = _Attendance;
+
+    factory Attendance.fromJson(Map<String, dynamic> json) => _$AttendanceFromJson(json);
+
+    String getNameField() => "Class: ${class_instance['modality_name']}; Customer: ${customer['name']}; Date: $date;";
+
+    getControllerFields(context) {
+        try {
+            Map controllerFieldsList = {
+                "selectedCustomer":  useState(""),
+                "selectedClass":  useState(""),
+                "dateController": useTextEditingController(),
+                "dateISOStringController": useTextEditingController(),
+            };
+            return controllerFieldsList;
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+
+    setControllersData(ref, controllerFields, record) async {
+        try {
+            record = await record;
+            controllerFields["selectedCustomer"].value = "${record.customer['id']}";
+            controllerFields["selectedClass"].value = "${record.class_instance['id']}";
+            setDateControllersInitialValue(
+                ref,
+                record.date,
+                controllerFields["dateController"],
+                controllerFields["dateISOStringController"],
+            );
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+
+    getListOfFieldWidgets(context, ref, customDarkThemeStyles, controllerFields) {
+        try {
+            var widgetList = [
+                SelectValueFromProviderListDropdown(
+                    "Customer",
+                    controllerFields["selectedCustomer"],
+                    asyncCustomersProvider,
+                ),
+                const SizedBox(height: 16.0),
+                SelectValueFromProviderListDropdown(
+                    "Class",
+                    controllerFields["selectedClass"],
+                    asyncClassProvider,
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                    controller: controllerFields["dateController"],
+                    readOnly: true,
+                    onTap:(){
+                        selectAndSetDateToControlers(
+                            context,
+                            ref,
+                            controllerFields["dateController"],
+                            controllerFields["dateISOStringController"]
+                        );
+                    },
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Date"),
+                        prefixIcon: const Icon(Icons.calendar_today),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                        suffixIcon: IconButton(
+                            onPressed: (){
+                                controllerFields["dateController"].clear();
+                                controllerFields["dateISOStringController"].clear();
+                            },
+                            icon: const Icon(Icons.clear),
+                        ),
+                    ),
+                ),
+            ];
+            return widgetList;
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+
+    getInstanceFromControllers(controllerFields) {
+        try {
+            return Attendance(
+                customer: {
+                    "id": int.parse(controllerFields["selectedCustomer"].value),
+                },
+                class_instance: {
+                    "id": int.parse(controllerFields["selectedClass"].value),
+                },
+                date: DateTime.parse(controllerFields["dateISOStringController"].text),
+            );
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
     }
 }

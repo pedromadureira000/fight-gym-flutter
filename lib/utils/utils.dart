@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fight_gym/config/app_routes.dart';
 import 'package:fight_gym/constants/constants.dart';
 import 'package:fight_gym/provider/configurations_provider.dart';
+import 'package:intl/intl.dart';
 
 String getStatusLabel(int status) {
     switch (status) {
@@ -65,6 +66,46 @@ Color getPriorityColor(int status) {
   }
 }
 
+// setTimeControllersInitialValue(ref, timeString, dateController, dateISOStringController){
+    // bool hasDateField = dateField.runtimeType == DateTime;
+    // dateController.text = hasDateField ? parseTimeToLocalizedString(ref, dateField) : "";
+    // dateISOStringController.text = hasDateField ? dateField!.toIso8601String() : "";
+// }
+
+// Future<void> selectAndSetTimeToControlers(context, ref, dateController, dateISOStringController) async {
+    // DateTime? pickedDate = await showDatePicker(
+        // context: context,
+        // initialDate: DateTime.now(),
+        // firstDate: DateTime.now(),
+        // lastDate: DateTime(2100),
+    // );
+
+    // if (pickedDate != null) {
+        // TimeOfDay? pickedTime = await showTimePicker(
+            // context: context,
+            // initialTime: TimeOfDay.now(),
+        // );
+
+        // if (pickedTime != null) {
+            // DateTime combinedDateTime = DateTime(
+                // pickedDate.year,
+                // pickedDate.month,
+                // pickedDate.day,
+                // pickedTime.hour,
+                // pickedTime.minute,
+            // );
+            // dateController.text = parseTimeToLocalizedString(ref, combinedDateTime);
+            // dateISOStringController.text = combinedDateTime.toIso8601String();
+        // }
+    // }
+// }
+
+// String parseTimeToLocalizedString(ref, DateTime date) {
+    // var notifier = ref.read(asyncConfigsProvider.notifier);
+    // String currentLocale = notifier.getLocale!().toString();
+    // String dateFormat = currentLocale == "pt" ? Constants.dateFormatPT : Constants.dateFormatEn;
+    // return DateFormat(dateFormat).format(date.toLocal());
+// }
 
 setDateControllersInitialValue(ref, dateField, dateController, dateISOStringController) {
     bool hasDateField = dateField.runtimeType == DateTime;
@@ -133,4 +174,49 @@ goToMenu(context) {
 bool isWebBrowserOnMobile(context) {
     var width = MediaQuery. of(context).size.width;
     return width <= 550;
+}
+
+
+void setTimeControllersInitialValue(
+    String timeString,
+    TextEditingController timeController, 
+    TextEditingController timeISOStringController, 
+) {
+    DateFormat timeFormat = DateFormat.Hms();
+    DateTime time = timeFormat.parse(timeString);
+    
+    String formattedTimeToShow = DateFormat('HH:mm').format(time);
+    String formattedTimeToSendOnAPI = DateFormat('HH:mm:ss').format(time);
+
+    timeController.text = formattedTimeToShow;
+    timeISOStringController.text = formattedTimeToSendOnAPI;
+}
+
+
+Future<void> selectAndSetTimeToControllers(
+    BuildContext context, 
+    TextEditingController timeController, 
+    TextEditingController timeISOStringController
+) async {
+    TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+        DateTime now = DateTime.now();
+        DateTime selectedTime = DateTime(
+            now.year, 
+            now.month, 
+            now.day, 
+            pickedTime.hour, 
+            pickedTime.minute
+        );
+
+        String formattedTimeToShow = DateFormat('HH:mm').format(selectedTime);
+        String formattedTimeToSendOnAPI = DateFormat('HH:mm:ss').format(selectedTime);
+
+        timeController.text = formattedTimeToShow;
+        timeISOStringController.text = formattedTimeToSendOnAPI;
+    }
 }

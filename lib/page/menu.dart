@@ -2,9 +2,11 @@ import "package:easy_localization/easy_localization.dart";
 import "package:fight_gym/config/app_config.dart";
 import "package:fight_gym/page/facade.dart";
 import "package:fight_gym/page/record_list_page.dart";
+import "package:fight_gym/provider/modules/class_provider.dart";
 import "package:fight_gym/provider/modules/customer_provider.dart";
 import "package:fight_gym/provider/modules/plan_provider.dart";
 import "package:fight_gym/provider/modules/modality_provider.dart";
+import "package:fight_gym/provider/modules/attendance_provider.dart";
 import "package:fight_gym/styles/app_colors.dart";
 import "package:flutter/material.dart";
 import "package:fight_gym/config/app_routes.dart";
@@ -62,9 +64,23 @@ class MenuPage extends HookConsumerWidget {
                 ),
                 "addInstanceRoute": AppRoutes.modalityCreate,
             },
+            "class": {
+                "widget": ListPage(
+                    provider: asyncClassProvider,
+                    createRecordNamedRoute: AppRoutes.classCreate,
+                    updateRecordNamedRoute: AppRoutes.classUpdate,
+                    addInstanceLabel: "Add Class",
+                ),
+                "addInstanceRoute": AppRoutes.classCreate,
+            },
             "attendance": {
-                "widget": const Text('4'),
-                "addInstanceRoute": AppRoutes.customerCreate,
+                "widget": ListPage(
+                    provider: asyncAttendanceProvider,
+                    createRecordNamedRoute: AppRoutes.attendanceCreate,
+                    updateRecordNamedRoute: AppRoutes.attendanceUpdate,
+                    addInstanceLabel: "Add Attendance",
+                ),
+                "addInstanceRoute": AppRoutes.attendanceCreate,
             },
             "payment": {
                 "widget": const Text('5'),
@@ -117,10 +133,18 @@ class MenuPage extends HookConsumerWidget {
                         ),
                         ListTile(
                             selected: selectedMenu.value == "modality",
-                            leading: const Icon(Icons.fitness_center),
+                            leading: const Icon(Icons.category),
                             title: Text(tr("Modality")),
                             onTap: () {
                                 Navigator.pushNamed(context, AppRoutes.modality);
+                            },
+                        ),
+                        ListTile(
+                            selected: selectedMenu.value == "class",
+                            leading: const Icon(Icons.fitness_center),
+                            title: Text(tr("Class")),
+                            onTap: () {
+                                Navigator.pushNamed(context, AppRoutes.classMenuRoute);
                             },
                         ),
                         ListTile(
@@ -128,7 +152,7 @@ class MenuPage extends HookConsumerWidget {
                             leading: const Icon(Icons.check_circle),
                             title: Text(tr("Attendance")),
                             onTap: () {
-                                Navigator.pushNamed(context, AppRoutes.plan);
+                                Navigator.pushNamed(context, AppRoutes.attendance);
                             },
                         ),
                         ListTile(

@@ -97,7 +97,7 @@ class Customer with _$Customer {
             controllerFields["phoneController"].text = record.phone;
             controllerFields["familyPhoneController"].text = record.family_phone;
             controllerFields["addressController"].text = record.address;
-            setDateControllersInitialValue(
+            setDateTimeControllersInitialValue(
                 ref,
                 record.birthday,
                 controllerFields["birthdayController"],
@@ -198,7 +198,7 @@ class Customer with _$Customer {
                     controller: controllerFields["birthdayController"],
                     readOnly: true,
                     onTap:(){
-                        selectAndSetDateToControlers(
+                        selectAndSetDateTimeToControlers(
                             context,
                             ref,
                             controllerFields["birthdayController"],
@@ -666,12 +666,16 @@ class Attendance with _$Attendance {
         int? id,
         required Map customer,
         required Map class_instance,
-        required DateTime date,
+        required String date,
     }) = _Attendance;
 
     factory Attendance.fromJson(Map<String, dynamic> json) => _$AttendanceFromJson(json);
 
-    String getNameField() => "Class: ${class_instance['modality_name']}; Customer: ${customer['name']}; Date: $date;";
+    String getNameField() {
+        DateTime dateTime = DateTime.parse(date);
+        String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
+        return "Treino: ${class_instance['modality_name']}; Aluno: ${customer['name']}; Data: $formattedDate";
+    }
 
     getControllerFields(context) {
         try {
@@ -766,11 +770,13 @@ class Attendance with _$Attendance {
             return Attendance(
                 customer: {
                     "id": int.parse(controllerFields["selectedCustomer"].value),
+                    "name": "fodder-name",
                 },
                 class_instance: {
                     "id": int.parse(controllerFields["selectedClass"].value),
+                    "modality_name": "fodder-name",
                 },
-                date: DateTime.parse(controllerFields["dateISOStringController"].text),
+                date: controllerFields["dateISOStringController"].text
             );
         } catch (err, stack) {
             AppConfig.logger.d("Unknown Error: $err");

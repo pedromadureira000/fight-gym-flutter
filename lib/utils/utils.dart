@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:fight_gym/config/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:fight_gym/config/app_routes.dart';
 import 'package:fight_gym/constants/constants.dart';
@@ -66,54 +67,41 @@ Color getPriorityColor(int status) {
   }
 }
 
-// setTimeControllersInitialValue(ref, timeString, dateController, dateISOStringController){
-    // bool hasDateField = dateField.runtimeType == DateTime;
-    // dateController.text = hasDateField ? parseTimeToLocalizedString(ref, dateField) : "";
-    // dateISOStringController.text = hasDateField ? dateField!.toIso8601String() : "";
-// }
+String parseTxt(String txt, {endIndex}) {
+    String parsedTxt = txt;
+    if (endIndex != null){
+        int txtlength = txt.length;
+        bool txtNeedToBeTruncated = txtlength > endIndex;
+        endIndex = txtNeedToBeTruncated ? endIndex : txtlength;
+        parsedTxt = txt.substring(0, endIndex);
+        if (txtNeedToBeTruncated){
+            parsedTxt += "......";
+        }
+    }
+    return parsedTxt;
+}
 
-// Future<void> selectAndSetTimeToControlers(context, ref, dateController, dateISOStringController) async {
-    // DateTime? pickedDate = await showDatePicker(
-        // context: context,
-        // initialDate: DateTime.now(),
-        // firstDate: DateTime.now(),
-        // lastDate: DateTime(2100),
-    // );
+goToMenu(context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushReplacementNamed(
+            context,
+            AppRoutes.menu
+        );
+    });
+}
 
-    // if (pickedDate != null) {
-        // TimeOfDay? pickedTime = await showTimePicker(
-            // context: context,
-            // initialTime: TimeOfDay.now(),
-        // );
+bool isWebBrowserOnMobile(context) {
+    var width = MediaQuery. of(context).size.width;
+    return width <= 550;
+}
 
-        // if (pickedTime != null) {
-            // DateTime combinedDateTime = DateTime(
-                // pickedDate.year,
-                // pickedDate.month,
-                // pickedDate.day,
-                // pickedTime.hour,
-                // pickedTime.minute,
-            // );
-            // dateController.text = parseTimeToLocalizedString(ref, combinedDateTime);
-            // dateISOStringController.text = combinedDateTime.toIso8601String();
-        // }
-    // }
-// }
-
-// String parseTimeToLocalizedString(ref, DateTime date) {
-    // var notifier = ref.read(asyncConfigsProvider.notifier);
-    // String currentLocale = notifier.getLocale!().toString();
-    // String dateFormat = currentLocale == "pt" ? Constants.dateFormatPT : Constants.dateFormatEn;
-    // return DateFormat(dateFormat).format(date.toLocal());
-// }
-
-setDateControllersInitialValue(ref, dateField, dateController, dateISOStringController) {
+setDateTimeControllersInitialValue(ref, dateField, dateController, dateISOStringController) {
     bool hasDateField = dateField.runtimeType == DateTime;
     dateController.text = hasDateField ? parseDateTimeToLocalizedString(ref, dateField) : "";
     dateISOStringController.text = hasDateField ? dateField!.toIso8601String() : "";
 }
 
-Future<void> selectAndSetDateToControlers(context, ref, dateController, dateISOStringController) async {
+Future<void> selectAndSetDateTimeToControlers(context, ref, dateController, dateISOStringController) async {
     DateTime? pickedDate = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
@@ -148,32 +136,35 @@ String parseDateTimeToLocalizedString(ref, DateTime date) {
     return DateFormat(dateFormat).format(date.toLocal());
 }
 
-String parseTxt(String txt, {endIndex}) {
-    String parsedTxt = txt;
-    if (endIndex != null){
-        int txtlength = txt.length;
-        bool txtNeedToBeTruncated = txtlength > endIndex;
-        endIndex = txtNeedToBeTruncated ? endIndex : txtlength;
-        parsedTxt = txt.substring(0, endIndex);
-        if (txtNeedToBeTruncated){
-            parsedTxt += "......";
-        }
-    }
-    return parsedTxt;
+setDateControllersInitialValue(ref, dateString, dateController, dateISOStringController) {
+    DateTime dateField = DateTime.parse(dateString);
+    var localizedDateString = parseDateTimeToLocalizedString(ref, dateField);
+    dateController.text = localizedDateString.split(' - ')[0];
+    var localizedApiFormatedDateString = dateField.toIso8601String().split('T')[0];
+    dateISOStringController.text = localizedApiFormatedDateString;
 }
 
-goToMenu(context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacementNamed(
-            context,
-            AppRoutes.menu
+Future<void> selectAndSetDateToControlers(context, ref, dateController, dateISOStringController) async {
+    DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime.now(),
+        lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+        DateTime combinedDateTime = DateTime(
+            pickedDate.year,
+            pickedDate.month,
+            pickedDate.day,
         );
-    });
-}
-
-bool isWebBrowserOnMobile(context) {
-    var width = MediaQuery. of(context).size.width;
-    return width <= 550;
+        var localizedDateString = parseDateTimeToLocalizedString(ref, combinedDateTime);
+        // "07/16/2024 - 12:00 AM"
+        dateController.text = localizedDateString.split(' - ')[0];
+        // "2024-07-16T00:00:00.000"
+        var localizedApiFormatedDateString = combinedDateTime.toIso8601String().split('T')[0];
+        dateISOStringController.text = localizedApiFormatedDateString;
+    }
 }
 
 

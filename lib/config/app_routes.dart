@@ -114,7 +114,7 @@ class AppRoutes {
         menuRoute: attendance,
         updateUrl: attendanceUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
         provider: asyncAttendanceProvider,
-        fodderRecordObj: Attendance(customer: {}, class_instance: {}, date: DateTime.now()),
+        fodderRecordObj: Attendance(customer: {}, class_instance: {}, date: "2024-10-10"),
         addRecordLabel: "Add Attendance",
         updateRecordLabel: "Update Attendance",
     ),
@@ -123,7 +123,7 @@ class AppRoutes {
         menuRoute: attendance,
         updateUrl: attendanceUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
         provider: asyncAttendanceProvider,
-        fodderRecordObj: Attendance(customer: {}, class_instance: {}, date: DateTime.now()),
+        fodderRecordObj: Attendance(customer: {}, class_instance: {}, date: "2024-10-10"),
         addRecordLabel: "Add Attendance",
         updateRecordLabel: "Update Attendance",
     ),

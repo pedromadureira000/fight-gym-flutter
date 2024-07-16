@@ -7,6 +7,7 @@ import "package:fight_gym/provider/modules/customer_provider.dart";
 import "package:fight_gym/provider/modules/plan_provider.dart";
 import "package:fight_gym/provider/modules/modality_provider.dart";
 import "package:fight_gym/provider/modules/attendance_provider.dart";
+import "package:fight_gym/provider/modules/payment_provider.dart";
 import "package:fight_gym/styles/app_colors.dart";
 import "package:flutter/material.dart";
 import "package:fight_gym/config/app_routes.dart";
@@ -83,8 +84,13 @@ class MenuPage extends HookConsumerWidget {
                 "addInstanceRoute": AppRoutes.attendanceCreate,
             },
             "payment": {
-                "widget": const Text('5'),
-                "addInstanceRoute": AppRoutes.customerCreate,
+                "widget": ListPage(
+                    provider: asyncPaymentProvider,
+                    createRecordNamedRoute: AppRoutes.paymentCreate,
+                    updateRecordNamedRoute: AppRoutes.paymentUpdate,
+                    addInstanceLabel: "Add Payment",
+                ),
+                "addInstanceRoute": AppRoutes.paymentCreate,
             }, 
         };
 
@@ -160,7 +166,7 @@ class MenuPage extends HookConsumerWidget {
                             leading: const Icon(Icons.payment),
                             title: Text(tr("Payment")),
                             onTap: () {
-                                Navigator.pushNamed(context, AppRoutes.plan);
+                                Navigator.pushNamed(context, AppRoutes.payment);
                             },
                         )
                     ],

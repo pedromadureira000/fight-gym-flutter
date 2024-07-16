@@ -74,4 +74,12 @@ class Constants {
         },
     };
     static const List<int> trialStatus = [1,2];
+
+    static List<Map> paymentMethodOptions = [
+        {"label": "PIX", "id": 1},
+        {"label": "Dinheiro", "id": 2},
+        {"label": "Cartão", "id": 3},
+        {"label": "Pagamento recorrente", "id": 4},
+        {"label": "Outros", "id": 5},
+    ];
 }

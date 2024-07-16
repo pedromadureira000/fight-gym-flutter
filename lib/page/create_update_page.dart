@@ -137,8 +137,10 @@ class CreateOrUpdatePage extends HookConsumerWidget {
                                                     ),
                                                     ElevatedButton(
                                                         style: customDarkThemeStyles.elevatedBtnStyle,
-                                                        onPressed: () {
-                                                            var newRecord = fodderRecordObj.getInstanceFromControllers(controllerFields);
+                                                        onPressed: () async {
+                                                            var newRecord = await fodderRecordObj.getInstanceFromControllers(
+                                                                ref, controllerFields
+                                                            );
                                                             if (record != null){
                                                                 updateRecord(ref, newRecord, context, record, provider, menuRoute);
                                                             }

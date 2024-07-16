@@ -1,6 +1,7 @@
 import 'package:fight_gym/model/models.dart';
 import 'package:fight_gym/provider/modules/class_provider.dart';
 import "package:fight_gym/provider/modules/customer_provider.dart";
+import 'package:fight_gym/provider/modules/payment_provider.dart';
 import 'package:fight_gym/provider/modules/plan_provider.dart';
 import 'package:fight_gym/provider/modules/modality_provider.dart';
 import 'package:fight_gym/provider/modules/attendance_provider.dart';
@@ -127,6 +128,28 @@ class AppRoutes {
         addRecordLabel: "Add Attendance",
         updateRecordLabel: "Update Attendance",
     ),
+    paymentCreate: (params) => CreateOrUpdatePage(
+        params: params,
+        menuRoute: payment,
+        updateUrl: paymentUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
+        provider: asyncPaymentProvider,
+        fodderRecordObj: Payment(
+            enrollment: {}, payment_date: DateTime.now(), amount: 99.99, payment_method: 1, transaction_id: null
+        ),
+        addRecordLabel: "Add Payment",
+        updateRecordLabel: "Update Payment",
+    ),
+    paymentUpdate: (params) => CreateOrUpdatePage(
+        params: params,
+        menuRoute: payment,
+        updateUrl: paymentUpdate, // NOTE: THIS IS UPDATE. Don't put create ❗
+        provider: asyncPaymentProvider,
+        fodderRecordObj: Payment(
+            enrollment: {}, payment_date: DateTime.now(), amount: 99.99, payment_method: 1, transaction_id: null
+        ),
+        addRecordLabel: "Add Payment",
+        updateRecordLabel: "Update Payment",
+    ),
   };
 
   static const login = '/login';
@@ -152,6 +175,8 @@ class AppRoutes {
   static const classUpdate = '/class_update';
   static const attendanceCreate = '/attendance_create';
   static const attendanceUpdate = '/attendance_update';
+  static const paymentCreate = '/payment_create';
+  static const paymentUpdate = '/payment_update';
 }
 
 Route<dynamic> getRoute(RouteSettings settings) {

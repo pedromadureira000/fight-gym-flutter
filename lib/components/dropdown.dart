@@ -1,4 +1,5 @@
 import "package:easy_localization/easy_localization.dart";
+import "package:fight_gym/config/app_config.dart";
 import "package:flutter/material.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
 import "package:fight_gym/provider/configurations_provider.dart";
@@ -72,7 +73,7 @@ class SelectDropdown extends HookConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
                 if (label.isNotEmpty) Text(
-                    label,
+                    tr(label),
                     style: TextStyle(
                         fontSize: 16,
                         color: Theme.of(context).brightness == Brightness.light ? Colors.black : AppColors.lightBackground,

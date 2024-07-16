@@ -14,7 +14,6 @@
     "Delete": "Deletar",
     "Close":"Fechar",
     "Update task": "Atualizar tarefa",
-    "Add task": "Adicionar tarefa",
     "Title": "Título",
     "Description": "Descrição",
     "Update": "Atualizar",
@@ -65,6 +64,9 @@
     "Start date": "Data inicial",
     "End date": "Data final",
     "Max Participants": "Máximo de participantes",
+    "Add Payment": "Adicionar Pagamento",
+    "Payment method": "Metodo de pagamento",
+    "Payment date": "Data do pagamento",
 
     "This field may not be blank.": "Este campo não pode ficar em branco.",
     "Ensure this field has no more than 100 characters.": "Certifique-se de que este campo não tenha mais de 100 caracteres",

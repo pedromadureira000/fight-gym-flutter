@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fight_gym/components/dropdown.dart';
 import 'package:fight_gym/config/app_config.dart';
+import 'package:fight_gym/constants/constants.dart';
 import 'package:fight_gym/provider/modules/class_provider.dart';
 import 'package:fight_gym/provider/modules/customer_provider.dart';
 import 'package:fight_gym/provider/modules/modality_provider.dart';
@@ -241,7 +242,7 @@ class Customer with _$Customer {
         }
     }
 
-    getInstanceFromControllers(controllerFields) {
+    getInstanceFromControllers(ref, controllerFields) async {
         try {
             return Customer(
                 name: controllerFields["nameController"].text.trim(),
@@ -376,7 +377,7 @@ class Plan with _$Plan {
         }
     }
 
-    getInstanceFromControllers(controllerFields) {
+    getInstanceFromControllers(ref, controllerFields) async {
         try {
             return Plan(
                 plan_name: controllerFields["planNameController"].text.trim(),
@@ -475,7 +476,7 @@ class Modality with _$Modality {
         }
     }
 
-    getInstanceFromControllers(controllerFields) {
+    getInstanceFromControllers(ref, controllerFields) async {
         try {
             return Modality(
                 name: controllerFields["nameController"].text.trim(),
@@ -638,7 +639,7 @@ class Class with _$Class {
         }
     }
 
-    getInstanceFromControllers(controllerFields) {
+    getInstanceFromControllers(ref, controllerFields) async {
         try {
             return Class(
                 modality: {
@@ -765,7 +766,7 @@ class Attendance with _$Attendance {
         }
     }
 
-    getInstanceFromControllers(controllerFields) {
+    getInstanceFromControllers(ref, controllerFields) async {
         try {
             return Attendance(
                 customer: {
@@ -784,4 +785,160 @@ class Attendance with _$Attendance {
             rethrow;
         }
     }
+}
+
+
+@unfreezed
+class Payment with _$Payment {
+    const Payment._();
+
+    factory Payment({
+        int? id,
+        required Map enrollment,
+        required DateTime payment_date,
+        required dynamic amount,
+        required int payment_method,
+        String? transaction_id,
+    }) = _Payment;
+
+    factory Payment.fromJson(Map<String, dynamic> json) => _$PaymentFromJson(json);
+
+    String getNameField() {
+        String formattedDate = DateFormat('dd/MM/yyyy').format(payment_date);
+        return "Valor: $amount |  Data: $formattedDate | Aluno(a): ${enrollment['customer_name']}";
+    }
+
+    getControllerFields(context) {
+        try {
+            Map controllerFieldsList = {
+                "selectedCustomer":  useState(""),
+                "selectedPaymentMethod":  useState("1"),
+                "amountController": useTextEditingController(),
+                "paymentDateController": useTextEditingController(),
+                "paymentDateISOStringController": useTextEditingController(),
+            };
+            return controllerFieldsList;
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+
+    setControllersData(ref, controllerFields, record) async {
+        try {
+            record = await record;
+            controllerFields["selectedCustomer"].value = "${record.enrollment['customer_id']}";
+            controllerFields["selectedPaymentMethod"].value = "${record.payment_method}";
+            setDateTimeControllersInitialValue(
+                ref,
+                record.payment_date,
+                controllerFields["paymentDateController"],
+                controllerFields["paymentDateISOStringController"],
+            );
+            controllerFields["amountController"].text = record.amount;
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+
+    getListOfFieldWidgets(context, ref, customDarkThemeStyles, controllerFields) {
+        try {
+            var widgetList = [
+                SelectValueFromProviderListDropdown(
+                    "Customer",
+                    controllerFields["selectedCustomer"],
+                    asyncCustomersProvider,
+                ),
+                const SizedBox(height: 16.0),
+                SelectDropdown(
+                    controllerFields["selectedPaymentMethod"],
+                    Constants.paymentMethodOptions,
+                    "Payment method",
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                    controller: controllerFields["paymentDateController"],
+                    readOnly: true,
+                    onTap:(){
+                        selectAndSetDateTimeToControlers(
+                            context,
+                            ref,
+                            controllerFields["paymentDateController"],
+                            controllerFields["paymentDateISOStringController"]
+                        );
+                    },
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Payment date"),
+                        prefixIcon: const Icon(Icons.calendar_today),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                        suffixIcon: IconButton(
+                            onPressed: (){
+                                controllerFields["paymentDateController"].clear();
+                                controllerFields["paymentDateISOStringController"].clear();
+                            },
+                            icon: const Icon(Icons.clear),
+                        ),
+                    ),
+                ),
+                const SizedBox(height: 16.0),
+                TextField(
+                    minLines: 1,
+                    maxLines: null,
+                    controller: controllerFields["amountController"],
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                    ],
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Price"),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                    ),
+                ),
+            ];
+            return widgetList;
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+
+    getInstanceFromControllers(ref, controllerFields) async {
+        try {
+            var customerId = int.parse(controllerFields["selectedCustomer"].value);
+            var customers = await ref.read(asyncCustomersProvider); // TODO FIXME pagination problem Should make getInstanceRequest
+            var customer = customers.value["listRecords"].firstWhere((el)=> el.id == customerId);
+            return Payment(
+                enrollment: {
+                    "id": customer.enrollment["id"],
+                    "customer_id": customerId,
+                    "customer_name": "fodder-name",
+                    "plan_name": "fodder-name",
+                },
+                payment_method: int.parse(controllerFields["selectedPaymentMethod"].value),
+                payment_date: DateTime.parse(controllerFields["paymentDateISOStringController"].text),
+                amount: controllerFields["amountController"].text.trim(),
+            );
+        } catch (err, stack) {
+            AppConfig.logger.d("Unknown Error: $err");
+            AppConfig.logger.d("Unknown Error: stack $stack");
+            rethrow;
+        }
+    }
+
 }

@@ -641,10 +641,13 @@ class Class with _$Class {
 
     getInstanceFromControllers(ref, controllerFields) async {
         try {
+            var modalityId = int.parse(controllerFields["selectedModality"].value);
+            var modalities = await ref.read(asyncModalityProvider); // TODO FIXME pagination problem Should make getInstanceRequest
+            var modality = modalities.value["listRecords"].firstWhere((el)=> el.id == modalityId);
             return Class(
                 modality: {
                     "id": int.parse(controllerFields["selectedModality"].value),
-                    "name": "fodder-name"
+                    "name": modality.name
                 },
                 start_time: controllerFields["startDateAPIformatedDateController"].text,
                 end_time: controllerFields["endDateAPIformatedDateController"].text,
@@ -768,14 +771,21 @@ class Attendance with _$Attendance {
 
     getInstanceFromControllers(ref, controllerFields) async {
         try {
+            var customerId = int.parse(controllerFields["selectedCustomer"].value);
+            var customers = await ref.read(asyncCustomersProvider); // TODO FIXME pagination problem Should make getInstanceRequest
+            var customer = customers.value["listRecords"].firstWhere((el)=> el.id == customerId);
+
+            var classId = int.parse(controllerFields["selectedClass"].value);
+            var classes = await ref.read(asyncClassProvider); // TODO FIXME pagination problem Should make getInstanceRequest
+            var classInstance = classes.value["listRecords"].firstWhere((el)=> el.id == classId);
             return Attendance(
                 customer: {
-                    "id": int.parse(controllerFields["selectedCustomer"].value),
-                    "name": "fodder-name",
+                    "id": customerId,
+                    "name": customer.name,
                 },
                 class_instance: {
-                    "id": int.parse(controllerFields["selectedClass"].value),
-                    "modality_name": "fodder-name",
+                    "id": classId,
+                    "modality_name": classInstance.modality["name"],
                 },
                 date: controllerFields["dateISOStringController"].text
             );
@@ -927,8 +937,8 @@ class Payment with _$Payment {
                 enrollment: {
                     "id": customer.enrollment["id"],
                     "customer_id": customerId,
-                    "customer_name": "fodder-name",
-                    "plan_name": "fodder-name",
+                    "customer_name": customer.name,
+                    "plan_name": customer.enrollment["plan"],
                 },
                 payment_method: int.parse(controllerFields["selectedPaymentMethod"].value),
                 payment_date: DateTime.parse(controllerFields["paymentDateISOStringController"].text),

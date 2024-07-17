@@ -120,7 +120,7 @@ class _ProfileBody extends HookConsumerWidget {
                     width: kIsWeb ? 300.0 : null,
                     child: TextFormField(
                         controller: phoneController,
-                        decoration: const InputDecoration(labelText: "Phone"),
+                        decoration: InputDecoration(labelText: tr("Phone")),
                     ),
                 ),
                 const SizedBox(height: 10),

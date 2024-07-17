@@ -1,3 +1,5 @@
+import 'package:fight_gym/components/qrcode/qr_code.dart';
+import 'package:fight_gym/components/qrcode/scan_customer_code_page.dart';
 import 'package:fight_gym/model/models.dart';
 import 'package:fight_gym/provider/modules/class_provider.dart';
 import "package:fight_gym/provider/modules/customer_provider.dart";
@@ -12,6 +14,7 @@ import 'package:fight_gym/page/profile/profile.dart';
 import 'package:fight_gym/page/profile/reset_password.dart';
 import 'package:fight_gym/page/profile/sign_up.dart';
 import 'package:fight_gym/page/create_update_page.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class AppRoutes {
   static final pages = {
@@ -20,6 +23,8 @@ class AppRoutes {
     sendResetPasswordEmail: (params) => const SendResetPasswordEmail(),
     signUp: (params) => const SignUpPage(),
     menu: (params) => const MenuPage(),
+
+    scanCustomerQrCode: (params) => const ScanCustomerCodePage(),
 
     customer: (params) => const MenuPage(),
     plan: (params) => const MenuPage(),
@@ -45,6 +50,8 @@ class AppRoutes {
         fodderRecordObj: Customer(name: "fodderRecordObj", enrollment: {}),
         addRecordLabel: "Add Customer",
         updateRecordLabel: "Update Customer",
+        getSecondUpdatePageBtn: kIsWeb ? ({record})=>CreateCustomerQrCodeBtn(record: record) : null, // ON Dart. We can't pass class as parameter.
+        // getSecondUpdatePageBtn: CreateCustomerQrCodeBtn, // ON Dart. We can't pass class as parameter.
     ),
     planCreate: (params) => CreateOrUpdatePage(
         params: params,
@@ -109,6 +116,7 @@ class AppRoutes {
         ),
         addRecordLabel: "Add Class",
         updateRecordLabel: "Update Class",
+        getSecondUpdatePageBtn: !kIsWeb ? ({record})=>GoToScanCustomerQrCodeBtn(record: record) : null, // ON Dart. We can't pass class as parameter.
     ),
     attendanceCreate: (params) => CreateOrUpdatePage(
         params: params,
@@ -157,6 +165,8 @@ class AppRoutes {
   static const sendResetPasswordEmail = '/reset_password_email';
   static const signUp = '/sign_up';
   static const menu = '/menu';
+
+  static const scanCustomerQrCode = "/scan_customer_qrcode";
 
   static const customer = '/customer';
   static const plan = '/plan';

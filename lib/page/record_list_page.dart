@@ -13,12 +13,16 @@ class ListPage extends HookConsumerWidget {
         required this.createRecordNamedRoute,
         required this.updateRecordNamedRoute,
         required this.addInstanceLabel,
+        this.secondBtn,
+        this.thirdBtn,
     });
 
     final dynamic provider;
     final dynamic createRecordNamedRoute;
     final dynamic updateRecordNamedRoute;
     final dynamic addInstanceLabel;
+    final Widget? secondBtn;
+    final Widget? thirdBtn;
 
     @override
     Widget build(BuildContext context, WidgetRef ref) {
@@ -48,23 +52,25 @@ class ListPage extends HookConsumerWidget {
                                         child: RichText(
                                             text: TextSpan(
                                                 children: [
-                                                  const WidgetSpan(
-                                                    child: Icon(Icons.add, size: 19),
-                                                  ),
-                                                  TextSpan(
-                                                    text: tr(addInstanceLabel),
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Theme.of(context).brightness == Brightness.light
-                                                          ? AppColors.lightBackground
-                                                          : Colors.black,
+                                                    const WidgetSpan(
+                                                        child: Icon(Icons.add, size: 19),
                                                     ),
-                                                  ),
+                                                    TextSpan(
+                                                        text: tr(addInstanceLabel),
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          color: Theme.of(context).brightness == Brightness.light
+                                                              ? AppColors.lightBackground
+                                                              : Colors.black,
+                                                        ),
+                                                    ),
                                                 ],
                                             ),
                                         ),
                                     ),
                                     const SizedBox(width: 10),
+                                    secondBtn ?? const SizedBox(),
+                                    thirdBtn ?? const SizedBox(),
                                 ],
                             ),
                             const SizedBox(height: 10),

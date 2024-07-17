@@ -52,7 +52,21 @@ android {
         applicationId "com.petersoftwarehouse.fight_gym"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 21
+        // minSdkVersion flutter.minSdkVersion // 
+        // ┌─ Flutter Fix ────────────────────────────────────────────────────────────────────────────────────────────────────┐
+        // │ The plugin mobile_scanner requires a higher Android SDK version.                                                 │
+        // │ Fix this issue by adding the following to the file /home/ph/Projects/fight-gym-flutter/android/app/build.gradle: │
+        // │ android {                                                                                                        │
+        // │   defaultConfig {                                                                                                │
+        // │     minSdkVersion 21                                                                                             │
+        // │   }                                                                                                              │
+        // │ }                                                                                                                │
+        // │                                                                                                                  │
+        // │ Following this change, your app will not be available to users running Android SDKs below 21.                    │
+        // │ Consider searching for a version of this plugin that supports these lower versions of the Android SDK instead.   │
+        // │ For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration  │
+        // └──────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

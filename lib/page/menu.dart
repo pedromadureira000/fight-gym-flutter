@@ -44,6 +44,8 @@ class MenuPage extends HookConsumerWidget {
                     createRecordNamedRoute: AppRoutes.customerCreate,
                     updateRecordNamedRoute: AppRoutes.customerUpdate,
                     addInstanceLabel: "Add Customer",
+                    // secondBtn: const AddQrCodeBtn(),
+                    // thirdBtn: const ScanQrCodeBtn(),
                 ),
                 "addInstanceRoute": AppRoutes.customerCreate,
             },

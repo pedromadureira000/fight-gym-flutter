@@ -22,6 +22,7 @@ class CreateOrUpdatePage extends HookConsumerWidget {
         required this.fodderRecordObj,
         required this.addRecordLabel,
         required this.updateRecordLabel,
+        this.getSecondUpdatePageBtn,
     });
     dynamic params;
     final String menuRoute;
@@ -30,6 +31,7 @@ class CreateOrUpdatePage extends HookConsumerWidget {
     final dynamic fodderRecordObj;
     final String addRecordLabel;
     final String updateRecordLabel;
+    final dynamic getSecondUpdatePageBtn;
 
     @override
     Widget build(BuildContext context, WidgetRef ref) {
@@ -68,6 +70,8 @@ class CreateOrUpdatePage extends HookConsumerWidget {
             customDarkThemeStyles,
             controllerFields,
         );
+        
+        var secondUpdatePageBtn = getSecondUpdatePageBtn != null ? getSecondUpdatePageBtn(record: record) : const SizedBox();
 
         useEffect(() {
             userAuthMiddleware(context);
@@ -122,6 +126,8 @@ class CreateOrUpdatePage extends HookConsumerWidget {
                                                     ) : const SizedBox(),
                                                 ],
                                             ),
+                                            getSecondUpdatePageBtn != null ? const SizedBox(height: 16.0) : const SizedBox(),
+                                            secondUpdatePageBtn,
                                             const SizedBox(height: 16.0),
                                             ...listOfFieldWidgets,
                                             const SizedBox(height: 20.0),

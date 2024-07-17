@@ -51,7 +51,9 @@ class ErrorMessageWidget extends HookConsumerWidget {
                             if (provider != null) {
                                 ref.refresh(provider!.future);
                             }
-                            goToMenu(context);
+                            else {
+                                goToMenu(context);
+                            }
                         },
                         child: Text(tr("Refresh"), style: AppText.normalText),
                     ),

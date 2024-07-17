@@ -72,6 +72,9 @@ class _ProfileBody extends HookConsumerWidget {
 
     @override
     Widget build(BuildContext context, WidgetRef ref) {
+        final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
+        var previousMenuRoute = arguments["previousMenuRoute"];
+
         final currentPasswordController = useTextEditingController();
         final newPasswordController = useTextEditingController();
         final confirmPasswordController = useTextEditingController();
@@ -269,7 +272,7 @@ class _ProfileBody extends HookConsumerWidget {
                     onPressed: () {
                         Navigator.pushReplacementNamed(
                             context,
-                            AppRoutes.menu
+                            previousMenuRoute ?? AppRoutes.menu
                         );
                     },
                 ),

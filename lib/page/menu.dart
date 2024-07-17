@@ -206,7 +206,10 @@ class CustomMenuAppBar extends ConsumerWidget implements PreferredSizeWidget {
                     onPressed: () {
                         Navigator.pushNamed(
                             context,
-                            AppRoutes.profile
+                            AppRoutes.profile,
+                            arguments: {
+                                "previousMenuRoute": ModalRoute.of(context)!.settings.name
+                            }
                         );
                     }
                 )

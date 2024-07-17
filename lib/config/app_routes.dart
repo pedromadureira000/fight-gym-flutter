@@ -50,7 +50,8 @@ class AppRoutes {
         fodderRecordObj: Customer(name: "fodderRecordObj", enrollment: {}),
         addRecordLabel: "Add Customer",
         updateRecordLabel: "Update Customer",
-        getSecondUpdatePageBtn: kIsWeb ? ({record})=>CreateCustomerQrCodeBtn(record: record) : null, // ON Dart. We can't pass class as parameter.
+        getSecondUpdatePageBtn: ({record})=>CreateCustomerQrCodeBtn(record: record), // ON Dart. We can't pass class as parameter.
+        // getSecondUpdatePageBtn: kIsWeb ? ({record})=>CreateCustomerQrCodeBtn(record: record) : null, // ON Dart. We can't pass class as parameter.
         // getSecondUpdatePageBtn: CreateCustomerQrCodeBtn, // ON Dart. We can't pass class as parameter.
     ),
     planCreate: (params) => CreateOrUpdatePage(

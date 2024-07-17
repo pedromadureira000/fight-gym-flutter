@@ -1,10 +1,11 @@
 import 'dart:io' show File;
 import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:fight_gym/config/app_config.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 import 'dart:convert';
-
+import 'package:share_plus/share_plus.dart';
 
 saveFile(record) async {
     try {
@@ -19,9 +20,11 @@ saveFile(record) async {
         );
         final qrImage = QrImage(qrCode);
         final qrImageBytes = await qrImage.toImageAsBytes(
-          size: 512,
-          format: ImageByteFormat.png,
-          decoration: const PrettyQrDecoration(),
+            size: 512,
+            format: ImageByteFormat.png,
+            decoration: const PrettyQrDecoration(
+                background: Colors.white
+            ),
         );
 
         // Convert ByteData to Uint8List
@@ -34,8 +37,7 @@ saveFile(record) async {
         // Write the file
         final file = File(path);
         await file.writeAsBytes(qrImageUint8List);
-        // TODO - I don't want just to save it. I want to share it.
-        AppConfig.logger.d("QR code saved to $path");
+        Share.shareXFiles([XFile(path)], text: 'Check out this file!');
     } catch (err, stack) {
         AppConfig.logger.d("err $err");
         AppConfig.logger.d("stack $stack");

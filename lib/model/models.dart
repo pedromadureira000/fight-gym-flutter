@@ -815,7 +815,7 @@ class Payment with _$Payment {
 
     String getNameField() {
         String formattedDate = DateFormat('dd/MM/yyyy').format(payment_date);
-        return "Valor: $amount |  Data: $formattedDate | Aluno(a): ${enrollment['customer_name']}";
+        return "Aluno(a): ${enrollment['customer_name']}  |  Valor: $amount  |  Data: $formattedDate";
     }
 
     getControllerFields(context) {
@@ -911,7 +911,7 @@ class Payment with _$Payment {
                     style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
                         Theme.of(context).textTheme.titleMedium,
                     decoration: InputDecoration(
-                        labelText: tr("Price"),
+                        labelText: tr("Value"),
                         border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(12))
                         ),

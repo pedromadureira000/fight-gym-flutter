@@ -121,6 +121,7 @@
     "Plan": "Plano",
     "Class": "Treino",
     "Date": "Data",
+    "Value": "Valor",
 
     "name": "nome",
     "password": "senha",

@@ -98,8 +98,27 @@ class MenuPage extends HookConsumerWidget {
                     createRecordNamedRoute: AppRoutes.attendanceCreate,
                     updateRecordNamedRoute: AppRoutes.attendanceUpdate,
                     addInstanceLabel: "Add Attendance",
-                    filterList:  const [
+                    filterList: [
+                        FilterProviderDropdown(
+                            queryParams: attendanceQueryParams,
+                            fieldLabel: "Filter customer",
+                            providerForFilterOptions: asyncCustomersProvider,
+                            providerToBeFiltered: asyncAttendanceProvider,
+                            filterKeyIdentifier: "customer_id",
+                        ),
+                        FilterProviderDropdown(
+                            queryParams: attendanceQueryParams,
+                            fieldLabel: "Filter class",
+                            providerForFilterOptions: asyncClassProvider,
+                            providerToBeFiltered: asyncAttendanceProvider,
+                            filterKeyIdentifier: "class_instance_id",
+                        ),
                     ],
+                    filterDate: FilterDate(
+                        queryParams: attendanceQueryParams,
+                        providerToBeFiltered: asyncAttendanceProvider,
+                        dateField: "date"
+                    ),
                 ),
                 "addInstanceRoute": AppRoutes.attendanceCreate,
             },
@@ -127,7 +146,7 @@ class MenuPage extends HookConsumerWidget {
                     ),
                 ),
                 "addInstanceRoute": AppRoutes.paymentCreate,
-            }, 
+            },
         };
 
         void floatingActionButtonAddMethod() {

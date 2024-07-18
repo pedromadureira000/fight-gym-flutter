@@ -71,6 +71,7 @@
     "Filter customer": "Filtrar aluno",
     "Initial date": "Data inicial",
     "Final date": "Data final",
+    "Filter class": "Filtrar treino",
 
     "This field may not be blank.": "Este campo não pode ficar em branco.",
     "Ensure this field has no more than 100 characters.": "Certifique-se de que este campo não tenha mais de 100 caracteres",

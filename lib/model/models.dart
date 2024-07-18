@@ -678,7 +678,10 @@ class Attendance with _$Attendance {
     String getNameField() {
         DateTime dateTime = DateTime.parse(date);
         String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
-        return "Treino: ${class_instance['modality_name']}; Aluno: ${customer['name']}; Data: $formattedDate";
+        String modalityName = class_instance['modality_name'];
+        String startTime = class_instance['start_time'].substring(0, class_instance['start_time'].length - 3);
+        String customerName = customer['name'];
+        return "Treino: $modalityName ($startTime); Aluno: $customerName; Data: $formattedDate";
     }
 
     getControllerFields(context) {

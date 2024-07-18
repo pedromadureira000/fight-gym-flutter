@@ -120,12 +120,11 @@ class MenuPage extends HookConsumerWidget {
                             pickIdFromOtherRecordsProperty: "enrollment",
                         ),
                     ],
-                    filterDate: 
-                        FilterDate(
-                            queryParams: paymentQueryParams,
-                            providerToBeFiltered: asyncPaymentProvider,
-                            dateField: "payment_date"
-                        ),
+                    filterDate: FilterDate(
+                        queryParams: paymentQueryParams,
+                        providerToBeFiltered: asyncPaymentProvider,
+                        dateField: "payment_date"
+                    ),
                 ),
                 "addInstanceRoute": AppRoutes.paymentCreate,
             }, 

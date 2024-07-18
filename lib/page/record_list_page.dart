@@ -77,8 +77,8 @@ class ListPage extends HookConsumerWidget {
                             ),
                             // show searchBar on mobile
                             if (!kIsWeb && searchBar) const SizedBox(height: 10),
-                            if (!kIsWeb && searchBar)  SizedBox(
-                                width: 280 ,
+                            if (!kIsWeb && searchBar) SizedBox(
+                                width: 280,
                                 child: TextField(
                                     controller: searchTermcontroller,
                                     decoration: InputDecoration(

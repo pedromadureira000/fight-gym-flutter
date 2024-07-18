@@ -237,80 +237,84 @@ class FilterDate extends HookConsumerWidget {
 
         CustomDarkThemeStyles customDarkThemeStyles = CustomDarkThemeStyles(Theme.of(context).brightness);
 
-        return Row(
-            children: [
-                Expanded(
-                      child: TextField(
-                            controller: initialDateController,
-                            readOnly: true,
-                            onTap: () {
-                                selectAndSetDateToControlers(
-                                    context,
-                                    ref,
-                                    initialDateController,
-                                    initialDateISOStringController,
-                                );
-                            },
-                            style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
-                                Theme.of(context).textTheme.titleMedium,
-                            decoration: InputDecoration(
-                                  labelText: tr('Initial date'),
-                                  prefixIcon: const Icon(Icons.calendar_today),
-                                  border: const OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                                  ),
-                                  filled: true,
-                                  fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
-                                  suffixIcon: IconButton(
-                                        onPressed: () {
-                                            initialDateController.clear();
-                                            initialDateISOStringController.clear();
-                                            if (queryParams.value["filterBy"] != null){
-                                                queryParams.value["filterBy"].remove("initial_$dateField");
-                                            }
-                                        },
-                                        icon: const Icon(Icons.clear),
-                                  ),
-                            ),
-                      ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                    child: TextField(
-                        controller: finalDateController,
+
+        var childrenList = [
+            SizedBox(
+                width: 200,
+                child:
+                TextField(
+                        controller: initialDateController,
                         readOnly: true,
                         onTap: () {
                             selectAndSetDateToControlers(
                                 context,
                                 ref,
-                                finalDateController,
-                                finalDateISOStringController,
+                                initialDateController,
+                                initialDateISOStringController,
                             );
                         },
+                        style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                            Theme.of(context).textTheme.titleMedium,
                         decoration: InputDecoration(
-                          labelText: tr('Final date'),
-                          prefixIcon: const Icon(Icons.calendar_today),
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                          ),
-                          filled: true,
-                          fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                                finalDateController.clear();
-                                finalDateISOStringController.clear();
-                                if (queryParams.value["filterBy"] != null){
-                                    queryParams.value["filterBy"].remove("final_$dateField");
-                                }
-                            },
-                            icon: const Icon(Icons.clear),
-                          ),
+                              labelText: tr('Initial date'),
+                              prefixIcon: const Icon(Icons.calendar_today),
+                              border: const OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(12)),
+                              ),
+                              filled: true,
+                              fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                              suffixIcon: IconButton(
+                                    onPressed: () {
+                                        initialDateController.clear();
+                                        initialDateISOStringController.clear();
+                                        if (queryParams.value["filterBy"] != null){
+                                            queryParams.value["filterBy"].remove("initial_$dateField");
+                                        }
+                                    },
+                                    icon: const Icon(Icons.clear),
+                              ),
                         ),
+                ),
+            ),
+            kIsWeb ? const SizedBox(width: 16) : const SizedBox(height: 8),
+            SizedBox(
+                width: 200,
+                child:
+                TextField(
+                    controller: finalDateController,
+                    readOnly: true,
+                    onTap: () {
+                        selectAndSetDateToControlers(
+                            context,
+                            ref,
+                            finalDateController,
+                            finalDateISOStringController,
+                        );
+                    },
+                    decoration: InputDecoration(
+                      labelText: tr('Final date'),
+                      prefixIcon: const Icon(Icons.calendar_today),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                      ),
+                      filled: true,
+                      fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                            finalDateController.clear();
+                            finalDateISOStringController.clear();
+                            if (queryParams.value["filterBy"] != null){
+                                queryParams.value["filterBy"].remove("final_$dateField");
+                            }
+                        },
+                        icon: const Icon(Icons.clear),
+                      ),
                     ),
                 ),
-                const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: () {
+            ),
+            kIsWeb ? const SizedBox(width: 16) : const SizedBox(height: 8),
+            ElevatedButton(
+                onPressed: () {
                     var notifier = ref.read(providerToBeFiltered.notifier);
                     var initialDate = initialDateISOStringController.text;
                     var finalDate = finalDateISOStringController.text;
@@ -348,9 +352,17 @@ class FilterDate extends HookConsumerWidget {
 
                     notifier.fetchRecords(queryParams: queryParams.value);
                 },
-                  child: Text(tr('Search')),
-                ),
-            ],
+                child: Text(tr('Search')),
+            ),
+        ];
+
+        return kIsWeb ? Expanded(
+            child: Row(
+                children: childrenList,
+            ),
+        )
+        : Column(
+            children: childrenList,
         );
     }
 }

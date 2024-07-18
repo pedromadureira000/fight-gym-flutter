@@ -45,8 +45,9 @@ class ListPage extends HookConsumerWidget {
                 child: SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        // mainAxisSize : MainAxisSize.min,
                         children: [
                             const SizedBox(height: 10),
                             Row(
@@ -65,42 +66,19 @@ class ListPage extends HookConsumerWidget {
                                             },
                                         ),
                                     ),
-                                    // NOTE: I think is redundant to have to buttons. But I might change my mind.
-                                    // if (kIsWeb && searchBar) const SizedBox(width: 10),
-                                    // ElevatedButton(
-                                        // onPressed: () {
-                                            // goToCreatePage(context, ref, createRecordNamedRoute);
-                                        // },
-                                        // style: customDarkThemeStyles.elevatedBtnStyleInsideContainer,
-                                        // child: RichText(
-                                            // text: TextSpan(
-                                                // children: [
-                                                    // const WidgetSpan(
-                                                        // child: Icon(Icons.add, size: 19),
-                                                    // ),
-                                                    // TextSpan(
-                                                        // text: tr(addInstanceLabel),
-                                                        // style: TextStyle(
-                                                          // fontSize: 16,
-                                                          // color: Theme.of(context).brightness == Brightness.light
-                                                              // ? AppColors.lightBackground
-                                                              // : Colors.black,
-                                                        // ),
-                                                    // ),
-                                                // ],
-                                            // ),
-                                        // ),
-                                    // ),
                                 ],
                             ),
-                            if (filterList.isNotEmpty) const SizedBox(height: 10),
-                            if (filterList.isNotEmpty) Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: filterList,
+                            if (kIsWeb) Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                    ...filterList,
+                                    if (filterDate != null) filterDate as Widget,
+                                ]
                             ),
+                            // show searchBar on mobile
                             if (!kIsWeb && searchBar) const SizedBox(height: 10),
                             if (!kIsWeb && searchBar)  SizedBox(
-                                width: 400.0 ,
+                                width: 280 ,
                                 child: TextField(
                                     controller: searchTermcontroller,
                                     decoration: InputDecoration(
@@ -112,8 +90,15 @@ class ListPage extends HookConsumerWidget {
                                     },
                                 ),
                             ),
-                            const SizedBox(height: 10),
-                            if (filterDate != null) filterDate as Widget,
+                            //show filterList on mobile
+                            if (!kIsWeb && filterList.isNotEmpty) const SizedBox(height: 10),
+                            if (!kIsWeb && filterList.isNotEmpty) Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: filterList,
+                            ),
+                            // show filter date on mobile
+                            if (!kIsWeb) const SizedBox(height: 10),
+                            if (!kIsWeb && filterDate != null) filterDate as Widget,
                             const SizedBox(height: 10),
                             ListOfRecords(queryParams, value, updateRecordNamedRoute, provider)
                         ],

@@ -67,6 +67,8 @@
     "Generate QR code": "Gerar QR Code",
     "Attendance added with success": "Presença registada com sucesso",
     "Error while trying to read qr code and create attendance.": "Erro ao tentar ler o código QR e registrar presença.",
+    "Search": "Pesquisar",
+    "Filter customer": "Filtrar aluno",
 
     "This field may not be blank.": "Este campo não pode ficar em branco.",
     "Ensure this field has no more than 100 characters.": "Certifique-se de que este campo não tenha mais de 100 caracteres",

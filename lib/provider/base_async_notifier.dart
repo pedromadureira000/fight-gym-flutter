@@ -136,9 +136,27 @@ abstract class BaseAsyncNotifier<T> extends AsyncNotifier<Map<String, dynamic>> 
         }
     }
 
-    Future<void> fetchMoreRecords(recordsLength) async {
+    Future<void> fetchRecords({loadMore=false, Map? filterBy, String? searchTerm}) async {
+        int recordsLength = state.value!["listRecords"].length;
+        AppConfig.logger.d("filterBy $filterBy");
         var token = await SecureStorage().readSecureData("token");
-        String url = "${AppConfig.backUrl}/$listUrl?startingIndex=$recordsLength";
+        String url = "${AppConfig.backUrl}/$listUrl";
+        if (loadMore){
+            url += "?startingIndex=$recordsLength";
+        }
+        if (searchTerm != null && searchTerm.isNotEmpty){
+            url += url.contains("?") ? "&contains_term=$searchTerm" : "?contains_term=$searchTerm";
+        }
+        if (filterBy != null){
+            filterBy.forEach((k, v) {
+                if (url.contains("?")){
+                    url += "&$k=$v";
+                }
+                else {
+                    url += "?$k=$v";
+                }
+            });
+        }
         final response = await http.get(
             Uri.parse(url),
             headers: Constants.httpRequestHeaders(token),
@@ -150,9 +168,17 @@ abstract class BaseAsyncNotifier<T> extends AsyncNotifier<Map<String, dynamic>> 
         int totalRecords = decodedJsonResponse["totalRecords"];
         final records = (decodedJsonResponse["result"] as List<dynamic>).cast<Map<String, dynamic>>();
         var listRecords = records.map(fromJson).toList();
-        state.value!["totalRecords"] = totalRecords;
-        state.value!["listRecords"].addAll(listRecords);
-        state = state; // to refresh page
+        if (loadMore){
+            state.value!["totalRecords"] = totalRecords;
+            state.value!["listRecords"].addAll(listRecords);
+            state = state; // to refresh page
+        }
+        else {
+            state = AsyncValue.data({
+                "totalRecords": totalRecords,
+                "listRecords": listRecords
+            });
+        }
     }
 
     addRecordLocaly(newRecordObj, recordMap) {

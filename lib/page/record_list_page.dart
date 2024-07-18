@@ -1,9 +1,11 @@
+import 'package:fight_gym/config/app_config.dart';
 import 'package:fight_gym/page/facade.dart';
 import 'package:fight_gym/styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import "package:easy_localization/easy_localization.dart";
 import "package:fight_gym/components/error_msg_widget.dart";
+import "package:flutter/foundation.dart" show kIsWeb;
 
 
 class ListPage extends HookConsumerWidget {
@@ -13,21 +15,23 @@ class ListPage extends HookConsumerWidget {
         required this.createRecordNamedRoute,
         required this.updateRecordNamedRoute,
         required this.addInstanceLabel,
-        this.secondBtn,
-        this.thirdBtn,
+        required this.filterList,
+        this.searchBar = false,
     });
 
     final dynamic provider;
     final dynamic createRecordNamedRoute;
     final dynamic updateRecordNamedRoute;
     final dynamic addInstanceLabel;
-    final Widget? secondBtn;
-    final Widget? thirdBtn;
+    final List<Widget> filterList;
+    final bool searchBar;
 
     @override
     Widget build(BuildContext context, WidgetRef ref) {
         final asyncValue = ref.watch(provider);
         CustomDarkThemeStyles customDarkThemeStyles = CustomDarkThemeStyles(Theme.of(context).brightness);
+
+        final TextEditingController searchTermcontroller = TextEditingController();
 
         return switch (asyncValue) {
             AsyncData(:final value) => RefreshIndicator(
@@ -42,8 +46,22 @@ class ListPage extends HookConsumerWidget {
                         children: [
                             const SizedBox(height: 10),
                             Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
+                                    if (kIsWeb && searchBar)  SizedBox(
+                                        width: 400.0 ,
+                                        child: TextField(
+                                            controller: searchTermcontroller,
+                                            decoration: InputDecoration(
+                                                border: const OutlineInputBorder(),
+                                                labelText: tr("Search"),
+                                            ),
+                                            onSubmitted: (String txt) {
+                                                searchTermFunction(ref, provider, txt);
+                                            },
+                                        ),
+                                    ),
+                                    const SizedBox(width: 10),
                                     ElevatedButton(
                                         onPressed: () {
                                             goToCreatePage(context, ref, createRecordNamedRoute);
@@ -68,10 +86,26 @@ class ListPage extends HookConsumerWidget {
                                             ),
                                         ),
                                     ),
-                                    const SizedBox(width: 10),
-                                    secondBtn ?? const SizedBox(),
-                                    thirdBtn ?? const SizedBox(),
                                 ],
+                            ),
+                            if (filterList.isNotEmpty) const SizedBox(height: 10),
+                            if (filterList.isNotEmpty) Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: filterList,
+                            ),
+                            if (!kIsWeb && searchBar) const SizedBox(height: 10),
+                            if (!kIsWeb && searchBar)  SizedBox(
+                                width: 400.0 ,
+                                child: TextField(
+                                    controller: searchTermcontroller,
+                                    decoration: InputDecoration(
+                                        border: const OutlineInputBorder(),
+                                        labelText: tr("Search"),
+                                    ),
+                                    onSubmitted: (String txt) {
+                                        searchTermFunction(ref, provider, txt);
+                                    },
+                                ),
                             ),
                             const SizedBox(height: 10),
                             ListOfRecords(value, updateRecordNamedRoute, provider)
@@ -126,7 +160,7 @@ class ListOfRecords extends HookConsumerWidget {
                                 icon: const Icon(Icons.sync),
                                 onPressed: () {
                                     var notifier = ref.read(provider.notifier);
-                                    notifier.fetchMoreRecords(recordsLength);
+                                    notifier.fetchRecords(loadMore: true);
                                 },
                             )
                         ],
@@ -145,3 +179,8 @@ class ListOfRecords extends HookConsumerWidget {
         );
     }
 }
+
+var searchTermFunction = (ref, provider, txt){
+    var notifier = ref.read(provider.notifier);
+    notifier.fetchRecords(searchTerm: txt);
+};

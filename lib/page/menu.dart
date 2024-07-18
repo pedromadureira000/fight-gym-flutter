@@ -1,5 +1,5 @@
 import "package:easy_localization/easy_localization.dart";
-import "package:fight_gym/config/app_config.dart";
+import "package:fight_gym/components/dropdown.dart";
 import "package:fight_gym/page/facade.dart";
 import "package:fight_gym/page/record_list_page.dart";
 import "package:fight_gym/provider/modules/class_provider.dart";
@@ -44,8 +44,8 @@ class MenuPage extends HookConsumerWidget {
                     createRecordNamedRoute: AppRoutes.customerCreate,
                     updateRecordNamedRoute: AppRoutes.customerUpdate,
                     addInstanceLabel: "Add Customer",
-                    // secondBtn: const AddQrCodeBtn(),
-                    // thirdBtn: const ScanQrCodeBtn(),
+                    searchBar: true,
+                    filterList:  const [],
                 ),
                 "addInstanceRoute": AppRoutes.customerCreate,
             },
@@ -55,6 +55,7 @@ class MenuPage extends HookConsumerWidget {
                     createRecordNamedRoute: AppRoutes.planCreate,
                     updateRecordNamedRoute: AppRoutes.planUpdate,
                     addInstanceLabel: "Add Plan",
+                    filterList:  const [],
                 ),
                 "addInstanceRoute": AppRoutes.planCreate,
             },
@@ -64,6 +65,7 @@ class MenuPage extends HookConsumerWidget {
                     createRecordNamedRoute: AppRoutes.modalityCreate,
                     updateRecordNamedRoute: AppRoutes.modalityUpdate,
                     addInstanceLabel: "Add Modality",
+                    filterList:  const [],
                 ),
                 "addInstanceRoute": AppRoutes.modalityCreate,
             },
@@ -73,6 +75,7 @@ class MenuPage extends HookConsumerWidget {
                     createRecordNamedRoute: AppRoutes.classCreate,
                     updateRecordNamedRoute: AppRoutes.classUpdate,
                     addInstanceLabel: "Add Class",
+                    filterList:  const [],
                 ),
                 "addInstanceRoute": AppRoutes.classCreate,
             },
@@ -82,6 +85,8 @@ class MenuPage extends HookConsumerWidget {
                     createRecordNamedRoute: AppRoutes.attendanceCreate,
                     updateRecordNamedRoute: AppRoutes.attendanceUpdate,
                     addInstanceLabel: "Add Attendance",
+                    filterList:  const [
+                    ],
                 ),
                 "addInstanceRoute": AppRoutes.attendanceCreate,
             },
@@ -91,6 +96,15 @@ class MenuPage extends HookConsumerWidget {
                     createRecordNamedRoute: AppRoutes.paymentCreate,
                     updateRecordNamedRoute: AppRoutes.paymentUpdate,
                     addInstanceLabel: "Add Payment",
+                    filterList:  [
+                        FilterProviderDropdown(
+                            fieldLabel: "Filter customer",
+                            providerForFilterOptions: asyncCustomersProvider,
+                            providerToBeFiltered: asyncPaymentProvider,
+                            filterKeyIdentifier: "enrollment_id",
+                            pickIdFromOtherRecordsProperty: "enrollment",
+                        ),
+                    ],
                 ),
                 "addInstanceRoute": AppRoutes.paymentCreate,
             }, 

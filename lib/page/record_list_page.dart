@@ -164,7 +164,8 @@ class ListOfRecords extends HookConsumerWidget {
                                 icon: const Icon(Icons.sync),
                                 onPressed: () {
                                     var notifier = ref.read(provider.notifier);
-                                    notifier.fetchRecords(loadMore: true);
+                                    var queryParams = {"loadMore": true};
+                                    notifier.fetchRecords(queryParams: queryParams);
                                 },
                             )
                         ],
@@ -186,5 +187,6 @@ class ListOfRecords extends HookConsumerWidget {
 
 var searchTermFunction = (ref, provider, txt){
     var notifier = ref.read(provider.notifier);
-    notifier.fetchRecords(searchTerm: txt);
+    var queryParams = {"searchTerm": txt};
+    notifier.fetchRecords(queryParams: queryParams);
 };

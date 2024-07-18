@@ -304,11 +304,14 @@ class FilterDate extends HookConsumerWidget {
                 ElevatedButton(
                   onPressed: () {
                     var notifier = ref.read(providerToBeFiltered.notifier);
-                    notifier.fetchRecords(filterBy: {
-                      "initial_$dateField": initialDateISOStringController.text,
-                      "final_$dateField": finalDateISOStringController.text,
-                    });
-                  },
+                    var queryParams = {
+                        "filterBy": {
+                          "initial_$dateField": initialDateISOStringController.text,
+                          "final_$dateField": finalDateISOStringController.text,
+                        }
+                    };
+                    notifier.fetchRecords(queryParams: queryParams);
+                },
                   child: const Text('Search'),
                 ),
             ],

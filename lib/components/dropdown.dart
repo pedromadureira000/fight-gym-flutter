@@ -259,7 +259,10 @@ class _FilterProviderDropdown extends ConsumerState<FilterProviderDropdown> {
                     notifier.fetchRecords();
                 }
                 else {
-                    notifier.fetchRecords(filterBy: {widget.filterKeyIdentifier: widget.selectedValue.value});
+                    var queryParams = {
+                        "filterBy": {widget.filterKeyIdentifier: widget.selectedValue.value}
+                    };
+                    notifier.fetchRecords(queryParams: queryParams);
                 }
             });
         });

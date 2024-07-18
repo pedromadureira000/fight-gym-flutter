@@ -136,9 +136,12 @@ abstract class BaseAsyncNotifier<T> extends AsyncNotifier<Map<String, dynamic>> 
         }
     }
 
-    Future<void> fetchRecords({loadMore=false, Map? filterBy, String? searchTerm}) async {
+    Future<void> fetchRecords({queryParams = const {}}) async {
+        bool loadMore = queryParams["loadMore"] ?? false;
+        String? searchTerm = queryParams["searchTerm"];
+        Map? filterBy = queryParams["filterBy"];
+
         int recordsLength = state.value!["listRecords"].length;
-        AppConfig.logger.d("filterBy $filterBy");
         var token = await SecureStorage().readSecureData("token");
         String url = "${AppConfig.backUrl}/$listUrl";
         if (loadMore){

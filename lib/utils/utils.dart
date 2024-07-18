@@ -1,10 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fight_gym/config/app_config.dart';
+import 'package:fight_gym/styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fight_gym/config/app_routes.dart';
 import 'package:fight_gym/constants/constants.dart';
 import 'package:fight_gym/provider/configurations_provider.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 String getStatusLabel(int status) {
     switch (status) {
@@ -148,7 +151,7 @@ Future<void> selectAndSetDateToControlers(context, ref, dateController, dateISOS
     DateTime? pickedDate = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
+        firstDate: DateTime(2024, 7, 01),
         lastDate: DateTime(2100),
     );
 
@@ -209,5 +212,106 @@ Future<void> selectAndSetTimeToControllers(
 
         timeController.text = formattedTimeToShow;
         timeISOStringController.text = formattedTimeToSendOnAPI;
+    }
+}
+
+
+class FilterDate extends HookConsumerWidget {
+    final dynamic providerToBeFiltered;
+    final String dateField;
+
+    const FilterDate({
+        required this.providerToBeFiltered,
+        required this.dateField,
+        super.key
+    });
+
+    @override
+    Widget build(BuildContext context, WidgetRef ref) {
+        final TextEditingController initialDateController = useTextEditingController();
+        final TextEditingController initialDateISOStringController = useTextEditingController();
+        final TextEditingController finalDateController = useTextEditingController();
+        final TextEditingController finalDateISOStringController = useTextEditingController();
+
+        CustomDarkThemeStyles customDarkThemeStyles = CustomDarkThemeStyles(Theme.of(context).brightness);
+
+        return Row(
+            children: [
+                Expanded(
+                      child: TextField(
+                            controller: initialDateController,
+                            readOnly: true,
+                            onTap: () {
+                                selectAndSetDateToControlers(
+                                    context,
+                                    ref,
+                                    initialDateController,
+                                    initialDateISOStringController,
+                                );
+                            },
+                            style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                                Theme.of(context).textTheme.titleMedium,
+                            decoration: InputDecoration(
+                                  labelText: 'Initial Date',
+                                  prefixIcon: const Icon(Icons.calendar_today),
+                                  border: const OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                                  ),
+                                  filled: true,
+                                  fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                                  suffixIcon: IconButton(
+                                        onPressed: () {
+                                          initialDateController.clear();
+                                          initialDateISOStringController.clear();
+                                        },
+                                        icon: const Icon(Icons.clear),
+                                  ),
+                            ),
+                      ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                    child: TextField(
+                        controller: finalDateController,
+                        readOnly: true,
+                        onTap: () {
+                            selectAndSetDateToControlers(
+                                context,
+                                ref,
+                                finalDateController,
+                                finalDateISOStringController,
+                            );
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Final Date',
+                          prefixIcon: const Icon(Icons.calendar_today),
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                          ),
+                          filled: true,
+                          fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              finalDateController.clear();
+                              finalDateISOStringController.clear();
+                            },
+                            icon: const Icon(Icons.clear),
+                          ),
+                        ),
+                    ),
+                ),
+                const SizedBox(width: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    var notifier = ref.read(providerToBeFiltered.notifier);
+                    notifier.fetchRecords(filterBy: {
+                      "initial_$dateField": initialDateISOStringController.text,
+                      "final_$dateField": finalDateISOStringController.text,
+                    });
+                  },
+                  child: const Text('Search'),
+                ),
+            ],
+        );
     }
 }

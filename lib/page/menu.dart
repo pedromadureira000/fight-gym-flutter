@@ -9,6 +9,7 @@ import "package:fight_gym/provider/modules/modality_provider.dart";
 import "package:fight_gym/provider/modules/attendance_provider.dart";
 import "package:fight_gym/provider/modules/payment_provider.dart";
 import "package:fight_gym/styles/app_colors.dart";
+import "package:fight_gym/utils/utils.dart";
 import "package:flutter/material.dart";
 import "package:fight_gym/config/app_routes.dart";
 import "package:fight_gym/data/local_storage/secure_storage.dart";
@@ -105,6 +106,11 @@ class MenuPage extends HookConsumerWidget {
                             pickIdFromOtherRecordsProperty: "enrollment",
                         ),
                     ],
+                    filterDate: 
+                        FilterDate(
+                            providerToBeFiltered: asyncPaymentProvider,
+                            dateField: "payment_date"
+                        ),
                 ),
                 "addInstanceRoute": AppRoutes.paymentCreate,
             }, 

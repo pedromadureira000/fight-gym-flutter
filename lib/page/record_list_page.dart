@@ -17,6 +17,7 @@ class ListPage extends HookConsumerWidget {
         required this.addInstanceLabel,
         required this.filterList,
         this.searchBar = false,
+        this.filterDate,
     });
 
     final dynamic provider;
@@ -25,6 +26,7 @@ class ListPage extends HookConsumerWidget {
     final dynamic addInstanceLabel;
     final List<Widget> filterList;
     final bool searchBar;
+    final Widget? filterDate;
 
     @override
     Widget build(BuildContext context, WidgetRef ref) {
@@ -107,6 +109,8 @@ class ListPage extends HookConsumerWidget {
                                     },
                                 ),
                             ),
+                            const SizedBox(height: 10),
+                            if (filterDate != null) filterDate as Widget,
                             const SizedBox(height: 10),
                             ListOfRecords(value, updateRecordNamedRoute, provider)
                         ],

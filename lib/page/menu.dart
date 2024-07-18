@@ -38,9 +38,17 @@ class MenuPage extends HookConsumerWidget {
 
         final ValueNotifier selectedMenu = useState(route != null ? route.substring(1) : "customer");
 
+        ValueNotifier customerQueryParams = useState({});
+        ValueNotifier planQueryParams = useState({});
+        ValueNotifier attendanceQueryParams = useState({});
+        ValueNotifier classQueryParams = useState({});
+        ValueNotifier modalityQueryParams = useState({});
+        ValueNotifier paymentQueryParams = useState({});
+
         Map<String, dynamic> widgetOptions = {
             "customer": {
                 "widget": ListPage(
+                    queryParams: customerQueryParams,
                     provider: asyncCustomersProvider,
                     createRecordNamedRoute: AppRoutes.customerCreate,
                     updateRecordNamedRoute: AppRoutes.customerUpdate,
@@ -52,6 +60,7 @@ class MenuPage extends HookConsumerWidget {
             },
             "plan": {
                 "widget": ListPage(
+                    queryParams: planQueryParams,
                     provider: asyncPlansProvider,
                     createRecordNamedRoute: AppRoutes.planCreate,
                     updateRecordNamedRoute: AppRoutes.planUpdate,
@@ -62,6 +71,7 @@ class MenuPage extends HookConsumerWidget {
             },
             "modality": {
                 "widget": ListPage(
+                    queryParams: modalityQueryParams,
                     provider: asyncModalityProvider,
                     createRecordNamedRoute: AppRoutes.modalityCreate,
                     updateRecordNamedRoute: AppRoutes.modalityUpdate,
@@ -72,6 +82,7 @@ class MenuPage extends HookConsumerWidget {
             },
             "class": {
                 "widget": ListPage(
+                    queryParams: classQueryParams,
                     provider: asyncClassProvider,
                     createRecordNamedRoute: AppRoutes.classCreate,
                     updateRecordNamedRoute: AppRoutes.classUpdate,
@@ -82,6 +93,7 @@ class MenuPage extends HookConsumerWidget {
             },
             "attendance": {
                 "widget": ListPage(
+                    queryParams: attendanceQueryParams,
                     provider: asyncAttendanceProvider,
                     createRecordNamedRoute: AppRoutes.attendanceCreate,
                     updateRecordNamedRoute: AppRoutes.attendanceUpdate,
@@ -93,12 +105,14 @@ class MenuPage extends HookConsumerWidget {
             },
             "payment": {
                 "widget": ListPage(
+                    queryParams: paymentQueryParams,
                     provider: asyncPaymentProvider,
                     createRecordNamedRoute: AppRoutes.paymentCreate,
                     updateRecordNamedRoute: AppRoutes.paymentUpdate,
                     addInstanceLabel: "Add Payment",
                     filterList:  [
                         FilterProviderDropdown(
+                            queryParams: paymentQueryParams,
                             fieldLabel: "Filter customer",
                             providerForFilterOptions: asyncCustomersProvider,
                             providerToBeFiltered: asyncPaymentProvider,
@@ -108,6 +122,7 @@ class MenuPage extends HookConsumerWidget {
                     ],
                     filterDate: 
                         FilterDate(
+                            queryParams: paymentQueryParams,
                             providerToBeFiltered: asyncPaymentProvider,
                             dateField: "payment_date"
                         ),

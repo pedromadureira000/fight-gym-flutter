@@ -217,10 +217,12 @@ Future<void> selectAndSetTimeToControllers(
 
 
 class FilterDate extends HookConsumerWidget {
+    final dynamic queryParams;
     final dynamic providerToBeFiltered;
     final String dateField;
 
     const FilterDate({
+        required this.queryParams,
         required this.providerToBeFiltered,
         required this.dateField,
         super.key
@@ -252,7 +254,7 @@ class FilterDate extends HookConsumerWidget {
                             style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
                                 Theme.of(context).textTheme.titleMedium,
                             decoration: InputDecoration(
-                                  labelText: 'Initial Date',
+                                  labelText: tr('Initial date'),
                                   prefixIcon: const Icon(Icons.calendar_today),
                                   border: const OutlineInputBorder(
                                     borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -261,8 +263,11 @@ class FilterDate extends HookConsumerWidget {
                                   fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
                                   suffixIcon: IconButton(
                                         onPressed: () {
-                                          initialDateController.clear();
-                                          initialDateISOStringController.clear();
+                                            initialDateController.clear();
+                                            initialDateISOStringController.clear();
+                                            if (queryParams.value["filterBy"] != null){
+                                                queryParams.value["filterBy"].remove("initial_$dateField");
+                                            }
                                         },
                                         icon: const Icon(Icons.clear),
                                   ),
@@ -283,7 +288,7 @@ class FilterDate extends HookConsumerWidget {
                             );
                         },
                         decoration: InputDecoration(
-                          labelText: 'Final Date',
+                          labelText: tr('Final date'),
                           prefixIcon: const Icon(Icons.calendar_today),
                           border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -292,8 +297,11 @@ class FilterDate extends HookConsumerWidget {
                           fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
                           suffixIcon: IconButton(
                             onPressed: () {
-                              finalDateController.clear();
-                              finalDateISOStringController.clear();
+                                finalDateController.clear();
+                                finalDateISOStringController.clear();
+                                if (queryParams.value["filterBy"] != null){
+                                    queryParams.value["filterBy"].remove("final_$dateField");
+                                }
                             },
                             icon: const Icon(Icons.clear),
                           ),
@@ -304,15 +312,43 @@ class FilterDate extends HookConsumerWidget {
                 ElevatedButton(
                   onPressed: () {
                     var notifier = ref.read(providerToBeFiltered.notifier);
-                    var queryParams = {
-                        "filterBy": {
-                          "initial_$dateField": initialDateISOStringController.text,
-                          "final_$dateField": finalDateISOStringController.text,
+                    var initialDate = initialDateISOStringController.text;
+                    var finalDate = finalDateISOStringController.text;
+                    if (initialDate.isNotEmpty){
+                        if (queryParams.value["filterBy"] != null){
+                            queryParams.value["filterBy"]["initial_$dateField"] = initialDate;
                         }
-                    };
-                    notifier.fetchRecords(queryParams: queryParams);
+                        else {
+                            queryParams.value["filterBy"] = {
+                                "initial_$dateField": initialDateISOStringController.text,
+                            };
+                        }
+                    }
+                    else {
+                        if (queryParams.value["filterBy"] != null){
+                            queryParams.value["filterBy"].remove("initial_$dateField");
+                        }
+                    }
+
+                    if (finalDate.isNotEmpty){
+                        if (queryParams.value["filterBy"] != null){
+                            queryParams.value["filterBy"]["final_$dateField"] = finalDate;
+                        }
+                        else {
+                            queryParams.value["filterBy"] = {
+                                "final_$dateField": finalDateISOStringController.text,
+                            };
+                        }
+                    }
+                    else {
+                        if (queryParams.value["filterBy"] != null){
+                            queryParams.value["filterBy"].remove("final_$dateField");
+                        }
+                    }
+
+                    notifier.fetchRecords(queryParams: queryParams.value);
                 },
-                  child: const Text('Search'),
+                  child: Text(tr('Search')),
                 ),
             ],
         );

@@ -11,6 +11,7 @@ import "package:flutter/foundation.dart" show kIsWeb;
 class ListPage extends HookConsumerWidget {
     const ListPage({
         super.key,
+        required this.queryParams,
         required this.provider,
         required this.createRecordNamedRoute,
         required this.updateRecordNamedRoute,
@@ -20,6 +21,7 @@ class ListPage extends HookConsumerWidget {
         this.filterDate,
     });
 
+    final dynamic queryParams;
     final dynamic provider;
     final dynamic createRecordNamedRoute;
     final dynamic updateRecordNamedRoute;
@@ -59,35 +61,36 @@ class ListPage extends HookConsumerWidget {
                                                 labelText: tr("Search"),
                                             ),
                                             onSubmitted: (String txt) {
-                                                searchTermFunction(ref, provider, txt);
+                                                searchTermFunction(queryParams, ref, provider, txt);
                                             },
                                         ),
                                     ),
-                                    const SizedBox(width: 10),
-                                    ElevatedButton(
-                                        onPressed: () {
-                                            goToCreatePage(context, ref, createRecordNamedRoute);
-                                        },
-                                        style: customDarkThemeStyles.elevatedBtnStyleInsideContainer,
-                                        child: RichText(
-                                            text: TextSpan(
-                                                children: [
-                                                    const WidgetSpan(
-                                                        child: Icon(Icons.add, size: 19),
-                                                    ),
-                                                    TextSpan(
-                                                        text: tr(addInstanceLabel),
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Theme.of(context).brightness == Brightness.light
-                                                              ? AppColors.lightBackground
-                                                              : Colors.black,
-                                                        ),
-                                                    ),
-                                                ],
-                                            ),
-                                        ),
-                                    ),
+                                    // NOTE: I think is redundant to have to buttons. But I might change my mind.
+                                    // if (kIsWeb && searchBar) const SizedBox(width: 10),
+                                    // ElevatedButton(
+                                        // onPressed: () {
+                                            // goToCreatePage(context, ref, createRecordNamedRoute);
+                                        // },
+                                        // style: customDarkThemeStyles.elevatedBtnStyleInsideContainer,
+                                        // child: RichText(
+                                            // text: TextSpan(
+                                                // children: [
+                                                    // const WidgetSpan(
+                                                        // child: Icon(Icons.add, size: 19),
+                                                    // ),
+                                                    // TextSpan(
+                                                        // text: tr(addInstanceLabel),
+                                                        // style: TextStyle(
+                                                          // fontSize: 16,
+                                                          // color: Theme.of(context).brightness == Brightness.light
+                                                              // ? AppColors.lightBackground
+                                                              // : Colors.black,
+                                                        // ),
+                                                    // ),
+                                                // ],
+                                            // ),
+                                        // ),
+                                    // ),
                                 ],
                             ),
                             if (filterList.isNotEmpty) const SizedBox(height: 10),
@@ -105,14 +108,14 @@ class ListPage extends HookConsumerWidget {
                                         labelText: tr("Search"),
                                     ),
                                     onSubmitted: (String txt) {
-                                        searchTermFunction(ref, provider, txt);
+                                        searchTermFunction(queryParams, ref, provider, txt);
                                     },
                                 ),
                             ),
                             const SizedBox(height: 10),
                             if (filterDate != null) filterDate as Widget,
                             const SizedBox(height: 10),
-                            ListOfRecords(value, updateRecordNamedRoute, provider)
+                            ListOfRecords(queryParams, value, updateRecordNamedRoute, provider)
                         ],
                     ),
                 ),
@@ -129,8 +132,9 @@ class ListPage extends HookConsumerWidget {
 
 
 class ListOfRecords extends HookConsumerWidget {
-    ListOfRecords(this.response, this.updateRecordNamedRoute, this.provider, {super.key});
+    ListOfRecords(this.queryParams, this.response, this.updateRecordNamedRoute, this.provider, {super.key});
 
+    final dynamic queryParams;
     final dynamic response;
     final dynamic updateRecordNamedRoute;
     final dynamic provider;
@@ -164,8 +168,7 @@ class ListOfRecords extends HookConsumerWidget {
                                 icon: const Icon(Icons.sync),
                                 onPressed: () {
                                     var notifier = ref.read(provider.notifier);
-                                    var queryParams = {"loadMore": true};
-                                    notifier.fetchRecords(queryParams: queryParams);
+                                    notifier.fetchRecords(queryParams: queryParams.value, loadMore: true);
                                 },
                             )
                         ],
@@ -185,8 +188,13 @@ class ListOfRecords extends HookConsumerWidget {
     }
 }
 
-var searchTermFunction = (ref, provider, txt){
+var searchTermFunction = (queryParams, ref, provider, txt){
     var notifier = ref.read(provider.notifier);
-    var queryParams = {"searchTerm": txt};
-    notifier.fetchRecords(queryParams: queryParams);
+    if (txt.isEmpty){
+        queryParams.value.remove("searchTerm");
+    }
+    else {
+        queryParams.value["searchTerm"] = txt;
+    }
+    notifier.fetchRecords(queryParams: queryParams.value);
 };

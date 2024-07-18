@@ -136,8 +136,7 @@ abstract class BaseAsyncNotifier<T> extends AsyncNotifier<Map<String, dynamic>> 
         }
     }
 
-    Future<void> fetchRecords({queryParams = const {}}) async {
-        bool loadMore = queryParams["loadMore"] ?? false;
+    Future<void> fetchRecords({queryParams = const {}, loadMore = false}) async {
         String? searchTerm = queryParams["searchTerm"];
         Map? filterBy = queryParams["filterBy"];
 

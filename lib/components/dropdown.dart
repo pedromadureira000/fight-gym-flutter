@@ -223,6 +223,7 @@ class SelectValueFromProviderListDropdown extends HookConsumerWidget {
 
 class FilterProviderDropdown extends StatefulHookConsumerWidget {
     FilterProviderDropdown({
+        required this.queryParams,
         required this.fieldLabel,
         required this.providerForFilterOptions,
         required this.providerToBeFiltered,
@@ -230,6 +231,7 @@ class FilterProviderDropdown extends StatefulHookConsumerWidget {
         this.pickIdFromOtherRecordsProperty,
         super.key
     });
+    final dynamic queryParams;
     String fieldLabel;
     dynamic providerForFilterOptions;
     dynamic providerToBeFiltered;
@@ -246,7 +248,7 @@ class FilterProviderDropdown extends StatefulHookConsumerWidget {
 class _FilterProviderDropdown extends ConsumerState<FilterProviderDropdown> {
     _FilterProviderDropdown();
 
-    List<Map<String, dynamic>> filterOptions = [{"label": "All", "id": 99999999}];
+    List<Map<String, dynamic>> filterOptions = [{"label": "Todos", "id": 99999999}];
 
     @override
     initState() {
@@ -256,13 +258,21 @@ class _FilterProviderDropdown extends ConsumerState<FilterProviderDropdown> {
             widget.selectedValue.addListener(() {
                 var notifier = ref.read(widget.providerToBeFiltered.notifier);
                 if (widget.selectedValue.value == "99999999"){
-                    notifier.fetchRecords();
+                    if (widget.queryParams.value["filterBy"] != null){
+                        widget.queryParams.value["filterBy"].remove(widget.filterKeyIdentifier);
+                    }
+                    notifier.fetchRecords(queryParams: widget.queryParams.value);
                 }
                 else {
-                    var queryParams = {
-                        "filterBy": {widget.filterKeyIdentifier: widget.selectedValue.value}
-                    };
-                    notifier.fetchRecords(queryParams: queryParams);
+                    if (widget.queryParams.value["filterBy"] != null){
+                        widget.queryParams.value["filterBy"][widget.filterKeyIdentifier] = widget.selectedValue.value;
+                    }
+                    else {
+                        widget.queryParams.value["filterBy"] = {
+                            widget.filterKeyIdentifier: widget.selectedValue.value,
+                        };
+                    }
+                    notifier.fetchRecords(queryParams: widget.queryParams.value);
                 }
             });
         });

@@ -93,9 +93,13 @@ class LoginRequired extends HookConsumerWidget {
                         // Spacer creates an adjustable, empty spacer that can be used to tune the spacing between 
                         //.. widgets in a Flex container, like Row or Column.
                         const Spacer(),
-                        Text(
-                            tr("Hello, welcome back!"),
+                        const Text(
+                            "Fight Gym",
                             style: AppText.header1
+                        ),
+                        Text(
+                            tr("System for fight gyms"),
+                            style: AppText.header2
                         ),
                         const SizedBox(
                           height: 16,

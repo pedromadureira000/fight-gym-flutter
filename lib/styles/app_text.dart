@@ -5,6 +5,10 @@ class AppText {
     fontSize: 43,
     fontWeight: FontWeight.w400,
   );
+  static const header2 = TextStyle(
+    fontSize: 29,
+    fontWeight: FontWeight.w400,
+  );
   static const normalText = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w600,

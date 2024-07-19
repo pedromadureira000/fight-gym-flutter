@@ -19,28 +19,34 @@ class AsyncUser extends _$AsyncUser {
     }
 
     Future<User> _fetchData() async {
-        // NOTE this does not work out of android
-        SecureStorage secureStorage = SecureStorage();
-        var token = await secureStorage.readSecureData('token');
-        if (token.isEmpty){
-            throw Exception("The user's token is missing");
-        }
+        try {
+            // NOTE this does not work out of android
+            SecureStorage secureStorage = SecureStorage();
+            var token = await secureStorage.readSecureData('token');
+            if (token.isEmpty){
+                throw Exception("The user's token is missing");
+            }
 
-        final response = await http.get(
-            Uri.parse('${AppConfig.backUrl}/user/user_view'),
-            headers: Constants.httpRequestHeaders(token),
-        );
+            final response = await http.get(
+                Uri.parse('${AppConfig.backUrl}/user/user_view'),
+                headers: Constants.httpRequestHeaders(token),
+            );
 
-        if (response.statusCode == 401){ //unauthorized
-            await deleteToken();
-            throw Exception('unauthorized. Token is wrong');
+            if (response.statusCode == 401){ //unauthorized
+                await deleteToken();
+                throw Exception('unauthorized. Token is wrong');
+            }
+            if (response.statusCode != 200){
+                throw Exception(Constants.defaultErrorMsg);
+            }
+            dynamic userMap = jsonDecode(utf8.decode(response.bodyBytes));
+            User user = User.fromJson(userMap);
+            return user;
+        } catch (err, stack) {
+            AppConfig.logger.d("err $err");
+            AppConfig.logger.d("stack $stack");
+            rethrow;
         }
-        if (response.statusCode != 200){
-            throw Exception(Constants.defaultErrorMsg);
-        }
-        dynamic userMap = jsonDecode(utf8.decode(response.bodyBytes));
-        User user = User.fromJson(userMap);
-        return user;
     }
     
     Future<String> login(String email, String password) async {

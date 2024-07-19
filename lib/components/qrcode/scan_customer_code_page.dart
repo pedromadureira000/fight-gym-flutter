@@ -63,7 +63,8 @@ class ScanCustomerCodePage extends HookConsumerWidget {
                                     },
                                     class_instance: {
                                         "id": record.id,
-                                        "modality_name": "fodder-read-only"
+                                        "modality_name": "fodder-read-only",
+                                        "start_time": "10:10:00"
                                     },
                                     date: DateTime.now().toIso8601String().split('T')[0],
                                 );

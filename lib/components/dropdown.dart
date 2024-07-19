@@ -311,8 +311,8 @@ class _FilterProviderDropdown extends ConsumerState<FilterProviderDropdown> {
                     filterOptions.addAll(recordOptions);
                 }
 
-                return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                return Column(
+                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                         Text(
                             tr(widget.fieldLabel),

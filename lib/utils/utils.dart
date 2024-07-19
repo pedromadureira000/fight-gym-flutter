@@ -8,6 +8,8 @@ import 'package:fight_gym/provider/configurations_provider.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 String getStatusLabel(int status) {
     switch (status) {
@@ -104,13 +106,24 @@ setDateTimeControllersInitialValue(ref, dateField, dateController, dateISOString
     dateISOStringController.text = hasDateField ? dateField!.toIso8601String() : "";
 }
 
-Future<void> selectAndSetDateTimeToControlers(context, ref, dateController, dateISOStringController) async {
-    DateTime? initialDate = dateISOStringController.text.isNotEmpty ? DateTime.parse(dateISOStringController.text) : DateTime.now();
+Future<void> selectAndSetDateTimeToControlers(
+    context,
+    ref,
+    dateController,
+    dateISOStringController
+) async {
+    tz.initializeTimeZones();
+    // Set the location to the desired time zone (e.g., 'America/New_York')
+    final location = tz.getLocation('America/Sao_Paulo');
 
-    AppConfig.logger.d('initialDate $initialDate');
+    DateTime? initialDate = dateISOStringController.text.isNotEmpty ?
+                            DateTime.parse(dateISOStringController.text) : DateTime.now();
+
+    tz.TZDateTime initialDateLocalized = tz.TZDateTime.from(initialDate, location);
+
     DateTime? pickedDate = await showDatePicker(
         context: context,
-        initialDate: initialDate,
+        initialDate: initialDateLocalized,
         firstDate: DateTime(1940, 7, 01),
         lastDate: DateTime(2100),
     );
@@ -118,7 +131,7 @@ Future<void> selectAndSetDateTimeToControlers(context, ref, dateController, date
     if (pickedDate != null) {
         TimeOfDay? pickedTime = await showTimePicker(
             context: context,
-            initialTime: TimeOfDay(hour: initialDate.hour, minute: initialDate.minute),
+            initialTime: TimeOfDay(hour: initialDateLocalized.hour, minute: initialDateLocalized.minute), 
         );
 
         if (pickedTime != null) {
@@ -197,7 +210,6 @@ Future<void> selectAndSetTimeToControllers(
 ) async {
     String timeString = timeISOStringController.text;
     TimeOfDay selectedTime;
-    // Brazil's Brasília Time (BRT) is UTC-3
     if (timeString.isNotEmpty){
         List<String> parts = timeString.split(':');
         int hour = int.parse(parts[0]);
@@ -209,7 +221,7 @@ Future<void> selectAndSetTimeToControllers(
     }
     TimeOfDay? pickedTime = await showTimePicker(
         context: context,
-        initialTime: selectedTime,
+        initialTime: selectedTime, 
     );
 
     if (pickedTime != null) {

@@ -24,4 +24,4 @@ fix_port_block_error:
 	@flutter pub cache repair && flutter clean
 
 send_apk_to_server:
-	@sudo ssh -i ~/.ssh/zap_ass.pem ubuntu@54.235.38.100 "rm -rf /home/ubuntu/fully-featured-backend/downloads/*" && scp -i ~/.ssh/zap_ass.pem ~/Projects/fully-featured/build/app/outputs/flutter-apk/app-release.apk ubuntu@54.235.38.100:/home/ubuntu/fully-featured-backend/downloads/
+	@sudo ssh -i ~/.ssh/zap_ass.pem ubuntu@34.230.88.183 "rm -rf /home/ubuntu/fight-gym/downloads/*" && scp -i ~/.ssh/zap_ass.pem ~/Projects/fight-gym-flutter/build/app/outputs/flutter-apk/app-release.apk ubuntu@34.230.88.183:/home/ubuntu/fight-gym/downloads/

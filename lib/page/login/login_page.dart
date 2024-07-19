@@ -198,32 +198,32 @@ class LoginRequired extends HookConsumerWidget {
                         const SizedBox(
                           height: 16,
                         ),
-                        SizedBox(
-                            width: kIsWeb ? 400 : null,
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                    Text(
-                                        tr("Dont't have account? "),
-                                        style: AppText.normalText,
-                                    ),
-                                    TextButton(
-                                        onPressed: () {
-                                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                                                Navigator.pushNamed(
-                                                    context,
-                                                    AppRoutes.signUp
-                                                );
-                                            });
-                                        },
-                                        style: customDarkThemeStyles.linkStyle,
-                                        child: Text(
-                                            tr("Sign up"),
-                                            style: AppText.subtitleLink3,
-                                        )),
-                                ],
-                            ),
-                        ),
+                        // SizedBox(
+                            // width: kIsWeb ? 400 : null,
+                            // child: Row(
+                                // mainAxisAlignment: MainAxisAlignment.center,
+                                // children: [
+                                    // Text(
+                                        // tr("Dont't have account? "),
+                                        // style: AppText.normalText,
+                                    // ),
+                                    // TextButton(
+                                        // onPressed: () {
+                                            // WidgetsBinding.instance.addPostFrameCallback((_) {
+                                                // Navigator.pushNamed(
+                                                    // context,
+                                                    // AppRoutes.signUp
+                                                // );
+                                            // });
+                                        // },
+                                        // style: customDarkThemeStyles.linkStyle,
+                                        // child: Text(
+                                            // tr("Sign up"),
+                                            // style: AppText.subtitleLink3,
+                                        // )),
+                                // ],
+                            // ),
+                        // ),
                         const Spacer(),
                         const SelectLanguage(),
                         const Spacer(),

@@ -36,18 +36,22 @@ The end-users download the .apk file signed with an app signing key.
 
 # Create an upload keystore
 https://docs.flutter.dev/deployment/android
+
+* keystore file is used for signing your APK in release mode.
+
 `
-keytool -genkey -v -keystore ~/upload-keystore.jks -keyalg RSA \
-        -keysize 2048 -validity 10000 -alias uploadkey
+keytool -genkey -v -keystore ~/Projects/fight-gym-flutter/android/app/upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias uploadkey
 `
 * update info on android/app/build.gradle : android.signingConfigs.release
+* check if signing.properties match with password and alias on the command before
 
 # Update SHA-1 signing certificate fingerprint 
 * run it
 `
 ./gradlew signingReport
 `
-* copy the SHA1 from the correct variant "release" or "debug" and update on Google api services > credentias > OAuth 2.0 Client IDs
+<!-- _not using firebase_ -->
+<!-- * copy the SHA1 from the correct variant "release" or "debug" and update on Google api services > credentias > OAuth 2.0 Client IDs  -->
 
 
 # enable Google People API

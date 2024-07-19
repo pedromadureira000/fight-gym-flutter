@@ -2,6 +2,7 @@ import 'package:fight_gym/config/app_config.dart';
 import 'package:fight_gym/page/facade.dart';
 import 'package:fight_gym/styles/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import "package:easy_localization/easy_localization.dart";
 import "package:fight_gym/components/error_msg_widget.dart";
@@ -35,7 +36,7 @@ class ListPage extends HookConsumerWidget {
         final asyncValue = ref.watch(provider);
         CustomDarkThemeStyles customDarkThemeStyles = CustomDarkThemeStyles(Theme.of(context).brightness);
 
-        final TextEditingController searchTermcontroller = TextEditingController();
+        final TextEditingController searchTermcontroller = useTextEditingController();
 
         return switch (asyncValue) {
             AsyncData(:final value) => RefreshIndicator(

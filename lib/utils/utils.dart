@@ -105,17 +105,20 @@ setDateTimeControllersInitialValue(ref, dateField, dateController, dateISOString
 }
 
 Future<void> selectAndSetDateTimeToControlers(context, ref, dateController, dateISOStringController) async {
+    DateTime? initialDate = dateISOStringController.text.isNotEmpty ? DateTime.parse(dateISOStringController.text) : DateTime.now();
+
+    AppConfig.logger.d('initialDate $initialDate');
     DateTime? pickedDate = await showDatePicker(
         context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now(),
+        initialDate: initialDate,
+        firstDate: DateTime(1940, 7, 01),
         lastDate: DateTime(2100),
     );
 
     if (pickedDate != null) {
         TimeOfDay? pickedTime = await showTimePicker(
             context: context,
-            initialTime: TimeOfDay.now(),
+            initialTime: TimeOfDay(hour: initialDate.hour, minute: initialDate.minute),
         );
 
         if (pickedTime != null) {
@@ -150,8 +153,8 @@ setDateControllersInitialValue(ref, dateString, dateController, dateISOStringCon
 Future<void> selectAndSetDateToControlers(context, ref, dateController, dateISOStringController) async {
     DateTime? pickedDate = await showDatePicker(
         context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2024, 7, 01),
+        initialDate: dateISOStringController.text.isNotEmpty ? DateTime.parse(dateISOStringController.text) : DateTime.now(),
+        firstDate: DateTime(1940, 7, 01),
         lastDate: DateTime(2100),
     );
 
@@ -192,9 +195,21 @@ Future<void> selectAndSetTimeToControllers(
     TextEditingController timeController, 
     TextEditingController timeISOStringController
 ) async {
+    String timeString = timeISOStringController.text;
+    TimeOfDay selectedTime;
+    // Brazil's Brasília Time (BRT) is UTC-3
+    if (timeString.isNotEmpty){
+        List<String> parts = timeString.split(':');
+        int hour = int.parse(parts[0]);
+        int minute = int.parse(parts[1]);
+        selectedTime = TimeOfDay(hour: hour, minute: minute);
+    }
+    else {
+        selectedTime = TimeOfDay.now();
+    }
     TimeOfDay? pickedTime = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay.now(),
+        initialTime: selectedTime,
     );
 
     if (pickedTime != null) {

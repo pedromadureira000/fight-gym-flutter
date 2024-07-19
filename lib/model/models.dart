@@ -789,6 +789,7 @@ class Attendance with _$Attendance {
                 class_instance: {
                     "id": classId,
                     "modality_name": classInstance.modality["name"],
+                    "start_time": "2024-07-15T08:00:00Z",
                 },
                 date: controllerFields["dateISOStringController"].text
             );

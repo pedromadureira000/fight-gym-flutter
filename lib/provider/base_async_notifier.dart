@@ -67,7 +67,7 @@ abstract class BaseAsyncNotifier<T> extends AsyncNotifier<Map<String, dynamic>> 
             if (response.statusCode != 200) {
                 return (getErrorMsg(response, Constants.defaultErrorMsg), null);
             }
-            Map responseMap = jsonDecode(response.body);
+            Map responseMap = jsonDecode(utf8.decode(response.bodyBytes));
             return ("success", responseMap);
         } catch (err, stack) {
             return (Constants.defaultErrorMsg, null);

@@ -183,10 +183,10 @@ abstract class BaseAsyncNotifier<T> extends AsyncNotifier<Map<String, dynamic>> 
         }
     }
 
-    addRecordLocaly(newRecordObj, recordMap) {
-        newRecordObj.id = recordMap["id"];
+    addRecordLocaly(recordMap) {
+        T newObj = fromJson(recordMap);
         if (state.value != null){ // XXX avoid to update localy if it has not been fetched yet
-            state.value!["listRecords"]!.insert(0, newRecordObj);
+            state.value!["listRecords"]!.insert(0, newObj);
             state.value!["totalRecords"] = (state.value!["totalRecords"] ?? 1) + 1;
         }
         state = state;
@@ -196,7 +196,7 @@ abstract class BaseAsyncNotifier<T> extends AsyncNotifier<Map<String, dynamic>> 
         if (state.value != null){ // XXX avoid to update localy if it has not been fetched yet
             var elIndex = state.value!["listRecords"].indexWhere((el) => el.id == oldRecordOjb.id);
             state.value!["listRecords"].removeAt(elIndex);
-            newRecordObj.id = oldRecordOjb.id;
+            newRecordObj.id = oldRecordOjb.id; // ??? Why I set this? should be filled already
             state.value!["listRecords"].insert(elIndex, newRecordObj);
             state = state;
         }

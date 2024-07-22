@@ -1,4 +1,5 @@
 import "package:easy_localization/easy_localization.dart";
+import "package:fight_gym/utils/snackbar.dart";
 import "package:flutter/material.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
 import "package:fight_gym/provider/configurations_provider.dart";
@@ -145,6 +146,9 @@ class SelectValueFromProviderListDropdown extends HookConsumerWidget {
         switch (asyncValue) {
             case AsyncData(): 
                 final records = asyncValue.value["listRecords"];
+                if (records.isEmpty) {
+                    showSnackBar(context, tr("You need to create a '") + tr(fieldLabel) + tr("' before adding this record."), "warning");
+                }
                 if (selectedValue.value.isEmpty) {
                     if (records.isNotEmpty) {
                         // WidgetsBinding.instance.addPostFrameCallback((_) {

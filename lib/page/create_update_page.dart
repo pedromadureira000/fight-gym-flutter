@@ -3,6 +3,7 @@ import "package:fight_gym/components/dialogs.dart";
 import "package:fight_gym/config/app_config.dart";
 import "package:fight_gym/config/app_routes.dart";
 import "package:fight_gym/page/facade.dart";
+import "package:fight_gym/utils/snackbar.dart";
 import "package:flutter/material.dart";
 import "package:flutter_hooks/flutter_hooks.dart";
 import "package:fight_gym/styles/app_colors.dart";
@@ -144,14 +145,18 @@ class CreateOrUpdatePage extends HookConsumerWidget {
                                                     ElevatedButton(
                                                         style: customDarkThemeStyles.elevatedBtnStyle,
                                                         onPressed: () async {
-                                                            var newRecord = await fodderRecordObj.getInstanceFromControllers(
-                                                                ref, controllerFields
-                                                            );
-                                                            if (record != null){
-                                                                updateRecord(ref, newRecord, context, record, provider, menuRoute);
-                                                            }
-                                                            else {
-                                                                addRecord(ref, newRecord, context, provider, menuRoute);
+                                                            try {
+                                                                var newRecord = await fodderRecordObj.getInstanceFromControllers(
+                                                                    ref, controllerFields
+                                                                );
+                                                                if (record != null){
+                                                                    updateRecord(ref, newRecord, context, record, provider, menuRoute);
+                                                                }
+                                                                else {
+                                                                    addRecord(ref, newRecord, context, provider, menuRoute);
+                                                                }
+                                                            } catch (err) {
+                                                                showSnackBar(context, tr("An unknown error has occurred"), "error");
                                                             }
                                                         },
                                                         child: record != null ? Text(tr("Update"), style: AppText.normalText) :

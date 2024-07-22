@@ -72,6 +72,8 @@
     "Initial date": "Data inicial",
     "Final date": "Data final",
     "Filter class": "Filtrar treino",
+    "You need to create a '": "Você precisa criar um '",
+    "' before adding this record.": "' antes de adicionar este registro.",
 
     "This field may not be blank.": "Este campo não pode ficar em branco.",
     "Ensure this field has no more than 100 characters.": "Certifique-se de que este campo não tenha mais de 100 caracteres",

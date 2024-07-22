@@ -18,7 +18,7 @@ addRecord (ref, newRecord, context, providerClass, menuRoute) async {
         var notifier = await ref.read(providerClass.notifier);
         var (result, recordMap) = await notifier.addRecord(newRecord);
         if (result == "success"){
-            notifier.addRecordLocaly(newRecord, recordMap);
+            notifier.addRecordLocaly(recordMap);
             handlePopNavigation(context, menuRoute);
         }
         else {

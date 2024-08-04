@@ -36,9 +36,7 @@ class AsyncDashboard extends _$AsyncDashboard {
             );
             if (response.statusCode == 200) {
                 dynamic decodedJsonResponse = jsonDecode(utf8.decode(response.bodyBytes));
-                int totalRecords = decodedJsonResponse["totalRecords"];
-                final records = (decodedJsonResponse["result"] as List<dynamic>).cast<Map<String, dynamic>>();
-                // var listRecords = records.map(fromJson).toList();
+                final records = (decodedJsonResponse as List<dynamic>).cast<Map<String, dynamic>>();
                 return {
                   "records": records,
                 };

@@ -49,7 +49,6 @@ class MenuPage extends HookConsumerWidget {
         Map<String, dynamic> widgetOptions = {
             "dashboard": {
                 "widget": Dashboard(),
-                "addInstanceRoute": AppRoutes.customerCreate,
             },
             "customer": {
                 "widget": ListPage(
@@ -154,6 +153,8 @@ class MenuPage extends HookConsumerWidget {
             },
         };
 
+        bool thereIsAddBtn = widgetOptions[selectedMenu.value]?["addInstanceRoute"] != null;
+
         void floatingActionButtonAddMethod() {
            goToCreatePage(context, ref, widgetOptions[selectedMenu.value]["addInstanceRoute"]);
         }
@@ -240,12 +241,12 @@ class MenuPage extends HookConsumerWidget {
                     ],
                 ),
             ),
-            floatingActionButton: FloatingActionButton(
+            floatingActionButton: thereIsAddBtn ? FloatingActionButton(
                 onPressed: floatingActionButtonAddMethod,
                 backgroundColor: customDarkThemeStyles.getPrimaryColor,
                 foregroundColor: customDarkThemeStyles.getSecundaryColor,
                 child: const Icon(Icons.add),
-            ),
+            ) : null,
             body: SizedBox(
                 width: kIsWeb ? MediaQuery.of(context).size.width : null,
                 child: Padding(

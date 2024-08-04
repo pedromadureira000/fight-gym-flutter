@@ -1,5 +1,6 @@
 import "package:easy_localization/easy_localization.dart";
 import "package:fight_gym/components/dropdown.dart";
+import "package:fight_gym/page/dashboard.dart";
 import "package:fight_gym/page/facade.dart";
 import "package:fight_gym/page/record_list_page.dart";
 import "package:fight_gym/provider/modules/class_provider.dart";
@@ -46,6 +47,10 @@ class MenuPage extends HookConsumerWidget {
         ValueNotifier paymentQueryParams = useState({});
 
         Map<String, dynamic> widgetOptions = {
+            "dashboard": {
+                "widget": Dashboard(),
+                "addInstanceRoute": AppRoutes.customerCreate,
+            },
             "customer": {
                 "widget": ListPage(
                     queryParams: customerQueryParams,
@@ -173,6 +178,14 @@ class MenuPage extends HookConsumerWidget {
                               fontSize: 24,
                             ),
                           ),
+                        ),
+                        ListTile(
+                            selected: selectedMenu.value == "dashboard",
+                            leading: const Icon(Icons.dashboard),
+                            title: const Text("Dashboard"),
+                            onTap: () {
+                                Navigator.pushNamed(context, AppRoutes.dashboard);
+                            },
                         ),
                         ListTile(
                             selected: selectedMenu.value == "customer",

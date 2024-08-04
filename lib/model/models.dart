@@ -68,6 +68,8 @@ class Customer with _$Customer {
 
     getControllerFields(context) {
         try {
+            int currentDay = DateTime.now().day;
+            int payday = currentDay > 28 ? 28 : currentDay;
             Map controllerFieldsList = {
                 "nameController": useTextEditingController(),
                 "emailController": useTextEditingController(),
@@ -76,6 +78,7 @@ class Customer with _$Customer {
                 "addressController": useTextEditingController(),
                 "birthdayController": useTextEditingController(),
                 "dateISOStringController": useTextEditingController(),
+                "paydayController": useTextEditingController(text: "$payday"),
                 "selectedPlan":  useState(""),
             };
             return controllerFieldsList;
@@ -98,6 +101,7 @@ class Customer with _$Customer {
             controllerFields["phoneController"].text = record.phone;
             controllerFields["familyPhoneController"].text = record.family_phone;
             controllerFields["addressController"].text = record.address;
+            controllerFields["paydayController"].text = "${record.enrollment['payday']}";
             setDateTimeControllersInitialValue(
                 ref,
                 record.birthday,
@@ -226,6 +230,22 @@ class Customer with _$Customer {
                     ),
                 ),
                 const SizedBox(height: 16.0),
+                TextField(
+                    minLines: 1,
+                    maxLines: null,
+                    controller: controllerFields["paydayController"],
+                    style: kIsWeb ? Theme.of(context).textTheme.titleMedium?.copyWith(fontSize: 19) :
+                        Theme.of(context).textTheme.titleMedium,
+                    decoration: InputDecoration(
+                        labelText: tr("Payday"),
+                        border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12))
+                        ),
+                        filled: true,
+                        fillColor: customDarkThemeStyles.inputDecorationFillcolor.withOpacity(0.5),
+                    ),
+                ),
+                const SizedBox(height: 16.0),
                 SelectValueFromProviderListDropdown(
                     "Plan",
                     controllerFields["selectedPlan"],
@@ -244,6 +264,7 @@ class Customer with _$Customer {
 
     getInstanceFromControllers(ref, controllerFields) async {
         try {
+            int payday = int.parse(controllerFields["paydayController"].text.trim());
             return Customer(
                 name: controllerFields["nameController"].text.trim(),
                 email: controllerFields["emailController"].text.trim(),
@@ -253,7 +274,8 @@ class Customer with _$Customer {
                 birthday: controllerFields["dateISOStringController"].text.isNotEmpty ? DateTime.parse(controllerFields["dateISOStringController"].text) : null,
                 enrollment: {
                     "plan": int.parse(controllerFields["selectedPlan"].value),
-                    "subscription_status": 1
+                    "subscription_status": 1,
+                    "payday": payday,
                 }
             );
         } catch (err, stack) {

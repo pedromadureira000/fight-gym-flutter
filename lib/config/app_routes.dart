@@ -26,6 +26,7 @@ class AppRoutes {
 
     scanCustomerQrCode: (params) => const ScanCustomerCodePage(),
 
+    dashboard: (params) => const MenuPage(),
     customer: (params) => const MenuPage(),
     plan: (params) => const MenuPage(),
     modality: (params) => const MenuPage(),
@@ -169,6 +170,7 @@ class AppRoutes {
 
   static const scanCustomerQrCode = "/scan_customer_qrcode";
 
+  static const dashboard = '/dashboard';
   static const customer = '/customer';
   static const plan = '/plan';
   static const modality = '/modality';

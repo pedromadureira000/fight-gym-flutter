@@ -34,7 +34,7 @@ class MenuPage extends HookConsumerWidget {
 
         var route = ModalRoute.of(context)!.settings.name;
         if (route == "/menu"){ // sometimes I need goToMenu
-            route = "/customer";
+            route = "/dashboard";
         }
 
         final ValueNotifier selectedMenu = useState(route != null ? route.substring(1) : "customer");

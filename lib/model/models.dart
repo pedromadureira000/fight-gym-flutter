@@ -80,6 +80,9 @@ class Customer with _$Customer {
                 "dateISOStringController": useTextEditingController(),
                 "paydayController": useTextEditingController(text: "$payday"),
                 "selectedPlan":  useState(""),
+                // Just info
+                "subscription_status": useTextEditingController(),
+                "last_payment_date_INFO": useTextEditingController(),
             };
             return controllerFieldsList;
         } catch (err, stack) {
@@ -102,6 +105,8 @@ class Customer with _$Customer {
             controllerFields["familyPhoneController"].text = record.family_phone;
             controllerFields["addressController"].text = record.address;
             controllerFields["paydayController"].text = "${record.enrollment['payday']}";
+            controllerFields["subscription_status"].text = "${record.enrollment['subscription_status']}";
+            controllerFields["last_payment_date_INFO"].text = record.enrollment['last_payment_date'] ?? "";
             setDateTimeControllersInitialValue(
                 ref,
                 record.birthday,
@@ -118,7 +123,53 @@ class Customer with _$Customer {
 
     getListOfFieldWidgets(context, ref, customDarkThemeStyles, controllerFields) {
         try {
+            var dateOfLastPayment = "";
+            if (controllerFields["last_payment_date_INFO"].text.isNotEmpty){
+                dateOfLastPayment = parseDateTimeToLocalizedString(ref, DateTime.parse(controllerFields["last_payment_date_INFO"].text));
+            }
             var widgetList = [
+                RichText(
+                    text: TextSpan(
+                        children: <TextSpan>[
+                            const TextSpan(
+                              text: 'Status de pagamento: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            TextSpan(
+                              text: gymSubscriptionStatusOptions[controllerFields["subscription_status"].text],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 18,
+                              ),
+                            ),
+                        ],
+                    ),
+                ),
+                const SizedBox(height: 16.0),
+                if (dateOfLastPayment.isNotEmpty) RichText(
+                    text: TextSpan(
+                        children: <TextSpan>[
+                            const TextSpan(
+                              text: 'Último pagamento: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
+                            TextSpan(
+                              text: dateOfLastPayment,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 18,
+                              ),
+                            ),
+                        ],
+                    ),
+                ),
+                const SizedBox(height: 16.0),
                 TextField(
                     minLines: 1,
                     maxLines: null,

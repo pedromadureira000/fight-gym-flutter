@@ -11,20 +11,14 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-String getStatusLabel(int status) {
-    switch (status) {
-        case 1:
-          return "Postponed";
-        case 2:
-          return "Pendent";
-        case 3:
-          return "Doing";
-        case 4:
-          return "Done";
-        default:
-          return "Unknown"; // or whatever default value you want
-    }
-}
+const Map<String, String> gymSubscriptionStatusOptions = {
+  "1": "Teste",
+  "2": "Teste Finalizado",
+  "3": "Mensalidade paga",
+  "4": "Mensalidade atrasada",
+  "5": "Inscrição cancelada",
+};
+
 
 Color getStatusColor(int status) {
   switch (status) {

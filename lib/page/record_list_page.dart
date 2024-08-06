@@ -151,9 +151,9 @@ class ListOfRecords extends HookConsumerWidget {
                 showCheckboxColumn: false,
                 columnSpacing: 16, // Space between columns
                 headingRowHeight: 56, // Height of the header row
-                headingRowColor: MaterialStateColor.resolveWith((states) => Colors.green[100] ?? Colors.green),
-                headingTextStyle: const TextStyle(
-                    color: Colors.black87,
+                headingRowColor: MaterialStateColor.resolveWith((states) => Theme.of(context).colorScheme.primary),
+                headingTextStyle: TextStyle(
+                    color: Colors.grey[50],
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                 ),
@@ -191,7 +191,7 @@ class ListOfRecords extends HookConsumerWidget {
                                 ),
                                 cells: [
                                     DataCell(
-                                        Text(tr("Load more")),
+                                        Text(tr("Load more"), style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
                                     ),
                                     DataCell(
                                         IconButton(

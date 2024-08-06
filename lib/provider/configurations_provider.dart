@@ -16,8 +16,8 @@ class AsyncConfigs extends _$AsyncConfigs {
         SecureStorage secureStorage = SecureStorage();
         String themeMode = await secureStorage.readSecureData("themeMode");
         if (themeMode.isEmpty){
-            themeMode = "dark";
-            await secureStorage.writeSecureData("themeMode", "dark");
+            themeMode = "light";
+            await secureStorage.writeSecureData("themeMode", themeMode);
         }
         return Configs(theme: themeMode);
     }
@@ -36,7 +36,7 @@ class AsyncConfigs extends _$AsyncConfigs {
         var theme = state.value?.theme;
         if (theme == null){
             AppConfig.logger.d("why theme is null inside updateInitialIndexLocaly????");
-            theme = "dark";
+            theme = "light";
         }
         state = AsyncValue.data(Configs(theme: theme));
     }

@@ -97,7 +97,7 @@ class Dashboard extends HookConsumerWidget {
                   ],
                 ),
               if (value is Map<String, dynamic> && value.containsKey('records') && (value['records'] as List<dynamic>).isEmpty)
-                const Text("No overdue payments found."),
+                Text(tr("No overdue payments found.")),
             ],
           ),
         ),

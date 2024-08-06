@@ -138,39 +138,100 @@ class ListOfRecords extends HookConsumerWidget {
             itemCount += 1; // The last element will be the btn
         }
 
-        return ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: itemCount,
-            itemBuilder: (context, index) {
-                if (showLoadMoreBtn && index == indexOfLastEl){
-                    return Column(
-                        children: <Widget>[
-                            Text(tr("Load more")),
-                            IconButton(
-                                highlightColor: Colors.transparent,
-                                splashColor: Colors.transparent,
-                                hoverColor: Colors.transparent,
-                                icon: const Icon(Icons.sync),
-                                onPressed: () {
-                                    var notifier = ref.read(provider.notifier);
-                                    notifier.fetchRecords(queryParams: queryParams.value, loadMore: true);
+        return Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey, width: 1), // Border color and width
+                borderRadius: BorderRadius.circular(8), // Rounded corners
+            ),
+            child: DataTable(
+                border: TableBorder.all(
+                    width: 0.5,
+                    color: Colors.black,
+                ),
+                showCheckboxColumn: false,
+                columnSpacing: 16, // Space between columns
+                headingRowHeight: 56, // Height of the header row
+                headingRowColor: MaterialStateColor.resolveWith((states) => Colors.green[100] ?? Colors.green),
+                headingTextStyle: const TextStyle(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                ),
+                dataTextStyle: const TextStyle(
+                    color: Colors.black87,
+                    fontSize: 14,
+                ),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8), // Rounded corners for the table
+                ),
+                columns: [
+                    DataColumn(
+                        label: Container(
+                            width: 250, // Set a fixed width for the column header
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: const Text('Nome', style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                    ),
+                    DataColumn(
+                        label: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: const Text('Ações', style: TextStyle(fontWeight: FontWeight.bold)),
+                        ),
+                    ),
+                ],
+                rows: List<DataRow>.generate(
+                    itemCount,
+                    (index) {
+                        if (showLoadMoreBtn && index == indexOfLastEl){
+                            return DataRow(
+                                color: MaterialStateProperty.resolveWith<Color?>(
+                                    (Set<MaterialState> states) {
+                                        return index % 2 == 0 ? Colors.white : Colors.green[100];
+                                    },
+                                ),
+                                cells: [
+                                    DataCell(
+                                        Text(tr("Load more")),
+                                    ),
+                                    DataCell(
+                                        IconButton(
+                                            highlightColor: Colors.transparent,
+                                            splashColor: Colors.transparent,
+                                            hoverColor: Colors.transparent,
+                                            icon: const Icon(Icons.sync),
+                                            onPressed: () {
+                                                var notifier = ref.read(provider.notifier);
+                                                notifier.fetchRecords(queryParams: queryParams.value, loadMore: true);
+                                            },
+                                        )
+                                    ),
+                                ],
+                            );
+                        }
+                        else {
+                            final record = response["listRecords"][index];
+                            return DataRow(
+                                color: MaterialStateProperty.resolveWith<Color?>(
+                                    (Set<MaterialState> states) {
+                                        return index % 2 == 0 ? Colors.white : Colors.green[100];
+                                    },
+                                ),
+                                cells: [
+                                    DataCell(Text(record.getNameField(), style: const TextStyle(fontSize: 16.0))),
+                                    // how to put custome fields?
+                                    const DataCell(Text("")),
+                                ],
+                                onSelectChanged: (selected) {
+                                    if (selected != null && selected) {
+                                        goToUpdatePage(context, ref, record, updateRecordNamedRoute);
+                                    }
                                 },
-                            )
-                        ],
-                    );
-                }
-                else {
-                    final record = response["listRecords"][index];
-                    return ListTile(
-                        title: Text(record.getNameField()),
-                        onTap: () {
-                            goToUpdatePage(context, ref, record, updateRecordNamedRoute);
-                        },
-                    );
-                }
-            },
-        );
+                            );
+                        }
+                    },
+                ),
+            )
+        );    
     }
 }
 

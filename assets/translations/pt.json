@@ -79,6 +79,7 @@
     "Last Payment Date": "Dia do último pagamento",
     "Days Overdue": "Dias de atraso",
     "Overdue Payments": "Pagamentos atrasados",
+    "No overdue payments found.": "Não há pagamentos atrasados",
 
     "This field may not be blank.": "Este campo não pode ficar em branco.",
     "Ensure this field has no more than 100 characters.": "Certifique-se de que este campo não tenha mais de 100 caracteres",

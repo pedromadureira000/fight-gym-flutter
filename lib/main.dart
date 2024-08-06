@@ -22,27 +22,27 @@ void main() async {
     await EasyLocalization.ensureInitialized();
     usePathUrlStrategy();
 
-    await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-    );
+    // await Firebase.initializeApp(
+        // options: DefaultFirebaseOptions.currentPlatform,
+    // );
 
     if (!kIsWeb){
-        final fcmToken = await FirebaseMessaging.instance.getToken(vapidKey: "BKagOny0KF_2pCJQ3m....moL0ewzQ8rZu");
-        AppConfig.fcmToken = fcmToken;
-        AppConfig.logger.d('fcmToken $fcmToken');
+        // final fcmToken = await FirebaseMessaging.instance.getToken(vapidKey: "BKagOny0KF_2pCJQ3m....moL0ewzQ8rZu");
+        // AppConfig.fcmToken = fcmToken;
+        // AppConfig.logger.d('fcmToken $fcmToken');
 
-        FirebaseMessaging messaging = FirebaseMessaging.instance;
+        // FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-        NotificationSettings settings = await messaging.requestPermission(
-            alert: true,
-            announcement: false,
-            badge: true,
-            carPlay: false,
-            criticalAlert: false,
-            provisional: false,
-            sound: true,
-        );
-        AppConfig.logger.d('User granted permission: ${settings.authorizationStatus}');
+        // NotificationSettings settings = await messaging.requestPermission(
+            // alert: true,
+            // announcement: false,
+            // badge: true,
+            // carPlay: false,
+            // criticalAlert: false,
+            // provisional: false,
+            // sound: true,
+        // );
+        // AppConfig.logger.d('User granted permission: ${settings.authorizationStatus}');
     }
 
     await SentryFlutter.init(
@@ -83,7 +83,7 @@ class MyApp extends HookConsumerWidget {
                 notifier.setsetLocale(setLocale);
                 notifier.setgetLocale(getLocale);
             }
-            NotificationListenerProvider().getMessage(context);
+            // NotificationListenerProvider().getMessage(context);
             return null;
         }, const []);
         var configs = ref.watch(asyncConfigsProvider);

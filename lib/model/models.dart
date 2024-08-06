@@ -136,6 +136,7 @@ class Customer with _$Customer {
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
+                                color: Colors.black87,
                               ),
                             ),
                             TextSpan(
@@ -143,6 +144,7 @@ class Customer with _$Customer {
                               style: const TextStyle(
                                 fontWeight: FontWeight.normal,
                                 fontSize: 18,
+                                color: Colors.black87,
                               ),
                             ),
                         ],

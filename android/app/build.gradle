@@ -31,7 +31,8 @@ signingProperties.load(new FileInputStream(signingPropertiesFile))
 
 android {
     namespace "com.petersoftwarehouse.fight_gym"
-    compileSdk flutter.compileSdkVersion
+    compileSdk 34
+    // compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -67,7 +68,8 @@ android {
         // │ Consider searching for a version of this plugin that supports these lower versions of the Android SDK instead.   │
         // │ For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration  │
         // └──────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-        targetSdkVersion flutter.targetSdkVersion
+        targetSdkVersion 34
+        // targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

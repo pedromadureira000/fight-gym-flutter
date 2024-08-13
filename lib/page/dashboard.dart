@@ -35,7 +35,8 @@ class Dashboard extends HookConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-                Text(tr("Overdue Payments"), style: Theme.of(context).textTheme.headline6),
+                // Text(tr("Overdue Payments"), style: Theme.of(context).textTheme.headline6), headline6 does not exit
+                Text(tr("Overdue Payments")),
                 if (value is Map<String, dynamic> && value.containsKey('records') && (value['records'] as List<dynamic>).isNotEmpty)
                             Table(
                                   border: TableBorder.all(
